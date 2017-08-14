@@ -42,8 +42,22 @@
                  header="Mantenimiento de Categorias de Movimiento">
 
             <p:dataTable id="dataTable"
+                         widgetVar="dataTable"
                          var="object" 
-                         value="#{categoriaMovimientoBean.listaCategoriasMovimiento}">
+                         value="#{categoriaMovimientoBean.listaCategoriasMovimiento}"
+                         rows="10"
+                         paginator="true"
+                         paginatorTemplate="{CurrentPageReport}  
+                         {FirstPageLink} 
+                         {PreviousPageLink} {PageLinks} {NextPageLink} 
+                         {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="5,10,15"
+                         paginatorAlwaysVisible="false"
+                         filterEvent="enter"
+                         scrollable="true"
+                         draggableColumns="true"
+                         emptyMessage="No se encontraron registros"
+                         filteredValue="#{categoriaMovimientoBean.listaCategoriasMovimientoFiltradas}">
 
                 <f:facet name="header">
                     Lista de Categorias de Movimiento

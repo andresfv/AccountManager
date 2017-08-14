@@ -25,11 +25,13 @@ public class CategoriaMovimientoBean {
     HibernateService hibernateService;
     CategoriaMovimiento categoriaMovimiento;
     List<CategoriaMovimiento> listaCategoriasMovimiento;
+    List<CategoriaMovimiento> listaCategoriasMovimientoFiltradas;
 
     public CategoriaMovimientoBean() {
         hibernateService = new HibernateService();
         categoriaMovimiento = new CategoriaMovimiento();
         listaCategoriasMovimiento = new ArrayList<CategoriaMovimiento>();
+        listaCategoriasMovimientoFiltradas = new ArrayList<CategoriaMovimiento>();
 
     }
 
@@ -47,6 +49,14 @@ public class CategoriaMovimientoBean {
 
     public void setListaCategoriasMovimiento(List<CategoriaMovimiento> listaCategoriasMovimiento) {
         this.listaCategoriasMovimiento = listaCategoriasMovimiento;
+    }
+
+    public List<CategoriaMovimiento> getListaCategoriasMovimientoFiltradas() {
+        return listaCategoriasMovimientoFiltradas;
+    }
+
+    public void setListaCategoriasMovimientoFiltradas(List<CategoriaMovimiento> listaCategoriasMovimientoFiltradas) {
+        this.listaCategoriasMovimientoFiltradas = listaCategoriasMovimientoFiltradas;
     }
 
     public CategoriaMovimiento getCategoriaMovimiento() {

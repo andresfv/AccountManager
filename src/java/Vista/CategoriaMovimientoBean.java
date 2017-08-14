@@ -5,12 +5,14 @@
  */
 package Vista;
 
-import Controlador.EntityService;
+import Controlador.HibernateService;
 import Modelo.CategoriaMovimiento;
 import java.util.ArrayList;
 import java.util.List;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 
 /**
  *
@@ -20,14 +22,31 @@ import javax.faces.bean.SessionScoped;
 @SessionScoped
 public class CategoriaMovimientoBean {
 
-    EntityService entityService;
+    HibernateService hibernateService;
     CategoriaMovimiento categoriaMovimiento;
     List<CategoriaMovimiento> listaCategoriasMovimiento;
 
     public CategoriaMovimientoBean() {
-        entityService = new EntityService();
+        hibernateService = new HibernateService();
         categoriaMovimiento = new CategoriaMovimiento();
         listaCategoriasMovimiento = new ArrayList<CategoriaMovimiento>();
+
+    }
+
+    public List<CategoriaMovimiento> getListaCategoriasMovimiento() {
+        List<Object> listaObjetos = new ArrayList<Object>();
+        listaObjetos.addAll(hibernateService.findAll("CategoriaMovimiento"));
+        listaCategoriasMovimiento.clear();
+        if (!listaObjetos.isEmpty()) {
+            for (Object objeto : listaObjetos) {
+                listaCategoriasMovimiento.add((CategoriaMovimiento) objeto);
+            }
+        }
+        return listaCategoriasMovimiento;
+    }
+
+    public void setListaCategoriasMovimiento(List<CategoriaMovimiento> listaCategoriasMovimiento) {
+        this.listaCategoriasMovimiento = listaCategoriasMovimiento;
     }
 
     public CategoriaMovimiento getCategoriaMovimiento() {
@@ -38,7 +57,24 @@ public class CategoriaMovimientoBean {
         this.categoriaMovimiento = categoriaMovimiento;
     }
 
+    public void newCategoriaMovimiento() {
+        this.categoriaMovimiento = new CategoriaMovimiento();
+    }
+
     public void saveCategoriaMovimiento() {
-        entityService.saveObjeto(this.categoriaMovimiento);
+        try {
+            hibernateService.save(this.categoriaMovimiento);
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Guardado", "Registro almacenado correctamente"));
+        } catch (Exception e) {
+
+        }
+    }
+
+    public void deleteCategoriaMovimiento() {
+        try {
+            hibernateService.delete(this.categoriaMovimiento);
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Eliminado", "Registro eliminado correctamente"));
+        } catch (Exception e) {
+        }
     }
 }

@@ -33,12 +33,6 @@
                               collapsible="true">
 
                     <h:form id="menuForm">
-
-                        <p:growl id="growl" 
-                                 showDetail="true" 
-                                 sticky="true" 
-                                 globalOnly="true"/> 
-
                         <p:menu>
                             <p:submenu label="Mantenimientos"
                                        icon="ui-icon-gear">
@@ -61,10 +55,14 @@
 
                 </p:layoutUnit>
 
-                <p:layoutUnit position="center">
-
-                    <ui:insert name="center"/>
-
+                <p:layoutUnit position="center">    
+                    <h:form id="centerForm">
+                        <p:messages id="messages" 
+                                    showDetail="true" 
+                                    closable="true" 
+                                    globalOnly="true"/>
+                        <ui:insert name="center"/>
+                    </h:form>
                 </p:layoutUnit>
             </p:layout>
 

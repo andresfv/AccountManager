@@ -46,6 +46,8 @@ Contributor(s):
     <property name="hibernate.connection.username">root</property>
     <property name="hibernate.connection.password">root</property>
     <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+    <property name="hibernate.current_session_context_class">thread</property>
+    <property name="hibernate.transaction.auto_close_session">true</property>
     <mapping resource="Modelo/TipoMovimiento.hbm.xml"/>
     <mapping resource="Modelo/Cuenta.hbm.xml"/>
     <mapping resource="Modelo/CategoriaMovimiento.hbm.xml"/>

@@ -13,6 +13,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import javax.transaction.TransactionScoped;
 
 /**
  *
@@ -36,19 +37,16 @@ public class CategoriaMovimientoBean {
     }
 
     public List<CategoriaMovimiento> getListaCategoriasMovimiento() {
+        listaCategoriasMovimiento.clear();
         List<Object> listaObjetos = new ArrayList<Object>();
         listaObjetos.addAll(hibernateService.findAll("CategoriaMovimiento"));
-        listaCategoriasMovimiento.clear();
         if (!listaObjetos.isEmpty()) {
             for (Object objeto : listaObjetos) {
                 listaCategoriasMovimiento.add((CategoriaMovimiento) objeto);
             }
         }
+        listaCategoriasMovimientoFiltradas = listaCategoriasMovimiento;
         return listaCategoriasMovimiento;
-    }
-
-    public void setListaCategoriasMovimiento(List<CategoriaMovimiento> listaCategoriasMovimiento) {
-        this.listaCategoriasMovimiento = listaCategoriasMovimiento;
     }
 
     public List<CategoriaMovimiento> getListaCategoriasMovimientoFiltradas() {
@@ -73,6 +71,7 @@ public class CategoriaMovimientoBean {
 
     public void saveCategoriaMovimiento() {
         try {
+            listaCategoriasMovimiento.clear();
             hibernateService.save(this.categoriaMovimiento);
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Guardado", "Registro almacenado correctamente"));
         } catch (Exception e) {

@@ -28,7 +28,8 @@
                                      value="Guardar"
                                      actionListener="#{categoriaMovimientoBean.saveCategoriaMovimiento()}"
                                      oncomplete="PF('dlg').hide();"
-                                     update="messages, dataTable"/>
+                                     update="messages, categoriaMovimientoDataTable"
+                                     onsuccess="PF('categoriaMovimientoDataTable').filter()"/>
 
                     <p:commandButton id="categoriaMovimientoCancelCommandButton"
                                      value="Cancelar"
@@ -41,8 +42,8 @@
         <p:panel id='categoriaMovimientoPanel'
                  header="Mantenimiento de Categorias de Movimiento">
 
-            <p:dataTable id="dataTable"
-                         widgetVar="dataTable"
+            <p:dataTable id="categoriaMovimientoDataTable"
+                         widgetVar="categoriaMovimientoDataTable"
                          var="object" 
                          value="#{categoriaMovimientoBean.listaCategoriasMovimiento}"
                          rows="10"
@@ -51,12 +52,12 @@
                          {FirstPageLink} 
                          {PreviousPageLink} {PageLinks} {NextPageLink} 
                          {LastPageLink} {RowsPerPageDropdown}"
-                         rowsPerPageTemplate="5,10,15"
+                         rowsPerPageTemplate="10,15,30,99999"
                          paginatorAlwaysVisible="false"
-                         filterEvent="enter"
                          scrollable="true"
                          draggableColumns="true"
                          emptyMessage="No se encontraron registros"
+                         filterEvent="enter"
                          filteredValue="#{categoriaMovimientoBean.listaCategoriasMovimientoFiltradas}">
 
                 <f:facet name="header">
@@ -69,10 +70,9 @@
                                      update=":#{p:component('dlg')}"/>
                 </f:facet>
 
-                <p:column headerText="Id">
-                    <h:outputText value="#{object.idCategoriaMovimiento}" />
-                </p:column>
-                <p:column headerText="Nombre">
+                <p:column headerText="Nombre"
+                          filterBy="#{object.nombre}"
+                          filterMatchMode="contains">
                     <h:outputText value="#{object.nombre}" />
                 </p:column>
             </p:dataTable>

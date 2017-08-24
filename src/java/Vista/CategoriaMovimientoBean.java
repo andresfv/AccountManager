@@ -14,6 +14,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.transaction.TransactionScoped;
+import org.primefaces.event.RowEditEvent;
 
 /**
  *
@@ -63,6 +64,22 @@ public class CategoriaMovimientoBean {
 
     public void setCategoriaMovimiento(CategoriaMovimiento categoriaMovimiento) {
         this.categoriaMovimiento = categoriaMovimiento;
+    }
+
+    public void onRowEdit(RowEditEvent event) {
+        this.categoriaMovimiento = ((CategoriaMovimiento) event.getObject());
+        saveCategoriaMovimiento();
+        this.categoriaMovimiento = null;
+    }
+
+    public void onRowCancel(RowEditEvent event) {
+
+    }
+
+    public void onDelete(Object object) {
+        this.categoriaMovimiento = ((CategoriaMovimiento) object);
+        deleteCategoriaMovimiento();
+        this.categoriaMovimiento = null;
     }
 
     public void newCategoriaMovimiento() {

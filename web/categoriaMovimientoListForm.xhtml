@@ -47,18 +47,19 @@
                          var="object" 
                          value="#{categoriaMovimientoBean.listaCategoriasMovimiento}"
                          rows="10"
-                         paginator="true"
-                         paginatorTemplate="{CurrentPageReport}  
-                         {FirstPageLink} 
-                         {PreviousPageLink} {PageLinks} {NextPageLink} 
-                         {LastPageLink} {RowsPerPageDropdown}"
-                         rowsPerPageTemplate="10,15,30,99999"
-                         paginatorAlwaysVisible="false"
                          scrollable="true"
                          draggableColumns="true"
                          emptyMessage="No se encontraron registros"
                          filterEvent="enter"
-                         filteredValue="#{categoriaMovimientoBean.listaCategoriasMovimientoFiltradas}">
+                         filteredValue="#{categoriaMovimientoBean.listaCategoriasMovimientoFiltradas}"
+                         editable="true">
+
+                <p:ajax event="rowEdit"
+                        listener="#{categoriaMovimientoBean.onRowEdit}"
+                        update="@this, #{p:component('messages')}"/>
+                <p:ajax event="rowEditCancel"
+                        listener="#{categoriaMovimientoBean.onRowCancel}"
+                        update="@this, #{p:component('messages')}"/>
 
                 <f:facet name="header">
                     Lista de Categorias de Movimiento
@@ -73,7 +74,23 @@
                 <p:column headerText="Nombre"
                           filterBy="#{object.nombre}"
                           filterMatchMode="contains">
-                    <h:outputText value="#{object.nombre}" />
+                    <p:cellEditor>
+                        <f:facet name="input">
+                            <p:inputText value="#{object.nombre}" />
+                        </f:facet>
+                        <f:facet name="output">
+                            <h:outputText value="#{object.nombre}" />
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+
+                <p:column headerText="Acciones" style="width:32px">
+                    <p:rowEditor/>
+                    <p:commandLink id="categoriaMovimientoEliminaBtn"
+                                     styleClass="ui-icon ui-icon-trash"
+                                     title="Elimina categoria movimiento"
+                                     actionListener="#{categoriaMovimientoBean.onDelete(object)}"
+                                     update="@this, #{p:component('categoriaMovimientoDataTable')}, #{p:component('messages')}"/>
                 </p:column>
             </p:dataTable>
 

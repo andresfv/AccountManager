@@ -34,20 +34,15 @@ public class CategoriaMovimientoBean {
         categoriaMovimiento = new CategoriaMovimiento();
         listaCategoriasMovimiento = new ArrayList<CategoriaMovimiento>();
         listaCategoriasMovimientoFiltradas = new ArrayList<CategoriaMovimiento>();
-
+        cargaListaMovimientos();
+    }
+    
+    public List<CategoriaMovimiento> getListaCategoriasMovimiento() {
+        return listaCategoriasMovimiento;
     }
 
-    public List<CategoriaMovimiento> getListaCategoriasMovimiento() {
-        listaCategoriasMovimiento.clear();
-        List<Object> listaObjetos = new ArrayList<Object>();
-        listaObjetos.addAll(hibernateService.findAll("CategoriaMovimiento"));
-        if (!listaObjetos.isEmpty()) {
-            for (Object objeto : listaObjetos) {
-                listaCategoriasMovimiento.add((CategoriaMovimiento) objeto);
-            }
-        }
-        listaCategoriasMovimientoFiltradas = listaCategoriasMovimiento;
-        return listaCategoriasMovimiento;
+    public void setListaCategoriasMovimiento(List<CategoriaMovimiento> listaCategoriasMovimiento) {
+        this.listaCategoriasMovimiento = listaCategoriasMovimiento;
     }
 
     public List<CategoriaMovimiento> getListaCategoriasMovimientoFiltradas() {
@@ -66,20 +61,36 @@ public class CategoriaMovimientoBean {
         this.categoriaMovimiento = categoriaMovimiento;
     }
 
+    public List<CategoriaMovimiento> cargaListaMovimientos() {
+        listaCategoriasMovimiento.clear();
+        List<Object> listaObjetos = new ArrayList<Object>();
+        listaObjetos.addAll(hibernateService.findAll("CategoriaMovimiento"));
+        if (!listaObjetos.isEmpty()) {
+            for (Object objeto : listaObjetos) {
+                listaCategoriasMovimiento.add((CategoriaMovimiento) objeto);
+            }
+        }
+        listaCategoriasMovimientoFiltradas = listaCategoriasMovimiento;
+        return listaCategoriasMovimiento;
+    }
+
     public void onRowEdit(RowEditEvent event) {
         this.categoriaMovimiento = ((CategoriaMovimiento) event.getObject());
         saveCategoriaMovimiento();
         this.categoriaMovimiento = null;
+        cargaListaMovimientos();
     }
 
     public void onRowCancel(RowEditEvent event) {
 
     }
 
-    public void onDelete(Object object) {
+    public String onDelete(Object object) {
         this.categoriaMovimiento = ((CategoriaMovimiento) object);
         deleteCategoriaMovimiento();
         this.categoriaMovimiento = null;
+        cargaListaMovimientos();
+        return "";
     }
 
     public void newCategoriaMovimiento() {

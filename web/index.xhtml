@@ -41,14 +41,14 @@
                                             url="/faces/categoriaMovimientoListForm.xhtml"/>
 
                                 <p:menuitem value="Lista de Tipos de Movimiento" 
-                                            url=""/>
+                                            url="/faces/tipoMovimientoListForm.xhtml"/>
                             </p:submenu>
 
                             <p:submenu label="Transacciones"
                                        icon="ui-icon-calculator">
 
                                 <p:menuitem value="Lista de Cuentas"
-                                            url=""/>
+                                            url="/faces/cuentaListForm.xhtml"/>
                             </p:submenu>
                         </p:menu>
                     </h:form>
@@ -57,12 +57,10 @@
 
                 <p:layoutUnit position="center">    
                     <h:form id="centerForm">
-                        <p:messages id="messages" 
+                        <p:growl id="messages" 
                                     showDetail="true" 
-                                    closable="true" 
-                                    globalOnly="true">
-                            <p:effect type="bounce" event="click"/>
-                        </p:messages>
+                                    globalOnly="true"
+                                    life="3000"/>
                         <ui:insert name="center"/>
                     </h:form>
                 </p:layoutUnit>

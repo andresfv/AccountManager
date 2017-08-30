@@ -18,9 +18,9 @@
 
             <p:commandButton id="confirmDeleteBtn"
                              value="Si"                 
-                             update="{p:component('categoriaMovimientoDataTable')}, p:component('messages')}" 
+                             update="{p:component('cuentaDataTable')}, p:component('messages')}" 
                              oncomplete="PF('confirmDeleteDialog').hide();"
-                             actionListener="{categoriaMovimientoBean.onDelete()}"
+                             actionListener="{cuentaBean.onDelete()}"
                              process="@this"/>    
 
             <p:commandButton id="declineDeleteBtn" 
@@ -31,28 +31,28 @@
         
         
         <p:dialog id="dlg"
-                  header="Nueva Categoria de Movimiento" 
+                  header="Nueva Cuenta" 
                   widgetVar="dlg" 
                   resizable="false">
             <h:panelGrid columns="2">
-                <p:outputLabel id='nombreCategoriaOutputLabel'
+                <p:outputLabel id='nombreCuentaOutputLabel'
                                value="Nombre"
-                               for="nombreCategriaMovimientoInputText"/>
-                <p:inputText id="nombreCategriaMovimientoInputText"
-                             value="#{categoriaMovimientoBean.categoriaMovimiento.nombre}"
+                               for="nombreCuentaInputText"/>
+                <p:inputText id="nombreCuentaInputText"
+                             value="#{cuentaBean.cuenta.nombre}"
                              required="true"/>
 
             </h:panelGrid>
             <f:facet name="footer">
                 <h:panelGrid columns="2">
-                    <p:commandButton id="categoriaMovimientoSaveCommandButton"
+                    <p:commandButton id="cuentaSaveCommandButton"
                                      value="Guardar"
-                                     action="#{categoriaMovimientoBean.onSave()}"
+                                     action="#{cuentaBean.onSave()}"
                                      oncomplete="PF('dlg').hide();"
-                                     update="#{p:component('categoriaMovimientoDataTable')}, #{p:component('messages')}"
-                                     process="@this, nombreCategriaMovimientoInputText"/>
+                                     update="#{p:component('cuentaDataTable')}, #{p:component('messages')}"
+                                     process="@this, nombreCuentaInputText"/>
                     
-                    <p:commandButton id="categoriaMovimientoCancelCommandButton"
+                    <p:commandButton id="cuentaCancelCommandButton"
                                      value="Cancelar"
                                      onclick="PF('dlg').hide();"/>
                 </h:panelGrid>
@@ -60,33 +60,33 @@
 
         </p:dialog>
 
-        <p:panel id='categoriaMovimientoPanel'
-                 header="Mantenimiento de Categorias de Movimiento">
+        <p:panel id='cuentaPanel'
+                 header="Mantenimiento de Cuentas">
 
-            <p:dataTable id="categoriaMovimientoDataTable"
-                         widgetVar="categoriaMovimientoDataTable"
+            <p:dataTable id="cuentaDataTable"
+                         widgetVar="cuentaDataTable"
                          var="object" 
-                         value="#{categoriaMovimientoBean.listaCategoriasMovimiento}"
+                         value="#{cuentaBean.listaCuentas}"
                          rows="10"
                          scrollable="true"
                          scrollHeight="300"
                          draggableColumns="true"
                          emptyMessage="No se encontraron registros"
                          filterEvent="enter"
-                         filteredValue="#{categoriaMovimientoBean.listaCategoriasMovimientoFiltradas}"
+                         filteredValue="#{cuentaBean.listaCuentasFiltradas}"
                          editable="true">
 
                 <p:ajax event="rowEdit"
-                        listener="#{categoriaMovimientoBean.onRowEdit}"
+                        listener="#{cuentaBean.onRowEdit}"
                         update="@this, #{p:component('messages')}"/>
                 <p:ajax event="rowEditCancel"
-                        listener="#{categoriaMovimientoBean.onRowCancel}"
+                        listener="#{cuentaBean.onRowCancel}"
                         update="@this, #{p:component('messages')}"/>
 
                 <f:facet name="header">
-                    Lista de Categorias de Movimiento
-                    <p:commandButton id="categoriaMovimientoNewCommandButton"
-                                     actionListener="#{categoriaMovimientoBean.newCategoriaMovimiento()}"
+                    Lista de Cuentas de Movimiento
+                    <p:commandButton id="cuentaNewCommandButton"
+                                     actionListener="#{cuentaBean.newCuenta()}"
                                      oncomplete="PF('dlg').show();"
                                      icon="ui-icon-plus"
                                      style="float:left; width:20px;height:20px"
@@ -109,11 +109,11 @@
 
                 <p:column headerText="Acciones" style="width:50px">
                     <p:rowEditor/>
-                    <p:commandLink id="categoriaMovimientoEliminaBtn"
+                    <p:commandLink id="cuentaEliminaBtn"
                                      styleClass="ui-icon ui-icon-trash"
-                                     title="Elimina categoria movimiento"
-                                     action="#{categoriaMovimientoBean.onDelete(object)}"
-                                     update="#{p:component('categoriaMovimientoDataTable')}, #{p:component('messages')}"
+                                     title="Elimina cuenta"
+                                     action="#{cuentaBean.onDelete(object)}"
+                                     update="#{p:component('cuentaDataTable')}, #{p:component('messages')}"
                                      process="@this"/>
                 </p:column>
             </p:dataTable>

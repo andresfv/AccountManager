@@ -12,17 +12,17 @@ public class Cuenta  implements java.io.Serializable {
 
 
      private Integer idCuenta;
-     private int nombre;
+     private String nombre;
      private Set movimientos = new HashSet(0);
 
     public Cuenta() {
     }
 
 	
-    public Cuenta(int nombre) {
+    public Cuenta(String nombre) {
         this.nombre = nombre;
     }
-    public Cuenta(int nombre, Set movimientos) {
+    public Cuenta(String nombre, Set movimientos) {
        this.nombre = nombre;
        this.movimientos = movimientos;
     }
@@ -34,11 +34,11 @@ public class Cuenta  implements java.io.Serializable {
     public void setIdCuenta(Integer idCuenta) {
         this.idCuenta = idCuenta;
     }
-    public int getNombre() {
+    public String getNombre() {
         return this.nombre;
     }
     
-    public void setNombre(int nombre) {
+    public void setNombre(String nombre) {
         this.nombre = nombre;
     }
     public Set getMovimientos() {

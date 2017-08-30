@@ -8,8 +8,8 @@
             <column name="ID_CUENTA" />
             <generator class="identity" />
         </id>
-        <property name="nombre" type="int">
-            <column name="NOMBRE" not-null="true" />
+        <property name="nombre" type="string">
+            <column length="100" name="NOMBRE" not-null="true" unique="true" />
         </property>
         <set name="movimientos" table="movimiento" inverse="true" lazy="true" fetch="select">
             <key>

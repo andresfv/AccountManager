@@ -18,9 +18,9 @@
 
             <p:commandButton id="confirmDeleteBtn"
                              value="Si"                 
-                             update="#{p:component('categoriaMovimientoDataTable')}, #{p:component('messages')}" 
+                             update="{p:component('categoriaMovimientoDataTable')}, p:component('messages')}" 
                              oncomplete="PF('confirmDeleteDialog').hide();"
-                             actionListener="#{categoriaMovimientoBean.onDelete()}"
+                             actionListener="{categoriaMovimientoBean.onDelete()}"
                              process="@this"/>    
 
             <p:commandButton id="declineDeleteBtn" 
@@ -47,11 +47,11 @@
                 <h:panelGrid columns="2">
                     <p:commandButton id="categoriaMovimientoSaveCommandButton"
                                      value="Guardar"
-                                     actionListener="#{categoriaMovimientoBean.saveCategoriaMovimiento()}"
+                                     action="#{categoriaMovimientoBean.onSave()}"
                                      oncomplete="PF('dlg').hide();"
-                                     update="messages, categoriaMovimientoDataTable"
-                                     onsuccess="PF('categoriaMovimientoDataTable').filter()"/>
-
+                                     update="#{p:component('categoriaMovimientoDataTable')}, #{p:component('messages')}"
+                                     process="@this"/>
+                    
                     <p:commandButton id="categoriaMovimientoCancelCommandButton"
                                      value="Cancelar"
                                      onclick="PF('dlg').hide();"/>
@@ -69,6 +69,7 @@
                          value="#{categoriaMovimientoBean.listaCategoriasMovimiento}"
                          rows="10"
                          scrollable="true"
+                         scrollHeight="300"
                          draggableColumns="true"
                          emptyMessage="No se encontraron registros"
                          filterEvent="enter"

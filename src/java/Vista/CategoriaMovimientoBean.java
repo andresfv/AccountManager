@@ -36,7 +36,7 @@ public class CategoriaMovimientoBean {
         listaCategoriasMovimientoFiltradas = new ArrayList<CategoriaMovimiento>();
         cargaListaMovimientos();
     }
-    
+
     public List<CategoriaMovimiento> getListaCategoriasMovimiento() {
         return listaCategoriasMovimiento;
     }
@@ -76,8 +76,7 @@ public class CategoriaMovimientoBean {
 
     public void onRowEdit(RowEditEvent event) {
         this.categoriaMovimiento = ((CategoriaMovimiento) event.getObject());
-        saveCategoriaMovimiento();
-        this.categoriaMovimiento = null;
+        onSave();
         cargaListaMovimientos();
     }
 
@@ -88,7 +87,14 @@ public class CategoriaMovimientoBean {
     public String onDelete(Object object) {
         this.categoriaMovimiento = ((CategoriaMovimiento) object);
         deleteCategoriaMovimiento();
-        this.categoriaMovimiento = null;
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Eliminado", "Registro eliminado correctamente"));
+        cargaListaMovimientos();
+        return "";
+    }
+
+    public String onSave() {
+        saveCategoriaMovimiento(this.categoriaMovimiento);
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Guardado", "Registro almacenado correctamente"));
         cargaListaMovimientos();
         return "";
     }
@@ -97,20 +103,17 @@ public class CategoriaMovimientoBean {
         this.categoriaMovimiento = new CategoriaMovimiento();
     }
 
-    public void saveCategoriaMovimiento() {
+    public void saveCategoriaMovimiento(CategoriaMovimiento categoriaMovimientoObj) {
         try {
-            listaCategoriasMovimiento.clear();
-            hibernateService.save(this.categoriaMovimiento);
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Guardado", "Registro almacenado correctamente"));
+            hibernateService.save(categoriaMovimientoObj);
         } catch (Exception e) {
-
         }
+
     }
 
     public void deleteCategoriaMovimiento() {
         try {
             hibernateService.delete(this.categoriaMovimiento);
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Eliminado", "Registro eliminado correctamente"));
         } catch (Exception e) {
         }
     }

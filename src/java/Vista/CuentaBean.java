@@ -96,11 +96,12 @@ public class CuentaBean {
         saveCuenta(this.cuenta);
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Guardado", "Registro almacenado correctamente"));
         cargaListaCuentas();
-        return "";
+        return "cuentaListForm";
     }
 
-    public void newCuenta() {
+    public String newCuenta() {
         this.cuenta = new Cuenta();
+        return "cuentaEditForm";
     }
 
     public void saveCuenta(Cuenta cuentaObj) {

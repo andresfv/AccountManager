@@ -72,11 +72,11 @@ public class CategoriaMovimientoBean {
         listaCategoriasMovimientoFiltradas = listaCategoriasMovimiento;
         return listaCategoriasMovimiento;
     }
-
+    
     public List<CategoriaMovimiento> completoCategoriasMovimiento(String categoria) {
         List<Object> listaObjetos = new ArrayList<Object>();
         List<CategoriaMovimiento> sugerencias = new ArrayList<CategoriaMovimiento>();
-        String query = "select * from CategoriaMovimiento WHERE nombre like %" + categoria + "%";
+        String query = "from CategoriaMovimiento WHERE nombre like %" + categoria + "%";
         listaObjetos.addAll(hibernateService.findAllBy(query));
 
         if (!listaObjetos.isEmpty()) {

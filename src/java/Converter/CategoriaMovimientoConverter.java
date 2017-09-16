@@ -19,7 +19,7 @@ import javax.faces.convert.FacesConverter;
  * @author Luis Andrés Fallas Valenciano
  */
 @FacesConverter("categoriaMovimientoConverter")
-public class CategoriaMovimientoConverter implements Converter, Serializable {
+public class CategoriaMovimientoConverter implements Converter {
 
     @Override
     public Object getAsObject(FacesContext context, UIComponent component, String value) {

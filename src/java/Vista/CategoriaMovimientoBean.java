@@ -72,12 +72,15 @@ public class CategoriaMovimientoBean {
         listaCategoriasMovimientoFiltradas = listaCategoriasMovimiento;
         return listaCategoriasMovimiento;
     }
-    
-    public List<CategoriaMovimiento> completoCategoriasMovimiento(String categoria) {
+
+    public List<CategoriaMovimiento> completoCategoriasMovimiento(String nombreCategoria) {
         List<Object> listaObjetos = new ArrayList<Object>();
         List<CategoriaMovimiento> sugerencias = new ArrayList<CategoriaMovimiento>();
-        String query = "from CategoriaMovimiento WHERE nombre like %" + categoria + "%";
-        listaObjetos.addAll(hibernateService.findAllBy(query));
+        if (nombreCategoria != null && nombreCategoria != "") {
+            listaObjetos.addAll(hibernateService.findAllByLike("CategoriaMovimiento", "nombre", nombreCategoria));
+        } else {
+            listaObjetos.addAll(hibernateService.findAll("CategoriaMovimiento"));
+        }
 
         if (!listaObjetos.isEmpty()) {
             for (Object objeto : listaObjetos) {

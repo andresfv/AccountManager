@@ -6,8 +6,8 @@
 package Vista;
 
 import Controlador.HibernateService;
-import Modelo.CategoriaMovimiento;
 import Modelo.Cuenta;
+import Modelo.Movimiento;
 import java.util.ArrayList;
 import java.util.List;
 import javax.faces.application.FacesMessage;
@@ -29,11 +29,13 @@ public class CuentaBean {
     List<Cuenta> listaCuentas;
     List<Cuenta> listaCuentasFiltradas;
 
+
     public CuentaBean() {
         hibernateService = new HibernateService();
         cuenta = new Cuenta();
         listaCuentas = new ArrayList<Cuenta>();
         listaCuentasFiltradas = new ArrayList<Cuenta>();
+      
         cargaListaCuentas();
     }
 
@@ -101,6 +103,11 @@ public class CuentaBean {
 
     public String newCuenta() {
         this.cuenta = new Cuenta();
+        return "cuentaEditForm";
+    }
+    
+    public String editCuenta(Cuenta cuenta) {
+        this.cuenta = cuenta;
         return "cuentaEditForm";
     }
 

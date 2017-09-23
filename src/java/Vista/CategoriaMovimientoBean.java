@@ -77,9 +77,9 @@ public class CategoriaMovimientoBean {
         List<Object> listaObjetos = new ArrayList<Object>();
         List<CategoriaMovimiento> sugerencias = new ArrayList<CategoriaMovimiento>();
         if (nombreCategoria != null && nombreCategoria != "") {
-            listaObjetos.addAll(hibernateService.findAllByLike("CategoriaMovimiento", "nombre", nombreCategoria));
+        listaObjetos.addAll(hibernateService.findAllByLike("CategoriaMovimiento", "nombre", nombreCategoria));
         } else {
-            listaObjetos.addAll(hibernateService.findAll("CategoriaMovimiento"));
+        listaObjetos.addAll(hibernateService.findAll("CategoriaMovimiento"));
         }
 
         if (!listaObjetos.isEmpty()) {

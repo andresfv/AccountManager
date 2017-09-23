@@ -118,7 +118,7 @@ public class HibernateService {
         try {
 
             Transaction tx = session.beginTransaction(); //Se inicia una transacción
-            String queryString = "from " + objectName + "as obj where obj." + column + " = " + value;
+            String queryString = "from " + objectName + " as obj where obj." + column + " = " + value;
             Query query = session.createQuery(queryString);
             objects.addAll(query.list());
             tx.commit(); //Se comitea en la base de datos
@@ -129,7 +129,7 @@ public class HibernateService {
         }
 
     }
-    
+
     public List<Object> findAllByLike(String objectName, String column, String value) {
         List<Object> objects = new ArrayList<Object>();
         Configuration configuration = new Configuration().configure();
@@ -141,7 +141,30 @@ public class HibernateService {
         try {
 
             Transaction tx = session.beginTransaction(); //Se inicia una transacción
-            String queryString = "from " + objectName + "as obj where obj." + column + " like " + value;
+            String queryString = "from " + objectName + " where " + column + " like '%" + value +"%'";
+            System.out.println("OJO "+queryString);
+            Query query = session.createQuery(queryString);
+            objects.addAll(query.list());
+            tx.commit(); //Se comitea en la base de datos
+        } catch (Exception e) {
+        } finally {
+            session.close(); //Se cierra la sesion
+            return objects;
+        }
+
+    }
+
+    public List<Object> runQuery(String queryString) {
+        List<Object> objects = new ArrayList<Object>();
+        Configuration configuration = new Configuration().configure();
+        StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder().
+                applySettings(configuration.getProperties());
+        SessionFactory sessionFactory = configuration.buildSessionFactory(builder.build());
+        //Se crea Objeto Session
+        Session session = sessionFactory.getCurrentSession(); //Se abre una sesion
+        try {
+
+            Transaction tx = session.beginTransaction(); //Se inicia una transacción       
             Query query = session.createQuery(queryString);
             objects.addAll(query.list());
             tx.commit(); //Se comitea en la base de datos

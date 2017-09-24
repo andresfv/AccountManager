@@ -52,18 +52,35 @@
 
                 <p:outputLabel id='categoriaMovimientoOutputLabel'
                                value="Categoria del Movimiento"
-                               for="categoriaMovimientoAutoComplete"/>
+                               for="categoriaMovimientoSelectOneMenu"/>
 
-                <p:autoComplete id="categoriaMovimientoAutoComplete"
-                                value="#{object.categoriaMovimiento}" 
-                                var="categoriaMovimiento"
-                                completeMethod="#{movimientoBean.completoCategoriaMovimiento}"
-                                converter="categoriaMovimientoConverter"
-                                forceSelection="true"
-                                itemLabel="#{categoriaMovimiento.nombre}"
-                                itemValue="#{categoriaMovimiento}"
-                                dropdown="true"
-                                required="true"/>
+                <p:selectOneMenu id="categoriaMovimientoSelectOneMenu"
+                                 value="#{movimientoBean.movimiento.categoriaMovimiento}"                             
+                                 converter="categoriaMovimientoConverter"
+                                 required="true">
+                    <f:selectItem itemLabel="Seleccione una categoria" 
+                                  itemValue="" />
+                    <f:selectItems value="#{cuentaBean.categoriasMovimiento}" 
+                                   var="categoriaMovimiento" 
+                                   itemLabel="#{categoriaMovimiento.nombre}" 
+                                   itemValue="#{categoriaMovimiento}" />
+                </p:selectOneMenu>
+                
+                <p:outputLabel id='tipoMovimientoOutputLabel'
+                               value="Tipo del Movimiento"
+                               for="tipoMovimientoSelectOneMenu"/>
+
+                <p:selectOneMenu id="tipoMovimientoSelectOneMenu"
+                                 value="#{movimientoBean.movimiento.tipoMovimiento}"                             
+                                 converter="tipoMovimientoConverter"
+                                 required="true">
+                    <f:selectItem itemLabel="Seleccione un tipo" 
+                                  itemValue="" />
+                    <f:selectItems value="#{cuentaBean.tiposMovimiento}" 
+                                   var="tipoMovimiento" 
+                                   itemLabel="#{tipoMovimiento.nombre}" 
+                                   itemValue="#{tipoMovimiento}" />
+                </p:selectOneMenu>
 
             </h:panelGrid>
             <f:facet name="footer">

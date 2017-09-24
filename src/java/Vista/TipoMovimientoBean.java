@@ -74,6 +74,19 @@ public class TipoMovimientoBean {
         listaTiposMovimientoFiltradas = listaTiposMovimiento;
         return listaTiposMovimiento;
     }
+    
+        public List<TipoMovimiento >completoTipoMovimiento() {
+        List<Object> listaObjetos = new ArrayList<Object>();
+        List<TipoMovimiento> tiposMovimiento = new ArrayList<TipoMovimiento>();
+        listaObjetos.addAll(hibernateService.findAll("TipoMovimiento"));
+
+        if (!listaObjetos.isEmpty()) {
+            for (Object objeto : listaObjetos) {
+                tiposMovimiento.add((TipoMovimiento) objeto);
+            }
+        }
+        return tiposMovimiento;
+    }
 
     public void onRowEdit(RowEditEvent event) {
         this.tipoMovimiento = ((TipoMovimiento) event.getObject());

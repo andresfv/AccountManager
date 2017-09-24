@@ -6,14 +6,17 @@
 package Vista;
 
 import Controlador.HibernateService;
+import Modelo.CategoriaMovimiento;
 import Modelo.Cuenta;
 import Modelo.Movimiento;
+import Modelo.TipoMovimiento;
 import java.util.ArrayList;
 import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import org.hibernate.metamodel.source.annotations.xml.mocker.MockHelper;
 import org.primefaces.event.RowEditEvent;
 
 /**
@@ -22,21 +25,28 @@ import org.primefaces.event.RowEditEvent;
  */
 @ManagedBean
 @SessionScoped
-public class CuentaBean {
+public class CuentaBean extends MovimientoBean{
 
     HibernateService hibernateService;
     Cuenta cuenta;
     List<Cuenta> listaCuentas;
     List<Cuenta> listaCuentasFiltradas;
-
+    CategoriaMovimientoBean categoriaMovimientoBean;
+    TipoMovimientoBean tipoMovimientoBean;
+    List<CategoriaMovimiento> categoriasMovimiento = new ArrayList<CategoriaMovimiento>();
+    List<TipoMovimiento> tiposMovimiento = new ArrayList<TipoMovimiento>();
 
     public CuentaBean() {
         hibernateService = new HibernateService();
         cuenta = new Cuenta();
         listaCuentas = new ArrayList<Cuenta>();
         listaCuentasFiltradas = new ArrayList<Cuenta>();
-      
+        categoriaMovimientoBean = new CategoriaMovimientoBean();
+        tipoMovimientoBean = new TipoMovimientoBean();
         cargaListaCuentas();
+        cargaCategoriasMovimiento();
+        cargaTiposMovimiento();
+        cargaListaMovimientos();
     }
 
     public List<Cuenta> getListaCuentas() {
@@ -63,6 +73,14 @@ public class CuentaBean {
         this.cuenta = cuenta;
     }
 
+    public List<CategoriaMovimiento> getCategoriasMovimiento() {
+        return categoriasMovimiento;
+    }
+
+    public List<TipoMovimiento> getTiposMovimiento() {
+        return tiposMovimiento;
+    }
+    
     public List<Cuenta> cargaListaCuentas() {
         listaCuentas.clear();
         List<Object> listaObjetos = new ArrayList<Object>();
@@ -74,6 +92,16 @@ public class CuentaBean {
         }
         listaCuentasFiltradas = listaCuentas;
         return listaCuentas;
+    }
+
+    public void cargaCategoriasMovimiento() {
+        categoriasMovimiento.clear();
+        categoriasMovimiento.addAll(categoriaMovimientoBean.completoCategoriasMovimiento());
+    }
+    
+    public void cargaTiposMovimiento(){
+       tiposMovimiento.clear();
+       tiposMovimiento.addAll(tipoMovimientoBean.completoTipoMovimiento());
     }
 
     public void onRowEdit(RowEditEvent event) {
@@ -105,7 +133,7 @@ public class CuentaBean {
         this.cuenta = new Cuenta();
         return "cuentaEditForm";
     }
-    
+
     public String editCuenta(Cuenta cuenta) {
         this.cuenta = cuenta;
         return "cuentaEditForm";

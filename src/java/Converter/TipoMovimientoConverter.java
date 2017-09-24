@@ -6,7 +6,9 @@
 package Converter;
 
 import Modelo.CategoriaMovimiento;
+import Modelo.TipoMovimiento;
 import Vista.CategoriaMovimientoBean;
+import Vista.TipoMovimientoBean;
 import java.io.Serializable;
 import java.util.List;
 import javax.faces.component.UIComponent;
@@ -18,21 +20,21 @@ import javax.faces.convert.FacesConverter;
  *
  * @author Luis Andrés Fallas Valenciano
  */
-@FacesConverter("categoriaMovimientoConverter")
-public class CategoriaMovimientoConverter implements Converter {
+@FacesConverter("tipoMovimientoConverter")
+public class TipoMovimientoConverter implements Converter {
 
     @Override
     public Object getAsObject(FacesContext context, UIComponent component, String value) {
         if (value == null || value.length() == 0) {
             return null;
         }
-        CategoriaMovimientoBean categoriaMovimientoBean = new CategoriaMovimientoBean();
+        TipoMovimientoBean tipoMovimientoBean = new TipoMovimientoBean();
         
-        List<CategoriaMovimiento> categoriasMovimiento = categoriaMovimientoBean.cargaListaCategoriasMovimiento();
+        List<TipoMovimiento> tiposMovimiento = tipoMovimientoBean.cargaListaTiposMovimiento();
 
-        for(CategoriaMovimiento categoriaMovimiento : categoriasMovimiento){
-            if(value.equals(categoriaMovimiento .getNombre())){
-                return categoriaMovimiento ;
+        for(TipoMovimiento tipoMovimiento : tiposMovimiento){
+            if(value.equals(tipoMovimiento .getNombre())){
+                return tipoMovimiento ;
             }
         }
         
@@ -41,6 +43,6 @@ public class CategoriaMovimientoConverter implements Converter {
 
     @Override
     public String getAsString(FacesContext context, UIComponent component, Object value) {
-        return value instanceof CategoriaMovimiento ? ((CategoriaMovimiento) value).getNombre(): "";
+        return value instanceof TipoMovimiento ? ((TipoMovimiento) value).getNombre(): "";
     }
 }

@@ -33,7 +33,7 @@ public class CategoriaMovimientoBean {
         categoriaMovimiento = new CategoriaMovimiento();
         listaCategoriasMovimiento = new ArrayList<CategoriaMovimiento>();
         listaCategoriasMovimientoFiltradas = new ArrayList<CategoriaMovimiento>();
-        cargaListaMovimientos();
+        cargaListaCategoriasMovimiento();
     }
 
     public List<CategoriaMovimiento> getListaCategoriasMovimiento() {
@@ -60,7 +60,7 @@ public class CategoriaMovimientoBean {
         this.categoriaMovimiento = categoriaMovimiento;
     }
 
-    public List<CategoriaMovimiento> cargaListaMovimientos() {
+    public List<CategoriaMovimiento> cargaListaCategoriasMovimiento() {
         listaCategoriasMovimiento.clear();
         List<Object> listaObjetos = new ArrayList<Object>();
         listaObjetos.addAll(hibernateService.findAll("CategoriaMovimiento"));
@@ -73,27 +73,23 @@ public class CategoriaMovimientoBean {
         return listaCategoriasMovimiento;
     }
 
-    public List<CategoriaMovimiento> completoCategoriasMovimiento(String nombreCategoria) {
+    public List<CategoriaMovimiento> completoCategoriasMovimiento() {
         List<Object> listaObjetos = new ArrayList<Object>();
-        List<CategoriaMovimiento> sugerencias = new ArrayList<CategoriaMovimiento>();
-        if (nombreCategoria != null && nombreCategoria != "") {
-        listaObjetos.addAll(hibernateService.findAllByLike("CategoriaMovimiento", "nombre", nombreCategoria));
-        } else {
+        List<CategoriaMovimiento> categoriasMovimiento = new ArrayList<CategoriaMovimiento>();
         listaObjetos.addAll(hibernateService.findAll("CategoriaMovimiento"));
-        }
 
         if (!listaObjetos.isEmpty()) {
             for (Object objeto : listaObjetos) {
-                sugerencias.add((CategoriaMovimiento) objeto);
+                categoriasMovimiento.add((CategoriaMovimiento) objeto);
             }
         }
-        return sugerencias;
+        return categoriasMovimiento;
     }
 
     public void onRowEdit(RowEditEvent event) {
         this.categoriaMovimiento = ((CategoriaMovimiento) event.getObject());
         onSave();
-        cargaListaMovimientos();
+        cargaListaCategoriasMovimiento();
     }
 
     public void onRowCancel(RowEditEvent event) {
@@ -104,14 +100,14 @@ public class CategoriaMovimientoBean {
         this.categoriaMovimiento = ((CategoriaMovimiento) object);
         deleteCategoriaMovimiento();
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Eliminado", "Registro eliminado correctamente"));
-        cargaListaMovimientos();
+        cargaListaCategoriasMovimiento();
         return "";
     }
 
     public String onSave() {
         saveCategoriaMovimiento(this.categoriaMovimiento);
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Guardado", "Registro almacenado correctamente"));
-        cargaListaMovimientos();
+        cargaListaCategoriasMovimiento();
         return "";
     }
 

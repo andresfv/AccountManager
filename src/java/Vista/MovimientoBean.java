@@ -108,17 +108,20 @@ public class MovimientoBean {
         saveMovimiento(this.movimiento);
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Guardado", "Registro almacenado correctamente"));
         cargaListaMovimientos();
-        return "";
+        return "cuentaEditForm";
     }
 
-    public void newMovimiento() {
+    public String newMovimiento(Cuenta cuenta) {
         this.movimiento = new Movimiento();
+        movimiento.setCuenta(cuenta);
+        return "movimientoEditForm";
     }
 
     public void saveMovimiento(Movimiento movimiento) {
         try {
             hibernateService.save(movimiento);
         } catch (Exception e) {
+            System.out.println("Error "+e);
         }
 
     }

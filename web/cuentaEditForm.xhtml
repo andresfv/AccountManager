@@ -7,107 +7,13 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui">
     <ui:define name="center">
-
-        <p:dialog id="dlg"
-                  header="Nuevo Movimiento" 
-                  widgetVar="dlg" 
-                  resizable="false">
-            <h:panelGrid columns="2">
-
-                <p:outputLabel id='detalleMovimientoOutputLabel'
-                               value="Detalle"
-                               for="detalleMovimientoInputText"/>
-                <p:inputText id="detalleMovimientoInputText"
-                             value="#{movimientoBean.movimiento.detalle}"
-                             required="true"/>
-
-                <p:outputLabel id='montoMovimientoOutputLabel'
-                               value="Monto"
-                               for="montoMovimientoInputText"/>
-                <p:inputText id="montoMovimientoInputText"
-                             value="#{movimientoBean.movimiento.monto}"
-                             required="true"/>
-
-                <p:outputLabel id='fechaMovimientoOutputLabel'
-                               value="Fecha del Movimiento"
-                               for="fechaMovimientoCalendar"/>
-
-                <p:calendar id="fechaMovimientoCalendar" 
-                            value="#{movimientoBean.movimiento.fechaMovimiento}"
-                            showOn="button"
-                            locale="es"
-                            navigator="true"
-                            pattern="dd/MM/yyyy"/>
-
-                <p:outputLabel id='fechaContableMovimientoOutputLabel'
-                               value="Fecha Contable"
-                               for="fechaContableMovimientoCalendar"/>
-
-                <p:calendar id="fechaContableMovimientoCalendar" 
-                            value="#{movimientoBean.movimiento.fechaContable}"
-                            showOn="button"
-                            locale="es"
-                            navigator="true"
-                            pattern="dd/MM/yyyy"/>
-
-                <p:outputLabel id='categoriaMovimientoOutputLabel'
-                               value="Categoria del Movimiento"
-                               for="categoriaMovimientoSelectOneMenu"/>
-
-                <p:selectOneMenu id="categoriaMovimientoSelectOneMenu"
-                                 value="#{movimientoBean.movimiento.categoriaMovimiento}"                             
-                                 converter="categoriaMovimientoConverter"
-                                 required="true">
-                    <f:selectItem itemLabel="Seleccione una categoria" 
-                                  itemValue="" />
-                    <f:selectItems value="#{cuentaBean.categoriasMovimiento}" 
-                                   var="categoriaMovimiento" 
-                                   itemLabel="#{categoriaMovimiento.nombre}" 
-                                   itemValue="#{categoriaMovimiento}" />
-                </p:selectOneMenu>
-                
-                <p:outputLabel id='tipoMovimientoOutputLabel'
-                               value="Tipo del Movimiento"
-                               for="tipoMovimientoSelectOneMenu"/>
-
-                <p:selectOneMenu id="tipoMovimientoSelectOneMenu"
-                                 value="#{movimientoBean.movimiento.tipoMovimiento}"                             
-                                 converter="tipoMovimientoConverter"
-                                 required="true">
-                    <f:selectItem itemLabel="Seleccione un tipo" 
-                                  itemValue="" />
-                    <f:selectItems value="#{cuentaBean.tiposMovimiento}" 
-                                   var="tipoMovimiento" 
-                                   itemLabel="#{tipoMovimiento.nombre}" 
-                                   itemValue="#{tipoMovimiento}" />
-                </p:selectOneMenu>
-
-            </h:panelGrid>
-            <f:facet name="footer">
-                <h:panelGrid columns="2">
-                    <p:commandButton id="movimientoSaveCommandButton"
-                                     value="Guardar"
-                                     action="#{movimientoBean.onSave()}"
-                                     oncomplete="PF('dlg').hide();"
-                                     update="#{p:component('movimientoDataTable')}, #{p:component('messages')}"
-                                     process="@this"/>
-
-                    <p:commandButton id="movimientoCancelCommandButton"
-                                     value="Cancelar"
-                                     onclick="PF('dlg').hide();"/>
-                </h:panelGrid>
-            </f:facet>  
-
-        </p:dialog>
-
         <p:menubar>
             <p:menuitem id="cuentaSaveCommandButton"
                         value="Guardar"
                         icon="ui-icon-disk"
                         action="#{cuentaBean.onSave()}"
-                        oncomplete="PF('dlg').hide();"
                         update="#{p:component('messages')}"
-                        process="@this, nombreCuentaInputText" />
+                        process="@form, nombreCuentaInputText" />
 
             <p:menuitem value="Regresar" 
                         url="/faces/cuentaListForm.xhtml" 
@@ -151,8 +57,7 @@
                 <f:facet name="header">
                     Lista de Movimientos
                     <p:commandButton id="movimientoNewCommandButton"
-                                     action="#{movimientoBean.newMovimiento()}"  
-                                     oncomplete="PF('dlg').show();"
+                                     action="#{movimientoBean.newMovimiento(cuentaBean.cuenta)}"  
                                      icon="ui-icon-plus"
                                      style="float:left; width:20px;height:20px"
                                      process="@this"/>

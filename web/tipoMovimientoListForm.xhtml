@@ -7,8 +7,12 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui">
     
-    <ui:define name="center">
 
+  
+
+    
+    <ui:define name="center">
+        <f:event type="preRenderView" listener="#{tipoMovimientoBean.initDefaults}"/>
 <!--        <p:confirmDialog id="confirmDeleteDialog" 
                          message="¿Desea eliminar el registro?"  
                          header="Confirmación" 

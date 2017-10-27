@@ -8,6 +8,7 @@
                 xmlns:p="http://primefaces.org/ui">
 
     <ui:define name="center">
+        <f:event type="preRenderView" listener="#{cuentaBean.initDefaults}"/>
 
         <!--        <p:confirmDialog id="confirmDeleteDialog" 
                                  message="¿Desea eliminar el registro?"  

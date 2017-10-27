@@ -13,7 +13,7 @@ public class CategoriaMovimiento  implements java.io.Serializable {
 
      private Integer idCategoriaMovimiento;
      private String nombre;
-     private Set movimientos = new HashSet(0);
+     //private Set movimientos = new HashSet(0);
 
     public CategoriaMovimiento() {
     }
@@ -24,7 +24,7 @@ public class CategoriaMovimiento  implements java.io.Serializable {
     }
     public CategoriaMovimiento(String nombre, Set movimientos) {
        this.nombre = nombre;
-       this.movimientos = movimientos;
+       //this.movimientos = movimientos;
     }
    
     public Integer getIdCategoriaMovimiento() {
@@ -41,13 +41,13 @@ public class CategoriaMovimiento  implements java.io.Serializable {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
-    public Set getMovimientos() {
-        return this.movimientos;
-    }
+//    public Set getMovimientos() {
+//        return this.movimientos;
+//    }
     
-    public void setMovimientos(Set movimientos) {
-        this.movimientos = movimientos;
-    }
+//    public void setMovimientos(Set movimientos) {
+//        this.movimientos = movimientos;
+//    }
 
 
 

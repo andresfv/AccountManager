@@ -6,15 +6,15 @@
 package Vista;
 
 import Controlador.HibernateService;
-import Modelo.CategoriaMovimiento;
 import Modelo.TipoMovimiento;
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
-import javax.transaction.TransactionScoped;
+import javax.faces.event.ComponentSystemEvent;
 import org.primefaces.event.RowEditEvent;
 
 /**
@@ -30,11 +30,16 @@ public class TipoMovimientoBean {
     List<TipoMovimiento> listaTiposMovimiento;
     List<TipoMovimiento> listaTiposMovimientoFiltradas;
 
-    public TipoMovimientoBean() {
+    @PostConstruct
+    public void init() {
         hibernateService = new HibernateService();
         tipoMovimiento = new TipoMovimiento();
         listaTiposMovimiento = new ArrayList<TipoMovimiento>();
         listaTiposMovimientoFiltradas = new ArrayList<TipoMovimiento>();
+
+    }
+
+    public void initDefaults(ComponentSystemEvent event) {
         cargaListaTiposMovimiento();
     }
 
@@ -61,6 +66,18 @@ public class TipoMovimientoBean {
     public void setTipoMovimiento(TipoMovimiento tipoMovimiento) {
         this.tipoMovimiento = tipoMovimiento;
     }
+    
+      public TipoMovimiento getTipoMovimientoSeleccionado(Integer id) {
+        if (id == null) {
+            throw new IllegalArgumentException("no id provided");
+        }
+        for (TipoMovimiento categoria : cargaListaTiposMovimiento()) {
+            if (id.equals(categoria.getIdTipoMovimiento())) {
+                return categoria;
+            }
+        }
+        return null;
+    }
 
     public List<TipoMovimiento> cargaListaTiposMovimiento() {
         listaTiposMovimiento.clear();
@@ -74,8 +91,8 @@ public class TipoMovimientoBean {
         listaTiposMovimientoFiltradas = listaTiposMovimiento;
         return listaTiposMovimiento;
     }
-    
-        public List<TipoMovimiento >completoTipoMovimiento() {
+
+    public List<TipoMovimiento> completoTipoMovimiento() {
         List<Object> listaObjetos = new ArrayList<Object>();
         List<TipoMovimiento> tiposMovimiento = new ArrayList<TipoMovimiento>();
         listaObjetos.addAll(hibernateService.findAll("TipoMovimiento"));

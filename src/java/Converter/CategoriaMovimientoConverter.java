@@ -7,8 +7,7 @@ package Converter;
 
 import Modelo.CategoriaMovimiento;
 import Vista.CategoriaMovimientoBean;
-import java.io.Serializable;
-import java.util.List;
+import javax.el.ValueExpression;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
@@ -23,24 +22,16 @@ public class CategoriaMovimientoConverter implements Converter {
 
     @Override
     public Object getAsObject(FacesContext context, UIComponent component, String value) {
-        if (value == null || value.length() == 0) {
-            return null;
-        }
-        CategoriaMovimientoBean categoriaMovimientoBean = new CategoriaMovimientoBean();
+        ValueExpression vex = context.getApplication().getExpressionFactory().createValueExpression(context.getELContext(), 
+                "#{categoriaMovimientoBean}",CategoriaMovimientoBean.class);
         
-        List<CategoriaMovimiento> categoriasMovimiento = categoriaMovimientoBean.cargaListaCategoriasMovimiento();
-
-        for(CategoriaMovimiento categoriaMovimiento : categoriasMovimiento){
-            if(value.equals(categoriaMovimiento .getNombre())){
-                return categoriaMovimiento ;
-            }
-        }
-        
-        return null; 
+        CategoriaMovimientoBean categoriasMovimiento = (CategoriaMovimientoBean)vex.getValue(context.getELContext());
+      
+        return categoriasMovimiento.getCategoriaMovimientoSeleccionada(Integer.valueOf(value));
     }
 
     @Override
     public String getAsString(FacesContext context, UIComponent component, Object value) {
-        return value instanceof CategoriaMovimiento ? ((CategoriaMovimiento) value).getNombre(): "";
+        return ((CategoriaMovimiento)value).getIdCategoriaMovimiento().toString();
     }
 }

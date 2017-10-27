@@ -6,30 +6,30 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui">
-    
+
     <ui:define name="center">
-
-<!--        <p:confirmDialog id="confirmDeleteDialog" 
-                         message="¿Desea eliminar el registro?"  
-                         header="Confirmación" 
-                         severity="alert" 
-                         widgetVar="confirmDeleteDialog" 
-                         appendTo="@(body)">
-
-            <p:commandButton id="confirmDeleteBtn"
-                             value="Si"                 
-                             update="{p:component('categoriaMovimientoDataTable')}, p:component('messages')}" 
-                             oncomplete="PF('confirmDeleteDialog').hide();"
-                             actionListener="{categoriaMovimientoBean.onDelete()}"
-                             process="@this"/>    
-
-            <p:commandButton id="declineDeleteBtn" 
-                             value="No" 
-                             onclick="PF('confirmDeleteDialog').hide();"
-                             type="button" />
-        </p:confirmDialog>-->
+        <f:event type="preRenderView" listener="#{categoriaMovimientoBean.initDefaults}"/>
+        <!--        <p:confirmDialog id="confirmDeleteDialog" 
+                                 message="¿Desea eliminar el registro?"  
+                                 header="Confirmación" 
+                                 severity="alert" 
+                                 widgetVar="confirmDeleteDialog" 
+                                 appendTo="@(body)">
         
+                    <p:commandButton id="confirmDeleteBtn"
+                                     value="Si"                 
+                                     update="{p:component('categoriaMovimientoDataTable')}, p:component('messages')}" 
+                                     oncomplete="PF('confirmDeleteDialog').hide();"
+                                     actionListener="{categoriaMovimientoBean.onDelete()}"
+                                     process="@this"/>    
         
+                    <p:commandButton id="declineDeleteBtn" 
+                                     value="No" 
+                                     onclick="PF('confirmDeleteDialog').hide();"
+                                     type="button" />
+                </p:confirmDialog>-->
+
+
         <p:dialog id="dlg"
                   header="Nueva Categoria de Movimiento" 
                   widgetVar="dlg" 
@@ -51,7 +51,7 @@
                                      oncomplete="PF('dlg').hide();"
                                      update="#{p:component('categoriaMovimientoDataTable')}, #{p:component('messages')}"
                                      process="@this, nombreCategriaMovimientoInputText"/>
-                    
+
                     <p:commandButton id="categoriaMovimientoCancelCommandButton"
                                      value="Cancelar"
                                      onclick="PF('dlg').hide();"/>
@@ -110,11 +110,11 @@
                 <p:column headerText="Acciones" style="width:50px">
                     <p:rowEditor/>
                     <p:commandLink id="categoriaMovimientoEliminaBtn"
-                                     styleClass="ui-icon ui-icon-trash"
-                                     title="Elimina categoria movimiento"
-                                     action="#{categoriaMovimientoBean.onDelete(object)}"
-                                     update="#{p:component('categoriaMovimientoDataTable')}, #{p:component('messages')}"
-                                     process="@this"/>
+                                   styleClass="ui-icon ui-icon-trash"
+                                   title="Elimina categoria movimiento"
+                                   action="#{categoriaMovimientoBean.onDelete(object)}"
+                                   update="#{p:component('categoriaMovimientoDataTable')}, #{p:component('messages')}"
+                                   process="@this"/>
                 </p:column>
             </p:dataTable>
 

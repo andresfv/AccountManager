@@ -7,6 +7,8 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui">
     <ui:define name="center">
+        <f:event type="preRenderView" listener="#{cuentaBean.initDefaults}"/>
+        
         <p:menubar>
             <p:menuitem id="cuentaSaveCommandButton"
                         value="Guardar"

@@ -9,10 +9,12 @@ import Controlador.HibernateService;
 import Modelo.CategoriaMovimiento;
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ComponentSystemEvent;
 import org.primefaces.event.RowEditEvent;
 
 /**
@@ -28,11 +30,15 @@ public class CategoriaMovimientoBean {
     List<CategoriaMovimiento> listaCategoriasMovimiento;
     List<CategoriaMovimiento> listaCategoriasMovimientoFiltradas;
 
-    public CategoriaMovimientoBean() {
+    @PostConstruct
+    public void init() {
         hibernateService = new HibernateService();
         categoriaMovimiento = new CategoriaMovimiento();
         listaCategoriasMovimiento = new ArrayList<CategoriaMovimiento>();
         listaCategoriasMovimientoFiltradas = new ArrayList<CategoriaMovimiento>();
+    }
+
+    public void initDefaults(ComponentSystemEvent event) {
         cargaListaCategoriasMovimiento();
     }
 
@@ -128,5 +134,17 @@ public class CategoriaMovimientoBean {
             hibernateService.delete(this.categoriaMovimiento);
         } catch (Exception e) {
         }
+    }
+
+    public CategoriaMovimiento getCategoriaMovimientoSeleccionada(Integer id) {
+        if (id == null) {
+            throw new IllegalArgumentException("no id provided");
+        }
+        for (CategoriaMovimiento categoria : cargaListaCategoriasMovimiento()) {
+            if (id.equals(categoria.getIdCategoriaMovimiento())) {
+                return categoria;
+            }
+        }
+        return null;
     }
 }

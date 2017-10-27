@@ -9,12 +9,15 @@ import Controlador.HibernateService;
 import Modelo.CategoriaMovimiento;
 import Modelo.Cuenta;
 import Modelo.Movimiento;
+import Modelo.TipoMovimiento;
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ComponentSystemEvent;
 import org.primefaces.event.RowEditEvent;
 
 /**
@@ -25,20 +28,35 @@ import org.primefaces.event.RowEditEvent;
 @SessionScoped
 public class MovimientoBean {
 
-    HibernateService hibernateService;
-    Cuenta cuenta;
-    Movimiento movimiento;
+    public HibernateService hibernateService;
+    public Cuenta cuenta;
+    public Movimiento movimiento;
+    public List<Movimiento> listaMovimientos;
+    public List<Movimiento> listaMovimientosFiltrados;
+    public CategoriaMovimientoBean categoriaMovimientoBean;
+    public TipoMovimientoBean tipoMovimientoBean;
+    public List<CategoriaMovimiento> categoriasMovimiento;
+    public List<TipoMovimiento> tiposMovimiento;
 
-    List<Movimiento> listaMovimientos;
-    List<Movimiento> listaMovimientosFiltrados;
-
-    public MovimientoBean() {
+    @PostConstruct
+    public void init() {
         hibernateService = new HibernateService();
         cuenta = new Cuenta();
         movimiento = new Movimiento();
         listaMovimientos = new ArrayList<Movimiento>();
         listaMovimientosFiltrados = new ArrayList<Movimiento>();
+        categoriaMovimientoBean = new CategoriaMovimientoBean();
+        tipoMovimientoBean = new TipoMovimientoBean();
+        categoriasMovimiento = new ArrayList<CategoriaMovimiento>();
+        tiposMovimiento = new ArrayList<TipoMovimiento>();
+        categoriaMovimientoBean.init();
+        tipoMovimientoBean.init();
+    }
+
+    public void initDefaults(ComponentSystemEvent event) {
         cargaListaMovimientos();
+        cargaCategoriasMovimiento();
+        cargaTiposMovimiento();
     }
 
     public Cuenta getCuenta() {
@@ -73,6 +91,14 @@ public class MovimientoBean {
         this.listaMovimientosFiltrados = listaMovimientosFiltrados;
     }
 
+    public List<CategoriaMovimiento> getCategoriasMovimiento() {
+        return categoriasMovimiento;
+    }
+
+    public List<TipoMovimiento> getTiposMovimiento() {
+        return tiposMovimiento;
+    }
+    
     public List<Movimiento> cargaListaMovimientos() {
         listaMovimientos.clear();
         List<Object> listaObjetos = new ArrayList<Object>();
@@ -84,6 +110,16 @@ public class MovimientoBean {
         }
         listaMovimientosFiltrados = listaMovimientos;
         return listaMovimientos;
+    }
+
+    public void cargaCategoriasMovimiento() {
+        categoriasMovimiento.clear();
+        categoriasMovimiento.addAll(categoriaMovimientoBean.completoCategoriasMovimiento());
+    }
+
+    public void cargaTiposMovimiento() {
+        tiposMovimiento.clear();
+        tiposMovimiento.addAll(tipoMovimientoBean.completoTipoMovimiento());
     }
 
     public void onRowEdit(RowEditEvent event) {
@@ -121,7 +157,7 @@ public class MovimientoBean {
         try {
             hibernateService.save(movimiento);
         } catch (Exception e) {
-            System.out.println("Error "+e);
+            System.out.println("Error " + e);
         }
 
     }

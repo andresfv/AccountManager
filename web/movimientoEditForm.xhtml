@@ -19,7 +19,7 @@
 
                 <p:menuitem value="Regresar" 
                             url="/faces/cuentaEditForm.xhtml" 
-                            icon="ui-icon-arrowreturnthick-1-w" />
+                            icon="ui-icon-arrowreturnthick-1-w"/>
             </p:menubar>
 
             <h:panelGrid columns="2">
@@ -62,36 +62,36 @@
                             pattern="dd/MM/yyyy"
                             required="true"/>
 
-<!--                <p:outputLabel id='categoriaMovimientoOutputLabel'
+                <p:outputLabel id='categoriaMovimientoOutputLabel'
                                value="Categoria del Movimiento"
                                for="categoriaMovimientoSelectOneMenu"/>
 
                 <p:selectOneMenu id="categoriaMovimientoSelectOneMenu"
-                                 value="{movimientoBean.movimiento.categoriaMovimiento}"
+                                 value="#{movimientoBean.movimiento.categoriaMovimiento}"
                                  required="true"
                                  converter="categoriaMovimientoConverter">
 
-                    <f:selectItems value="{movimientoBean.categoriasMovimiento}" 
+                    <f:selectItems value="#{movimientoBean.categoriasMovimiento}" 
                                    var="categoriaMovimiento" 
-                                   itemLabel="{categoriaMovimiento.nombre}" 
-                                   itemValue="{categoriaMovimiento}" />
+                                   itemLabel="#{categoriaMovimiento.nombre}" 
+                                   itemValue="#{categoriaMovimiento}" />
                     <p:ajax process="@this" 
                             event="change"/>
-                </p:selectOneMenu>-->
+                </p:selectOneMenu>
 
-                                <p:outputLabel id='tipoMovimientoOutputLabel'
-                                               value="Tipo del Movimiento"
-                                               for="tipoMovimientoSelectOneMenu"/>
-                
-                                <p:selectOneMenu id="tipoMovimientoSelectOneMenu"
-                                                 value="#{movimientoBean.movimiento.tipoMovimiento}"                             
-                                                 converter="tipoMovimientoConverter">
-                
-                                    <f:selectItems value="#{movimientoBean.tiposMovimiento}" 
-                                                   var="tipoMovimiento" 
-                                                   itemLabel="#{tipoMovimiento.nombre}" 
-                                                   itemValue="#{tipoMovimiento}"/>
-                                </p:selectOneMenu>
+                <!--                                <p:outputLabel id='tipoMovimientoOutputLabel'
+                                                               value="Tipo del Movimiento"
+                                                               for="tipoMovimientoSelectOneMenu"/>
+                                
+                                                <p:selectOneMenu id="tipoMovimientoSelectOneMenu"
+                                                                 value="{movimientoBean.movimiento.tipoMovimiento}"                             
+                                                                 converter="tipoMovimientoConverter">
+                                
+                                                    <f:selectItems value="{movimientoBean.tiposMovimiento}" 
+                                                                   var="tipoMovimiento" 
+                                                                   itemLabel="{tipoMovimiento.nombre}" 
+                                                                   itemValue="{tipoMovimiento}"/>
+                                                </p:selectOneMenu>-->
 
             </h:panelGrid>
         </p:panel>

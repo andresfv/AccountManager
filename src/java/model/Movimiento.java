@@ -1,4 +1,4 @@
-package Modelo;
+package model;
 // Generated 11/08/2017 09:51:54 AM by Hibernate Tools 4.3.1
 
 import java.util.Date;

@@ -3,12 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Vista;
+package bean;
 
-import Controlador.HibernateService;
-import Modelo.CategoriaMovimiento;
-import Modelo.Cuenta;
-import Modelo.TipoMovimiento;
+import dao.HibernateService;
+import impl.HibernateServiceImpl;
+import model.Cuenta;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -35,7 +34,7 @@ public class CuentaBean {
 
     @PostConstruct
     public void init() {
-        hibernateService = new HibernateService();
+        hibernateService = new HibernateServiceImpl();
         cuenta = new Cuenta();
         listaCuentas = new ArrayList<Cuenta>();
         listaCuentasFiltradas = new ArrayList<Cuenta>();

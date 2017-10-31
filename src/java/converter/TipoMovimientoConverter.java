@@ -3,10 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Converter;
+package converter;
 
-import Modelo.CategoriaMovimiento;
-import Vista.CategoriaMovimientoBean;
+import model.CategoriaMovimiento;
+import model.TipoMovimiento;
+import bean.CategoriaMovimientoBean;
+import bean.TipoMovimientoBean;
+import java.util.List;
 import javax.el.ValueExpression;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -17,21 +20,21 @@ import javax.faces.convert.FacesConverter;
  *
  * @author Luis Andrés Fallas Valenciano
  */
-@FacesConverter("categoriaMovimientoConverter")
-public class CategoriaMovimientoConverter implements Converter {
+@FacesConverter("tipoMovimientoConverter")
+public class TipoMovimientoConverter implements Converter {
 
-    @Override
+@Override
     public Object getAsObject(FacesContext context, UIComponent component, String value) {
         ValueExpression vex = context.getApplication().getExpressionFactory().createValueExpression(context.getELContext(), 
-                "#{categoriaMovimientoBean}",CategoriaMovimientoBean.class);
+                "#{tipoMovimientoBean}",TipoMovimientoBean.class);
         
-        CategoriaMovimientoBean categoriasMovimiento = (CategoriaMovimientoBean)vex.getValue(context.getELContext());
+        TipoMovimientoBean tipoMovimiento = (TipoMovimientoBean)vex.getValue(context.getELContext());
       
-        return categoriasMovimiento.getCategoriaMovimientoSeleccionada(Integer.valueOf(value));
+        return tipoMovimiento.getTipoMovimientoSeleccionado(Integer.valueOf(value));
     }
 
     @Override
     public String getAsString(FacesContext context, UIComponent component, Object value) {
-        return ((CategoriaMovimiento)value).getIdCategoriaMovimiento().toString();
+        return ((TipoMovimiento)value).getIdTipoMovimiento().toString();
     }
 }

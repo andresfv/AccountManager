@@ -2,7 +2,7 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <!-- Generated 11/08/2017 09:51:55 AM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
-  <class catalog="account_manager" name="Modelo.CategoriaMovimiento" optimistic-lock="version" table="categoria_movimiento">
+  <class catalog="account_manager" name="model.CategoriaMovimiento" optimistic-lock="version" table="categoria_movimiento">
     <id name="idCategoriaMovimiento" type="java.lang.Integer">
       <column name="ID_CATEGORIA_MOVIMIENTO"/>
       <generator class="identity"/>
@@ -10,7 +10,7 @@
     <property name="nombre" type="string">
       <column length="100" name="NOMBRE" not-null="true" unique="true"/>
     </property>
-<!--    <set fetch="select" inverse="true" lazy="true" name="movimientos" table="movimiento">
+    <!--    <set fetch="select" inverse="true" lazy="true" name="movimientos" table="movimiento">
       <key>
         <column name="CATEGORIA_MOVIMIENTO" not-null="true"/>
       </key>

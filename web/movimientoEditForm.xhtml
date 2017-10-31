@@ -68,13 +68,9 @@
 
                 <p:selectOneMenu id="categoriaMovimientoSelectOneMenu"
                                  value="#{movimientoBean.movimiento.categoriaMovimiento}"
-                                 required="true"
-                                 converter="categoriaMovimientoConverter">
+                                 required="true">
 
-                    <f:selectItems value="#{movimientoBean.categoriasMovimiento}" 
-                                   var="categoriaMovimiento" 
-                                   itemLabel="#{categoriaMovimiento.nombre}" 
-                                   itemValue="#{categoriaMovimiento}" />
+                    <f:selectItems value="#{movimientoBean.llenarCategorias()}"/>
                     <p:ajax process="@this" 
                             event="change"/>
                 </p:selectOneMenu>

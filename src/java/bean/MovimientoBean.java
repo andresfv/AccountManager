@@ -3,13 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Vista;
+package bean;
 
-import Controlador.HibernateService;
-import Modelo.CategoriaMovimiento;
-import Modelo.Cuenta;
-import Modelo.Movimiento;
-import Modelo.TipoMovimiento;
+import dao.HibernateService;
+import impl.HibernateServiceImpl;
+import model.CategoriaMovimiento;
+import model.Cuenta;
+import model.Movimiento;
+import model.TipoMovimiento;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -18,6 +19,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
+import javax.faces.model.SelectItem;
 import org.primefaces.event.RowEditEvent;
 
 /**
@@ -40,7 +42,7 @@ public class MovimientoBean {
 
     @PostConstruct
     public void init() {
-        hibernateService = new HibernateService();
+        hibernateService = new HibernateServiceImpl();
         cuenta = new Cuenta();
         movimiento = new Movimiento();
         listaMovimientos = new ArrayList<Movimiento>();
@@ -102,7 +104,7 @@ public class MovimientoBean {
     public List<Movimiento> cargaListaMovimientos() {
         listaMovimientos.clear();
         List<Object> listaObjetos = new ArrayList<Object>();
-        listaObjetos.addAll(hibernateService.findAllByEqual("Movimiento", "cuenta", cuenta.toString()));
+        listaObjetos.addAll(hibernateService.findAllByEqual("Movimiento", "cuenta", movimiento.getCuenta().getIdCuenta().toString()));
         if (!listaObjetos.isEmpty()) {
             for (Object objeto : listaObjetos) {
                 listaMovimientos.add((Movimiento) objeto);
@@ -115,6 +117,14 @@ public class MovimientoBean {
     public void cargaCategoriasMovimiento() {
         categoriasMovimiento.clear();
         categoriasMovimiento.addAll(categoriaMovimientoBean.completoCategoriasMovimiento());
+    }
+    
+    public List<SelectItem> llenarCategorias() {
+        List<SelectItem> lista = new ArrayList<SelectItem>();
+        for (CategoriaMovimiento categoria : this.categoriasMovimiento) {
+            lista.add(new SelectItem(categoria.getIdCategoriaMovimiento(), categoria.getNombre()));
+        }
+        return lista;
     }
 
     public void cargaTiposMovimiento() {

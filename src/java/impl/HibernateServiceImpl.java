@@ -19,22 +19,8 @@ import util.HibernateUtil;
  */
 public class HibernateServiceImpl implements HibernateService {
 
-//    private static final ThreadLocal<Session> sessions = new ThreadLocal<Session>();
-//
-//    public static void closeSession() throws HibernateException {
-//        Session s = sessions.get();
-//        if (s != null) {
-//            System.out.println("OJO SI ENTRA!!!!!");
-//            s.close();
-//            sessions.remove();
-//        }
-//    }
     @Override
     public void save(Object object) {
-//        Configuration configuration = new Configuration().configure();
-//        StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder().
-//                applySettings(configuration.getProperties());
-//        SessionFactory sessionFactory = configuration.buildSessionFactory(builder.build());
         //Se crea Objeto Session
         Session session = HibernateUtil.getSessionFactory().openSession(); //Se abre una sesion
         Transaction tx = session.beginTransaction(); //Se inicia una transacción
@@ -51,10 +37,6 @@ public class HibernateServiceImpl implements HibernateService {
 
     @Override
     public void delete(Object object) {
-//        Configuration configuration = new Configuration().configure();
-//        StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder().
-//                applySettings(configuration.getProperties());
-//        SessionFactory sessionFactory = configuration.buildSessionFactory(builder.build());
         //Se crea Objeto Session
         Session session = HibernateUtil.getSessionFactory().openSession(); //Se abre una sesion
         Transaction tx = session.beginTransaction(); //Se inicia una transacción
@@ -71,10 +53,6 @@ public class HibernateServiceImpl implements HibernateService {
     @Override
     public List<Object> findAll(String objectName) {
         List<Object> objects = new ArrayList<Object>();
-//        Configuration configuration = new Configuration().configure();
-//        StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder().
-//                applySettings(configuration.getProperties());
-//        SessionFactory sessionFactory = configuration.buildSessionFactory(builder.build());
         //Se crea Objeto Session
         Session session = HibernateUtil.getSessionFactory().openSession(); //Se abre una sesion
         Transaction tx = session.beginTransaction(); //Se inicia una transacción
@@ -93,10 +71,6 @@ public class HibernateServiceImpl implements HibernateService {
     @Override
     public Object findById(int idObject, String objectName) {
         Object object = new Object();
-//        Configuration configuration = new Configuration().configure();
-//        StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder().
-//                applySettings(configuration.getProperties());
-//        SessionFactory sessionFactory = configuration.buildSessionFactory(builder.build());
         //Se crea Objeto Session
         Session session = HibernateUtil.getSessionFactory().openSession(); //Se abre una sesion
         Transaction tx = session.beginTransaction(); //Se inicia una transacción
@@ -117,11 +91,25 @@ public class HibernateServiceImpl implements HibernateService {
     @Override
     public List<Object> findAllByEqual(String objectName, String column, String value) {
         List<Object> objects = new ArrayList<Object>();
-//        Configuration configuration = new Configuration().configure();
-//        StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder().
-//                applySettings(configuration.getProperties());
-//        SessionFactory sessionFactory = configuration.buildSessionFactory(builder.build());
         //Se crea Objeto Session
+        Session session = HibernateUtil.getSessionFactory().openSession(); //Se abre una sesion
+        Transaction tx = session.beginTransaction(); //Se inicia una transacción
+        try {
+            String queryString = "from " + objectName + " as obj where obj." + column + " = " + value;
+            Query query = session.createQuery(queryString);
+            objects.addAll(query.list());
+            tx.commit(); //Se comitea en la base de datos
+            session.close(); //Se cierra la sesion
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            tx.rollback();
+        }
+        return objects;
+    }
+    
+    @Override
+    public List<Object> findAllByEqual(String objectName, String column, Object value) {
+        List<Object> objects = new ArrayList<Object>();
         Session session = HibernateUtil.getSessionFactory().openSession(); //Se abre una sesion
         Transaction tx = session.beginTransaction(); //Se inicia una transacción
         try {
@@ -142,10 +130,6 @@ public class HibernateServiceImpl implements HibernateService {
             String value
     ) {
         List<Object> objects = new ArrayList<Object>();
-//        Configuration configuration = new Configuration().configure();
-//        StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder().
-//                applySettings(configuration.getProperties());
-//        SessionFactory sessionFactory = configuration.buildSessionFactory(builder.build());
         //Se crea Objeto Session
         Session session = HibernateUtil.getSessionFactory().openSession(); //Se abre una sesion
         Transaction tx = session.beginTransaction(); //Se inicia una transacción
@@ -169,10 +153,6 @@ public class HibernateServiceImpl implements HibernateService {
     public List<Object> runQuery(String queryString
     ) {
         List<Object> objects = new ArrayList<Object>();
-//        Configuration configuration = new Configuration().configure();
-//        StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder().
-//                applySettings(configuration.getProperties());
-//        SessionFactory sessionFactory = configuration.buildSessionFactory(builder.build());
         //Se crea Objeto Session
         Session session = HibernateUtil.getSessionFactory().openSession(); //Se abre una sesion
         Transaction tx = session.beginTransaction(); //Se inicia una transacción       

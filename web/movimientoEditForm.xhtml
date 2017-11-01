@@ -67,27 +67,23 @@
                                for="categoriaMovimientoSelectOneMenu"/>
 
                 <p:selectOneMenu id="categoriaMovimientoSelectOneMenu"
-                                 value="#{movimientoBean.movimiento.categoriaMovimiento}"
+                                 value="#{movimientoBean.movimiento.idCategoriaMovimiento}"
                                  required="true">
-
                     <f:selectItems value="#{movimientoBean.llenarCategorias()}"/>
                     <p:ajax process="@this" 
                             event="change"/>
                 </p:selectOneMenu>
 
-                <!--                                <p:outputLabel id='tipoMovimientoOutputLabel'
-                                                               value="Tipo del Movimiento"
-                                                               for="tipoMovimientoSelectOneMenu"/>
-                                
-                                                <p:selectOneMenu id="tipoMovimientoSelectOneMenu"
-                                                                 value="{movimientoBean.movimiento.tipoMovimiento}"                             
-                                                                 converter="tipoMovimientoConverter">
-                                
-                                                    <f:selectItems value="{movimientoBean.tiposMovimiento}" 
-                                                                   var="tipoMovimiento" 
-                                                                   itemLabel="{tipoMovimiento.nombre}" 
-                                                                   itemValue="{tipoMovimiento}"/>
-                                                </p:selectOneMenu>-->
+                <p:outputLabel id='tipoMovimientoOutputLabel'
+                               value="Tipo del Movimiento"
+                               for="tipoMovimientoSelectOneMenu"/>
+
+                <p:selectOneMenu id="tipoMovimientoSelectOneMenu"
+                                 value="#{movimientoBean.movimiento.idTipoMovimiento}">
+                    <f:selectItems value="#{movimientoBean.llenarTipos()}"/>
+                    <p:ajax process="@this" 
+                            event="change"/>
+                </p:selectOneMenu>
 
             </h:panelGrid>
         </p:panel>

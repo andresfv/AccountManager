@@ -47,7 +47,8 @@ public class CuentaBean {
     }
 
     public void initDetails(ComponentSystemEvent event) {
-        movimientoBean.cargaListaMovimientos();
+        this.cuenta.getMovimientos().clear();
+        this.cuenta.getMovimientos().addAll(movimientoBean.cargaListaMovimientos(cuenta));
     }
 
     public List<Cuenta> getListaCuentas() {

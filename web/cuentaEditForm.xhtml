@@ -8,7 +8,9 @@
                 xmlns:p="http://primefaces.org/ui">
     <ui:define name="center">
         <f:event type="preRenderView" listener="#{cuentaBean.initDefaults}"/>
-        
+        <f:event type="preRenderView" listener="#{movimientoBean.initDefaults}"/>
+        <f:event type="preRenderView" listener="#{cuentaBean.initDetails}"/>
+
         <p:menubar>
             <p:menuitem id="cuentaSaveCommandButton"
                         value="Guardar"
@@ -39,7 +41,7 @@
             <p:dataTable id="movimientoDataTable"
                          widgetVar="movimientoDataTable"
                          var="object" 
-                         value="#{movimientoBean.listaMovimientos}"
+                         value="#{cuentaBean.cuenta.movimientos}"
                          rows="10"
                          scrollable="true"
                          scrollHeight="300"
@@ -99,16 +101,13 @@
                           filterMatchMode="contains">
                     <p:cellEditor>
                         <f:facet name="input">
-                            <p:autoComplete id="categoriaMovimientoAutoCompleteColumn"
-                                            value="#{object.categoriaMovimiento}" 
-                                            var="categoriaMovimiento"
-                                            completeMethod="#{movimientoBean.completoCategoriaMovimiento}"
-                                            converter="categoriaMovimientoConverter"
-                                            forceSelection="true"
-                                            itemLabel="#{categoriaMovimiento.nombre}"
-                                            itemValue="#{categoriaMovimiento}"
-                                            dropdown="true"
-                                            required="true"/>
+                            <p:selectOneMenu id="categoriaMovimientoSelectOneMenu"
+                                             value="#{object.idCategoriaMovimiento}"
+                                             required="true">
+                                <f:selectItems value="#{movimientoBean.llenarCategorias()}"/>
+                                <p:ajax process="@this" 
+                                        event="change"/>
+                            </p:selectOneMenu>
                         </f:facet>
                         <f:facet name="output">
                             <h:outputText value="#{object.categoriaMovimientoNombre}" />

@@ -24,6 +24,8 @@ public interface HibernateService {
     public Object findById(int idObject, String objectName);
 
     public List<Object> findAllByEqual(String objectName, String column, String value);
+    
+    public List<Object> findAllByEqual(String objectName, String column, Object value);
 
     public List<Object> findAllByLike(String objectName, String column, String value);
 

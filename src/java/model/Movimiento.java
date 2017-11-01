@@ -1,6 +1,8 @@
 package model;
 // Generated 11/08/2017 09:51:54 AM by Hibernate Tools 4.3.1
 
+import dao.HibernateService;
+import impl.HibernateServiceImpl;
 import java.util.Date;
 import javax.persistence.Transient;
 
@@ -17,24 +19,17 @@ public class Movimiento implements java.io.Serializable {
     private double monto;
     private Date fechaMovimiento;
     private Date fechaContable;
-
+    private HibernateService hibernateService;
+    private int idCategoriaMovimiento;
+    private int idTipoMovimiento;
+    
     @Transient
     private String categoriaMovimientoNombre;
-
     @Transient
     private String tipoMovimientoNombre;
 
     public Movimiento() {
-    }
-
-    public Movimiento(CategoriaMovimiento categoriaMovimiento, Cuenta cuenta, TipoMovimiento tipoMovimiento, String detalle, double monto, Date fechaMovimiento, Date fechaContable) {
-        this.categoriaMovimiento = categoriaMovimiento;
-        this.cuenta = cuenta;
-        this.tipoMovimiento = tipoMovimiento;
-        this.detalle = detalle;
-        this.monto = monto;
-        this.fechaMovimiento = fechaMovimiento;
-        this.fechaContable = fechaContable;
+        hibernateService = new HibernateServiceImpl();
     }
 
     public Integer getIdMovimiento() {
@@ -51,6 +46,25 @@ public class Movimiento implements java.io.Serializable {
 
     public void setCategoriaMovimiento(CategoriaMovimiento categoriaMovimiento) {
         this.categoriaMovimiento = categoriaMovimiento;
+    }
+
+    public int getIdCategoriaMovimiento() {
+        idCategoriaMovimiento = categoriaMovimiento != null ? categoriaMovimiento.getIdCategoriaMovimiento() : idCategoriaMovimiento;
+        return idCategoriaMovimiento;
+    }
+
+    public void setIdCategoriaMovimiento(int idCategoriaMovimiento) {
+        this.categoriaMovimiento = (CategoriaMovimiento) hibernateService.findById(idCategoriaMovimiento, "CategoriaMovimiento");
+    }
+
+    public int getIdTipoMovimiento() {
+        idTipoMovimiento = tipoMovimiento != null ? tipoMovimiento.getIdTipoMovimiento() : idTipoMovimiento;
+        return idTipoMovimiento;
+    }
+
+    public void setIdTipoMovimiento(int idTipoMovimiento) {
+        this.tipoMovimiento = (TipoMovimiento) hibernateService.findById(idTipoMovimiento, "TipoMovimiento");
+        this.idTipoMovimiento = idTipoMovimiento;
     }
 
     public Cuenta getCuenta() {
@@ -108,5 +122,4 @@ public class Movimiento implements java.io.Serializable {
     public String getTipoMovimientoNombre() {
         return tipoMovimientoNombre = tipoMovimiento != null ? tipoMovimiento.getNombre() : "";
     }
-
 }

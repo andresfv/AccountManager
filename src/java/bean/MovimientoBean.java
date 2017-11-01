@@ -56,7 +56,6 @@ public class MovimientoBean {
     }
 
     public void initDefaults(ComponentSystemEvent event) {
-        cargaListaMovimientos();
         cargaCategoriasMovimiento();
         cargaTiposMovimiento();
     }
@@ -100,14 +99,16 @@ public class MovimientoBean {
     public List<TipoMovimiento> getTiposMovimiento() {
         return tiposMovimiento;
     }
-    
-    public List<Movimiento> cargaListaMovimientos() {
+
+    public List<Movimiento> cargaListaMovimientos(Cuenta cuenta) {
         listaMovimientos.clear();
         List<Object> listaObjetos = new ArrayList<Object>();
-        listaObjetos.addAll(hibernateService.findAllByEqual("Movimiento", "cuenta", movimiento.getCuenta().getIdCuenta().toString()));
-        if (!listaObjetos.isEmpty()) {
-            for (Object objeto : listaObjetos) {
-                listaMovimientos.add((Movimiento) objeto);
+        if (movimiento.getCuenta() != null) {
+            listaObjetos.addAll(hibernateService.findAllByEqual("Movimiento", "cuenta", cuenta));
+            if (!listaObjetos.isEmpty()) {
+                for (Object objeto : listaObjetos) {
+                    listaMovimientos.add((Movimiento) objeto);
+                }
             }
         }
         listaMovimientosFiltrados = listaMovimientos;
@@ -118,7 +119,7 @@ public class MovimientoBean {
         categoriasMovimiento.clear();
         categoriasMovimiento.addAll(categoriaMovimientoBean.completoCategoriasMovimiento());
     }
-    
+
     public List<SelectItem> llenarCategorias() {
         List<SelectItem> lista = new ArrayList<SelectItem>();
         for (CategoriaMovimiento categoria : this.categoriasMovimiento) {
@@ -132,10 +133,17 @@ public class MovimientoBean {
         tiposMovimiento.addAll(tipoMovimientoBean.completoTipoMovimiento());
     }
 
+    public List<SelectItem> llenarTipos() {
+        List<SelectItem> lista = new ArrayList<SelectItem>();
+        for (TipoMovimiento tipo : this.tiposMovimiento) {
+            lista.add(new SelectItem(tipo.getIdTipoMovimiento(), tipo.getNombre()));
+        }
+        return lista;
+    }
+
     public void onRowEdit(RowEditEvent event) {
         this.movimiento = ((Movimiento) event.getObject());
         onSave();
-        cargaListaMovimientos();
     }
 
     public void onRowCancel(RowEditEvent event) {
@@ -146,14 +154,12 @@ public class MovimientoBean {
         this.movimiento = ((Movimiento) object);
         deleteMovimiento();
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Eliminado", "Registro eliminado correctamente"));
-        cargaListaMovimientos();
         return "";
     }
 
     public String onSave() {
         saveMovimiento(this.movimiento);
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Guardado", "Registro almacenado correctamente"));
-        cargaListaMovimientos();
         return "cuentaEditForm";
     }
 

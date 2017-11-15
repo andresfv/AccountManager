@@ -41,14 +41,14 @@
             <p:dataTable id="movimientoDataTable"
                          widgetVar="movimientoDataTable"
                          var="object" 
-                         value="#{cuentaBean.cuenta.movimientos}"
+                         value="#{cuentaBean.listaMovimientos}"
                          rows="10"
                          scrollable="true"
                          scrollHeight="300"
                          draggableColumns="true"
                          emptyMessage="No se encontraron registros"
                          filterEvent="enter"
-                         filteredValue="#{movimientoBean.listaMovimientosFiltrados}"
+                         filteredValue="#{cuentaBean.listaMovimientosFiltrados}"
                          editable="true">
 
                 <p:ajax event="rowEdit"
@@ -97,7 +97,7 @@
                 </p:column>
 
                 <p:column headerText="Categoria"
-                          filterBy="#{object.monto}"
+                          filterBy="#{object.categoriaMovimientoNombre}"
                           filterMatchMode="contains">
                     <p:cellEditor>
                         <f:facet name="input">
@@ -105,12 +105,26 @@
                                              value="#{object.idCategoriaMovimiento}"
                                              required="true">
                                 <f:selectItems value="#{movimientoBean.llenarCategorias()}"/>
-                                <p:ajax process="@this" 
-                                        event="change"/>
                             </p:selectOneMenu>
                         </f:facet>
                         <f:facet name="output">
                             <h:outputText value="#{object.categoriaMovimientoNombre}" />
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+
+                <p:column headerText="Tipo"
+                          filterBy="#{object.tipoMovimientoNombre}"
+                          filterMatchMode="contains">
+                    <p:cellEditor>
+                        <f:facet name="input">
+                            <p:selectOneMenu id="tipoMovimientoSelectOneMenu"
+                                             value="#{movimientoBean.movimiento.idTipoMovimiento}">
+                                <f:selectItems value="#{movimientoBean.llenarTipos()}"/>
+                            </p:selectOneMenu>
+                        </f:facet>
+                        <f:facet name="output">
+                            <h:outputText value="#{object.tipoMovimientoNombre}" />
                         </f:facet>
                     </p:cellEditor>
                 </p:column>
@@ -122,6 +136,7 @@
                                    title="Elimina el movimiento"
                                    action="#{movimientoBean.onDelete(object)}"
                                    update="#{p:component('movimientoDataTable')}, #{p:component('messages')}"
+                                   actionListener="#{cuentaBean.cargaMovimientosCuenta()}"
                                    process="@this"/>
                 </p:column>
             </p:dataTable>

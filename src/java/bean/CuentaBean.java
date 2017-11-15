@@ -16,6 +16,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
+import model.Movimiento;
 import org.primefaces.event.RowEditEvent;
 
 /**
@@ -30,6 +31,8 @@ public class CuentaBean {
     Cuenta cuenta;
     List<Cuenta> listaCuentas;
     List<Cuenta> listaCuentasFiltradas;
+    List<Movimiento> listaMovimientos;
+    List<Movimiento> listaMovimientosFiltrados;
     MovimientoBean movimientoBean;
 
     @PostConstruct
@@ -38,6 +41,8 @@ public class CuentaBean {
         cuenta = new Cuenta();
         listaCuentas = new ArrayList<Cuenta>();
         listaCuentasFiltradas = new ArrayList<Cuenta>();
+        listaMovimientos = new ArrayList<Movimiento>();
+        listaMovimientosFiltrados = new ArrayList<Movimiento>();
         movimientoBean = new MovimientoBean();
         movimientoBean.init();
     }
@@ -47,8 +52,15 @@ public class CuentaBean {
     }
 
     public void initDetails(ComponentSystemEvent event) {
-        this.cuenta.getMovimientos().clear();
-        this.cuenta.getMovimientos().addAll(movimientoBean.cargaListaMovimientos(cuenta));
+        this.listaMovimientos.clear();
+        this.listaMovimientos.addAll(cuenta.getMovimientos());
+        listaMovimientosFiltrados = this.listaMovimientos;
+    }
+
+    public void cargaMovimientosCuenta() {
+        this.listaMovimientos.clear();
+        this.listaMovimientos.addAll(movimientoBean.cargaListaMovimientos(cuenta));
+        listaMovimientosFiltrados = this.listaMovimientos;
     }
 
     public List<Cuenta> getListaCuentas() {
@@ -67,6 +79,22 @@ public class CuentaBean {
         this.listaCuentasFiltradas = listaCuentasFiltradas;
     }
 
+    public List<Movimiento> getListaMovimientos() {
+        return listaMovimientos;
+    }
+
+    public void setListaMovimientos(List<Movimiento> listaMovimientos) {
+        this.listaMovimientos = listaMovimientos;
+    }
+
+    public List<Movimiento> getListaMovimientosFiltrados() {
+        return listaMovimientosFiltrados;
+    }
+
+    public void setListaMovimientosFiltrados(List<Movimiento> listaMovimientosFiltrados) {
+        this.listaMovimientosFiltrados = listaMovimientosFiltrados;
+    }
+
     public Cuenta getCuenta() {
         return cuenta;
     }
@@ -74,7 +102,6 @@ public class CuentaBean {
     public void setCuenta(Cuenta cuenta) {
         this.cuenta = cuenta;
     }
-
 
     public List<Cuenta> cargaListaCuentas() {
         listaCuentas.clear();

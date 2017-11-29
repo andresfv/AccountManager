@@ -52,14 +52,12 @@ public class CuentaBean {
     }
 
     public void initDetails(ComponentSystemEvent event) {
-        this.listaMovimientos.clear();
-        this.listaMovimientos.addAll(cuenta.getMovimientos());
-        listaMovimientosFiltrados = this.listaMovimientos;
+        cargaMovimientosCuenta();
     }
 
     public void cargaMovimientosCuenta() {
         this.listaMovimientos.clear();
-        this.listaMovimientos.addAll(movimientoBean.cargaListaMovimientos(cuenta));
+        this.listaMovimientos.addAll(movimientoBean.getListaMovimientos());
         listaMovimientosFiltrados = this.listaMovimientos;
     }
 

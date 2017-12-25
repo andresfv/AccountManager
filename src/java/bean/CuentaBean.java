@@ -17,6 +17,8 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
 import model.Movimiento;
+import org.hibernate.Hibernate;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.RowEditEvent;
 
 /**
@@ -57,7 +59,7 @@ public class CuentaBean {
 
     public void cargaMovimientosCuenta() {
         this.listaMovimientos.clear();
-        this.listaMovimientos.addAll(movimientoBean.getListaMovimientos());
+        this.listaMovimientos.addAll(movimientoBean.cargaListaMovimientos(cuenta.getIdCuenta()));
         listaMovimientosFiltrados = this.listaMovimientos;
     }
 

@@ -49,6 +49,7 @@ Contributor(s):
     <property name="hibernate_format_sql">true</property>
     <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
     <property name="hibernate.current_session_context_class">thread</property>
+    <property name="hibernate.enable_lazy_load_no_trans">true</property>
     <mapping resource="model/TipoMovimiento.hbm.xml"/>
     <mapping resource="model/Cuenta.hbm.xml"/>
     <mapping resource="model/CategoriaMovimiento.hbm.xml"/>

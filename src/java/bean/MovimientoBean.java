@@ -100,17 +100,15 @@ public class MovimientoBean {
         return tiposMovimiento;
     }
 
-    public List<Movimiento> cargaListaMovimientos(Cuenta cuenta) {
+    public List<Movimiento> cargaListaMovimientos(Integer idCuenta) {
         listaMovimientos.clear();
         List<Object> listaObjetos = new ArrayList<Object>();
-        if (movimiento.getCuenta() != null) {
-            listaObjetos.addAll(hibernateService.findAllByEqual("Movimiento", "cuenta", cuenta));
+            listaObjetos.addAll(hibernateService.findAllByEqual("Movimiento", "cuenta", idCuenta));
             if (!listaObjetos.isEmpty()) {
                 for (Object objeto : listaObjetos) {
                     listaMovimientos.add((Movimiento) objeto);
                 }
             }
-        }
         listaMovimientosFiltrados = listaMovimientos;
         return listaMovimientos;
     }

@@ -9,62 +9,43 @@
     <ui:define name="center">
         <f:event type="preRenderView" listener="#{cuentaBean.initDefaults}"/>
         <f:event type="preRenderView" listener="#{movimientoBean.initDefaults}"/>
-        <f:event type="preRenderView" listener="#{cuentaBean.initDetails}"/>
-
-        <p:menubar>
-            <p:menuitem id="cuentaSaveCommandButton"
-                        value="Guardar"
-                        icon="ui-icon-disk"
-                        action="#{cuentaBean.onSave()}"
-                        update="#{p:component('messages')}"
-                        process="@form, nombreCuentaInputText" />
-
-            <p:menuitem value="Regresar" 
-                        url="/faces/cuentaListForm.xhtml" 
-                        icon="ui-icon-arrowreturnthick-1-w" />
-        </p:menubar>
+        <f:event type="preRenderView" listener="#{cuentaBean.initDetailsConsulta}"/>
 
 
         <p:panel id='cuentaPanel'
-                 header="Mantenimiento de Cuenta">
+                 header="Consulta de Movimientos por Cuenta">
 
             <h:panelGrid columns="2">
-                <p:outputLabel id='nombreCuentaOutputLabel'
-                               value="Nombre"
-                               for="nombreCuentaInputText"/>
-                <p:inputText id="nombreCuentaInputText"
-                             value="#{cuentaBean.cuenta.nombre}"
-                             required="true"/>
+                <p:outputLabel id='cuentaOutputLabel'
+                               value="Cuenta"
+                               for="cuentaSelectOneMenu"/>
+
+                <p:selectOneMenu id="cuentaSelectOneMenu"
+                                 value="#{cuentaBean.cuenta.idCuenta}">
+                    <f:selectItem itemLabel="Todos" itemValue="" noSelectionOption="true"/>
+                    <f:selectItems value="#{cuentaBean.llenarCuentas()}"/>
+                    <p:ajax process="@this"
+                            event="change"
+                            update="movimientoDataTable, totalIngresosInputText, totalGastosInputText"
+                            listener="#{cuentaBean.consultaMovimientosCuenta()}"/>
+                </p:selectOneMenu>
 
             </h:panelGrid>
 
             <p:dataTable id="movimientoDataTable"
                          widgetVar="movimientoDataTable"
                          var="object" 
-                         value="#{cuentaBean.listaMovimientos}"
+                         value="#{cuentaBean.consultaMovimientos}"
                          rows="10"
                          scrollable="true"
                          scrollHeight="300"
                          draggableColumns="true"
                          emptyMessage="No se encontraron registros"
                          filterEvent="enter"
-                         filteredValue="#{cuentaBean.listaMovimientosFiltrados}"
-                         editable="true">
-
-                <p:ajax event="rowEdit"
-                        listener="#{movimientoBean.onRowEdit}"
-                        update="@this, #{p:component('messages')}"/>
-                <p:ajax event="rowEditCancel"
-                        listener="#{movimientoBean.onRowCancel}"
-                        update="@this, #{p:component('messages')}"/>
+                         filteredValue="#{cuentaBean.consultaMovimientosFiltrados}">
 
                 <f:facet name="header">
                     Lista de Movimientos
-                    <p:commandButton id="movimientoNewCommandButton"
-                                     action="#{movimientoBean.newMovimiento(cuentaBean.cuenta)}"  
-                                     icon="ui-icon-plus"
-                                     style="float:left; width:20px;height:20px"
-                                     process="@this"/>
                 </f:facet>
 
                 <p:column headerText="Detalle"
@@ -80,7 +61,6 @@
                         </f:facet>
                     </p:cellEditor>
                 </p:column>
-
 
                 <p:column headerText="Monto"
                           filterBy="#{object.monto}"
@@ -134,24 +114,27 @@
                     </p:cellEditor>
                 </p:column>
 
-                <p:column headerText="Acciones" style="width:50px">
-                    <p:rowEditor/>
-                    <p:commandLink id="movimientoEliminaBtn"
-                                   styleClass="ui-icon ui-icon-trash"
-                                   title="Elimina el movimiento"
-                                   action="#{movimientoBean.onDelete(object)}"
-                                   update="#{p:component('movimientoDataTable')}, #{p:component('messages')}"
-                                   actionListener="#{cuentaBean.cargaMovimientosCuenta()}"
-                                   process="@this"/>
-                </p:column>
-
             </p:dataTable>
+
             <h:panelGrid columns="2">
-                <p:outputLabel id='totalOutputLabel'
-                               value="Total"
-                               for="totalInputText"/>
-                <p:inputNumber id="totalInputText"
-                               value="#{cuentaBean.totalMontoMovimientos}"
+                <p:outputLabel id='totalIngesosOutputLabel'
+                               value="Total Ingresos"
+                               for="totalIngresosInputText"/>
+
+                <p:outputLabel id='totalGastosOutputLabel'
+                               value="Total Gastos"
+                               for="totalGastosInputText"/>
+
+                <p:inputNumber id="totalIngresosInputText"
+                               value="#{cuentaBean.totalIngresosMontoMovimientosConsultados}"
+                               disabled="true"
+                               minValue="0"
+                               symbol="¢"
+                               thousandSeparator="."
+                               decimalSeparator=","/>
+
+                <p:inputNumber id="totalGastosInputText"
+                               value="#{cuentaBean.totalGastosMontoMovimientosConsultados}"
                                disabled="true"
                                minValue="0"
                                symbol="¢"

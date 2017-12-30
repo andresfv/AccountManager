@@ -100,15 +100,35 @@ public class MovimientoBean {
         return tiposMovimiento;
     }
 
-    public List<Movimiento> cargaListaMovimientos(Integer idCuenta) {
+    public List<Movimiento> cargaListaMovimientosPorCuenta(Integer idCuenta) {
         listaMovimientos.clear();
         List<Object> listaObjetos = new ArrayList<Object>();
             listaObjetos.addAll(hibernateService.findAllByEqual("Movimiento", "cuenta", idCuenta));
-            if (!listaObjetos.isEmpty()) {
-                for (Object objeto : listaObjetos) {
-                    listaMovimientos.add((Movimiento) objeto);
-                }
+       
+
+        if (!listaObjetos.isEmpty()) {
+            for (Object objeto : listaObjetos) {
+                listaMovimientos.add((Movimiento) objeto);
             }
+        }
+        listaMovimientosFiltrados = listaMovimientos;
+        return listaMovimientos;
+    }
+    
+    public List<Movimiento> consultaListaMovimientosPorCuenta(Integer idCuenta) {
+        listaMovimientos.clear();
+        List<Object> listaObjetos = new ArrayList<Object>();
+        if (idCuenta != null) {
+            listaObjetos.addAll(hibernateService.findAllByEqual("Movimiento", "cuenta", idCuenta));
+        } else {
+             listaObjetos.addAll(hibernateService.findAll("Movimiento"));
+        }
+
+        if (!listaObjetos.isEmpty()) {
+            for (Object objeto : listaObjetos) {
+                listaMovimientos.add((Movimiento) objeto);
+            }
+        }
         listaMovimientosFiltrados = listaMovimientos;
         return listaMovimientos;
     }

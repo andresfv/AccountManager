@@ -34,9 +34,14 @@
                 <p:outputLabel id='montoMovimientoOutputLabel'
                                value="Monto"
                                for="montoMovimientoInputText"/>
-                <p:inputText id="montoMovimientoInputText"
-                             value="#{movimientoBean.movimiento.monto}"
-                             required="true"/>
+      
+                <p:inputNumber id="montoMovimientoInputText"
+                               value="#{movimientoBean.movimiento.monto}"
+                               required="true"
+                               minValue="0"
+                               symbol="¢"
+                               thousandSeparator="."
+                               decimalSeparator=","/>
 
                 <p:outputLabel id='fechaMovimientoOutputLabel'
                                value="Fecha del Movimiento"

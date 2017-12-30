@@ -34,7 +34,6 @@ public class HibernateServiceImpl implements HibernateService {
         try {
             session.saveOrUpdate(object); //Se almacena el objeto deseado
             tx.commit(); //Se comitea en la base de datos
-            session.close(); //Se cierra la sesion
         } catch (Exception e) {
             System.out.println(e.getMessage());
             tx.rollback();

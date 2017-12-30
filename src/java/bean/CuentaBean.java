@@ -16,9 +16,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
+import javax.faces.model.SelectItem;
 import model.Movimiento;
-import org.hibernate.Hibernate;
-import org.primefaces.context.RequestContext;
 import org.primefaces.event.RowEditEvent;
 
 /**
@@ -35,7 +34,13 @@ public class CuentaBean {
     List<Cuenta> listaCuentasFiltradas;
     List<Movimiento> listaMovimientos;
     List<Movimiento> listaMovimientosFiltrados;
+    List<Movimiento> consultaMovimientos;
+    List<Movimiento> consultaMovimientosFiltrados;
     MovimientoBean movimientoBean;
+    Double totalIngresosMontoMovimientos;
+    Double totalGastosMontoMovimientos;
+    Double totalIngresosMontoMovimientosConsultados;
+    Double totalGastosMontoMovimientosConsultados;
 
     @PostConstruct
     public void init() {
@@ -45,8 +50,14 @@ public class CuentaBean {
         listaCuentasFiltradas = new ArrayList<Cuenta>();
         listaMovimientos = new ArrayList<Movimiento>();
         listaMovimientosFiltrados = new ArrayList<Movimiento>();
+        consultaMovimientos = new ArrayList<Movimiento>();
+        consultaMovimientosFiltrados = new ArrayList<Movimiento>();
         movimientoBean = new MovimientoBean();
         movimientoBean.init();
+        totalIngresosMontoMovimientos = 0.0;
+        totalGastosMontoMovimientos = 0.0;
+        totalIngresosMontoMovimientosConsultados = 0.0;
+        totalGastosMontoMovimientosConsultados = 0.0;
     }
 
     public void initDefaults(ComponentSystemEvent event) {
@@ -57,10 +68,20 @@ public class CuentaBean {
         cargaMovimientosCuenta();
     }
 
+    public void initDetailsConsulta(ComponentSystemEvent event) {
+        consultaMovimientosCuenta();
+    }
+
     public void cargaMovimientosCuenta() {
         this.listaMovimientos.clear();
-        this.listaMovimientos.addAll(movimientoBean.cargaListaMovimientos(cuenta.getIdCuenta()));
+        this.listaMovimientos.addAll(movimientoBean.cargaListaMovimientosPorCuenta(cuenta.getIdCuenta()));
         listaMovimientosFiltrados = this.listaMovimientos;
+    }
+
+    public void consultaMovimientosCuenta() {
+        this.consultaMovimientos.clear();
+        this.consultaMovimientos.addAll(movimientoBean.consultaListaMovimientosPorCuenta(cuenta.getIdCuenta()));
+        consultaMovimientosFiltrados = this.consultaMovimientos;
     }
 
     public List<Cuenta> getListaCuentas() {
@@ -87,6 +108,22 @@ public class CuentaBean {
         this.listaMovimientos = listaMovimientos;
     }
 
+    public List<Movimiento> getConsultaMovimientos() {
+        return consultaMovimientos;
+    }
+
+    public void setConsultaMovimientos(List<Movimiento> consultaMovimientos) {
+        this.consultaMovimientos = consultaMovimientos;
+    }
+
+    public List<Movimiento> getConsultaMovimientosFiltrados() {
+        return consultaMovimientosFiltrados;
+    }
+
+    public void setConsultaMovimientosFiltrados(List<Movimiento> consultaMovimientosFiltrados) {
+        this.consultaMovimientosFiltrados = consultaMovimientosFiltrados;
+    }
+
     public List<Movimiento> getListaMovimientosFiltrados() {
         return listaMovimientosFiltrados;
     }
@@ -103,6 +140,46 @@ public class CuentaBean {
         this.cuenta = cuenta;
     }
 
+    public Double getTotalIngresosMontoMovimientos() {
+        totalIngresosMontoMovimientos = 0.0;
+        for (Movimiento movimiento : listaMovimientos) {
+            if (movimiento.getTipoMovimiento().getIdTipoMovimiento() == 3) {
+                totalIngresosMontoMovimientos += movimiento.getMonto();
+            }
+        }
+        return totalIngresosMontoMovimientos;
+    }
+
+    public Double getTotalGastosMontoMovimientos() {
+        totalGastosMontoMovimientos = 0.0;
+        for (Movimiento movimiento : listaMovimientos) {
+            if (movimiento.getTipoMovimiento().getIdTipoMovimiento() == 2) {
+                totalGastosMontoMovimientos += movimiento.getMonto();
+            }
+        }
+        return totalGastosMontoMovimientos;
+    }
+
+    public Double getTotalIngresosMontoMovimientosConsultados() {
+         totalIngresosMontoMovimientosConsultados = 0.0;
+        for (Movimiento movimiento : consultaMovimientos) {
+            if (movimiento.getTipoMovimiento().getIdTipoMovimiento() == 3) {
+                totalIngresosMontoMovimientosConsultados += movimiento.getMonto();
+            }
+        }
+        return totalIngresosMontoMovimientosConsultados;
+    }
+
+    public Double getTotalGastosMontoMovimientosConsultados() {
+         totalGastosMontoMovimientosConsultados = 0.0;
+        for (Movimiento movimiento : consultaMovimientos) {
+            if (movimiento.getTipoMovimiento().getIdTipoMovimiento() == 2) {
+                totalGastosMontoMovimientosConsultados += movimiento.getMonto();
+            }
+        }
+        return totalGastosMontoMovimientosConsultados;
+    }
+
     public List<Cuenta> cargaListaCuentas() {
         listaCuentas.clear();
         List<Object> listaObjetos = new ArrayList<Object>();
@@ -114,6 +191,14 @@ public class CuentaBean {
         }
         listaCuentasFiltradas = listaCuentas;
         return listaCuentas;
+    }
+
+    public List<SelectItem> llenarCuentas() {
+        List<SelectItem> lista = new ArrayList<SelectItem>();
+        for (Cuenta cuenta : this.cargaListaCuentas()) {
+            lista.add(new SelectItem(cuenta.getIdCuenta(), cuenta.getNombre()));
+        }
+        return lista;
     }
 
     public void onRowEdit(RowEditEvent event) {

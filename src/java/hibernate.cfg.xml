@@ -54,5 +54,6 @@ Contributor(s):
     <mapping resource="model/Cuenta.hbm.xml"/>
     <mapping resource="model/CategoriaMovimiento.hbm.xml"/>
     <mapping resource="model/Movimiento.hbm.xml"/>
+    <mapping class="model.Parametro" package="model"/>
   </session-factory>
 </hibernate-configuration>

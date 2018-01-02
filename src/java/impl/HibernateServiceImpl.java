@@ -8,7 +8,6 @@ package impl;
 import dao.HibernateService;
 import java.util.ArrayList;
 import java.util.List;
-import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;

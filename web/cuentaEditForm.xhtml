@@ -53,10 +53,16 @@
 
                 <p:ajax event="rowEdit"
                         listener="#{movimientoBean.onRowEdit}"
-                        update="@this, #{p:component('messages')}"/>
+                        update="@this, #{p:component('messages')}, 
+                        :#{p:component('totalesOutputPanel')}"/>
+                
                 <p:ajax event="rowEditCancel"
                         listener="#{movimientoBean.onRowCancel}"
-                        update="@this, #{p:component('messages')}"/>
+                        update="@this, #{p:component('messages')}, 
+                        :#{p:component('totalesOutputPanel')}"/>
+
+                <p:ajax event="filter" 
+                        update=":#{p:component('totalesOutputPanel')}"/>
 
                 <f:facet name="header">
                     Lista de Movimientos
@@ -96,7 +102,9 @@
                                            decimalSeparator=","/>
                         </f:facet>
                         <f:facet name="output">
-                            <h:outputText value="#{object.monto}" />
+                            <h:outputText value="#{object.monto}">
+                                <f:convertNumber currencySymbol="¢" type="currency"/>
+                            </h:outputText>
                         </f:facet>
                     </p:cellEditor>
                 </p:column>
@@ -134,6 +142,56 @@
                     </p:cellEditor>
                 </p:column>
 
+                <p:column headerText="Fecha Movimiento"
+                          filterBy="#{object.fechaMovimiento}"
+                          filterMatchMode="contains">
+                    <p:cellEditor>
+                        <f:facet name="input">
+                            <p:calendar id="fechaMovimientoCalendarIn" 
+                                        value="#{object.fechaMovimiento}"
+                                        showOn="button"
+                                        locale="es"
+                                        navigator="true"
+                                        pattern="dd/MM/yyyy"
+                                        required="true"/>
+                        </f:facet>
+                        <f:facet name="output">
+                            <p:calendar id="fechaMovimientoCalendarOut" 
+                                        value="#{object.fechaMovimiento}"
+                                        showOn="button"
+                                        locale="es"
+                                        navigator="true"
+                                        pattern="dd/MM/yyyy"
+                                        disabled="true"/>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+
+                <p:column headerText="Fecha Contable"
+                          filterBy="#{object.fechaContable}"
+                          filterMatchMode="contains">
+                    <p:cellEditor>
+                        <f:facet name="input">
+                            <p:calendar id="fechaContableMovimientoCalendarIn" 
+                                        value="#{object.fechaContable}"
+                                        showOn="button"
+                                        locale="es"
+                                        navigator="true"
+                                        pattern="dd/MM/yyyy"
+                                        required="true"/>
+                        </f:facet>
+                        <f:facet name="output">
+                            <p:calendar id="fechaContableMovimientoCalendarOut" 
+                                        value="#{object.fechaContable}"
+                                        showOn="button"
+                                        locale="es"
+                                        navigator="true"
+                                        pattern="dd/MM/yyyy"
+                                        disabled="true"/>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+
                 <p:column headerText="Acciones" style="width:50px">
                     <p:rowEditor/>
                     <p:commandLink id="movimientoEliminaBtn"
@@ -146,19 +204,44 @@
                 </p:column>
 
             </p:dataTable>
-            <h:panelGrid columns="2">
-                <p:outputLabel id='totalOutputLabel'
-                               value="Total"
-                               for="totalInputText"/>
-                <p:inputNumber id="totalInputText"
-                               value="#{cuentaBean.totalMontoMovimientos}"
-                               disabled="true"
-                               minValue="0"
-                               symbol="¢"
-                               thousandSeparator="."
-                               decimalSeparator=","/>
+            <p:outputPanel id="totalesOutputPanel">
+                <h:panelGrid columns="3">
+                    <p:outputLabel id='totalIngesosOutputLabel'
+                                   value="Total Ingresos"
+                                   for="totalIngresosInputText"/>
 
-            </h:panelGrid>
+                    <p:outputLabel id='totalGastosOutputLabel'
+                                   value="Total Gastos"
+                                   for="totalGastosInputText"/>
+
+                    <p:outputLabel id='saldoOutputLabel'
+                                   value="Saldo"
+                                   for="saldoInputText"/>
+
+                    <p:inputNumber id="totalIngresosInputText"
+                                   value="#{cuentaBean.totalIngresosMontoMovimientosConsultados}"
+                                   disabled="true"
+                                   minValue="0"
+                                   symbol="¢"
+                                   thousandSeparator="."
+                                   decimalSeparator=","/>
+
+                    <p:inputNumber id="totalGastosInputText"
+                                   value="#{cuentaBean.totalGastosMontoMovimientosConsultados}"
+                                   disabled="true"
+                                   minValue="0"
+                                   symbol="¢"
+                                   thousandSeparator="."
+                                   decimalSeparator=","/>
+
+                    <p:inputNumber id="saldoInputText"
+                                   value="#{cuentaBean.saldoMontoMovimientos}"
+                                   disabled="true"
+                                   symbol="¢"
+                                   thousandSeparator="."
+                                   decimalSeparator=","/>
+                </h:panelGrid>
+            </p:outputPanel>
         </p:panel>
 
     </ui:define>

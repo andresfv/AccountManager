@@ -39,8 +39,10 @@ public class CuentaBean {
     MovimientoBean movimientoBean;
     Double totalIngresosMontoMovimientos;
     Double totalGastosMontoMovimientos;
+    Double saldoMontoMovimientos;
     Double totalIngresosMontoMovimientosConsultados;
     Double totalGastosMontoMovimientosConsultados;
+    Double saldoMovimientosConsultados;
 
     @PostConstruct
     public void init() {
@@ -56,8 +58,10 @@ public class CuentaBean {
         movimientoBean.init();
         totalIngresosMontoMovimientos = 0.0;
         totalGastosMontoMovimientos = 0.0;
+        saldoMontoMovimientos = 0.0;
         totalIngresosMontoMovimientosConsultados = 0.0;
         totalGastosMontoMovimientosConsultados = 0.0;
+        saldoMovimientosConsultados = 0.0;
     }
 
     public void initDefaults(ComponentSystemEvent event) {
@@ -142,7 +146,7 @@ public class CuentaBean {
 
     public Double getTotalIngresosMontoMovimientos() {
         totalIngresosMontoMovimientos = 0.0;
-        for (Movimiento movimiento : listaMovimientos) {
+        for (Movimiento movimiento : listaMovimientosFiltrados) {
             if (movimiento.getTipoMovimiento().getIdTipoMovimiento() == 3) {
                 totalIngresosMontoMovimientos += movimiento.getMonto();
             }
@@ -152,7 +156,7 @@ public class CuentaBean {
 
     public Double getTotalGastosMontoMovimientos() {
         totalGastosMontoMovimientos = 0.0;
-        for (Movimiento movimiento : listaMovimientos) {
+        for (Movimiento movimiento : listaMovimientosFiltrados) {
             if (movimiento.getTipoMovimiento().getIdTipoMovimiento() == 2) {
                 totalGastosMontoMovimientos += movimiento.getMonto();
             }
@@ -160,9 +164,15 @@ public class CuentaBean {
         return totalGastosMontoMovimientos;
     }
 
+    public Double getSaldoMontoMovimientos() {
+        saldoMontoMovimientos = 0.0;
+        saldoMontoMovimientos = getTotalIngresosMontoMovimientos() - getTotalGastosMontoMovimientos();
+        return saldoMontoMovimientos;
+    }
+
     public Double getTotalIngresosMontoMovimientosConsultados() {
-         totalIngresosMontoMovimientosConsultados = 0.0;
-        for (Movimiento movimiento : consultaMovimientos) {
+        totalIngresosMontoMovimientosConsultados = 0.0;
+        for (Movimiento movimiento : consultaMovimientosFiltrados) {
             if (movimiento.getTipoMovimiento().getIdTipoMovimiento() == 3) {
                 totalIngresosMontoMovimientosConsultados += movimiento.getMonto();
             }
@@ -171,13 +181,20 @@ public class CuentaBean {
     }
 
     public Double getTotalGastosMontoMovimientosConsultados() {
-         totalGastosMontoMovimientosConsultados = 0.0;
-        for (Movimiento movimiento : consultaMovimientos) {
+        totalGastosMontoMovimientosConsultados = 0.0;
+        for (Movimiento movimiento : consultaMovimientosFiltrados) {
             if (movimiento.getTipoMovimiento().getIdTipoMovimiento() == 2) {
                 totalGastosMontoMovimientosConsultados += movimiento.getMonto();
             }
         }
         return totalGastosMontoMovimientosConsultados;
+    }
+
+    public Double getSaldoMontoMovimientosConsultados() {
+        saldoMovimientosConsultados = 0.0;
+        saldoMovimientosConsultados = 0.0;
+        saldoMovimientosConsultados = totalIngresosMontoMovimientosConsultados - totalGastosMontoMovimientosConsultados;
+        return saldoMovimientosConsultados;
     }
 
     public List<Cuenta> cargaListaCuentas() {

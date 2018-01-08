@@ -25,6 +25,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
+import com.google.common.io.Files;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -222,60 +223,60 @@ public class CuentaBean {
         }
     }
 
-    public void handleFileUpload(FileUploadEvent event) {
+    public void handleFileUpload(FileUploadEvent event) throws IOException {
         FacesMessage message = new FacesMessage("Archivo", event.getFile().getFileName() + " cargado.");
         FacesContext.getCurrentInstance().addMessage(null, message);
-        //readXLSFile(event.getFile().getInputstream());
+        String formato = event.getFile().getFileName().toString();
+        formato = Files.getFileExtension(formato);
+        InputStream fileInputStream = event.getFile().getInputstream();
+
+        if (formato.equals("xlsx")) {
+//                extraerExcelXlsx(fileInputStream);
+        } else if (formato.equals("xls")) {
+            readXLSFile(fileInputStream);
+        }
+
     }
 
-    public void readXLSFile(FileInputStream file) throws IOException {
-        InputStream ExcelFileToRead = file;
-        HSSFWorkbook wb = new HSSFWorkbook(ExcelFileToRead);
-
+    public void readXLSFile(InputStream file) throws IOException {
+        HSSFWorkbook wb = new HSSFWorkbook(file);
         HSSFSheet sheet = wb.getSheetAt(0);
         HSSFRow row;
         HSSFCell cell;
-
         Iterator rows = sheet.rowIterator();
 
         while (rows.hasNext()) {
             row = (HSSFRow) rows.next();
-            Iterator cells = row.cellIterator();
-
-            while (cells.hasNext()) {
-                cell = (HSSFCell) cells.next();
-
-                if (cell.getCellType() == HSSFCell.CELL_TYPE_STRING) {
-                    System.out.print(cell.getStringCellValue() + " ");
-                } else if (cell.getCellType() == HSSFCell.CELL_TYPE_NUMERIC) {
-                    System.out.print(cell.getNumericCellValue() + " ");
-                } else {
-                    //U Can Handel Boolean, Formula, Errors
-                }
-            }
-            System.out.println();
+            insertaMovimientoXLS(row);
         }
     }
 
-    public static void readXLSXFile() throws IOException {
-        InputStream ExcelFileToRead = new FileInputStream("C:\\Users\\Utkarsh\\Desktop\\test.xlsx");
-        XSSFWorkbook wb = new XSSFWorkbook(ExcelFileToRead);
+    public void readXLSXFile(InputStream file) throws IOException {
+        XSSFWorkbook wb = new XSSFWorkbook(file);
         XSSFSheet sheet = wb.getSheetAt(0);
         XSSFRow row;
         XSSFCell cell;
         Iterator rows = sheet.rowIterator();
-        String Test1 = sheet.getRow(0).getCell(0).getStringCellValue();
 
-        for (int i = 1; i <= 5; i++) {
-            InsertProduct(sheet, i);
+        while (rows.hasNext()) {
+            row = (XSSFRow) rows.next();
+            insertaMovimientoXLSX(row);
         }
     }
 
-    public static void InsertProduct(XSSFSheet sheet, int row) {
-        String ProductName = sheet.getRow(row).getCell(0).getStringCellValue();
-        String category = sheet.getRow(row).getCell(1).getStringCellValue();
-        String subcategory = sheet.getRow(row).getCell(2).getStringCellValue();
-        String subsubcategory = sheet.getRow(row).getCell(3).getStringCellValue();
-        String classd = sheet.getRow(row).getCell(4).getStringCellValue();
+    public void insertaMovimientoXLS(HSSFRow row) {
+        Movimiento movimientoExcel = new Movimiento();
+        movimientoExcel.setFechaContable(row.getCell(0).getDateCellValue());
+        movimientoExcel.setFechaMovimiento(row.getCell(1).getDateCellValue());
+        movimientoExcel.setDetalle(row.getCell(3).getStringCellValue());
+        if (row.getCell(5).getNumericCellValue() > 0) {
+//            movimientoExcel.setTipoMovimiento(2);
+//            movimientoExcel.setMonto(row.getCell(5).getNumericCellValue());
+        }
+        movimientoExcel.setDetalle(row.getCell(3).getStringCellValue());
+    }
+
+    public void insertaMovimientoXLSX(XSSFRow row) {
+        String ProductName = row.getCell(0).getStringCellValue();
     }
 }

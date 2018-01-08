@@ -26,9 +26,18 @@
 
         </p:menubar>
 
-        <p:fileUpload fileUploadListener="#{cuentaBean.handleFileUpload}" 
-                      mode="simple" dragDropSupport="false"
-                      update="messages" allowTypes="/(\.|\/)(xls|xlsx)$/" />
+        <p:outputLabel id='nombreCuentaOutputLabel'
+                       value="Cargar desde archivo excel"
+                       for="cargaArchivoExcel"/>
+
+        <p:fileUpload id="cargaArchivoExcel"
+                      fileUploadListener="#{cuentaBean.handleFileUpload}" 
+                      mode="simple" 
+                      dragDropSupport="false"
+                      update="messages, movimientoDataTable" 
+                      allowTypes="/(\.|\/)(xls|xlsx)$/" 
+                      invalidFileMessage="Solo se adminten formatos xls o xlsx"/>
+        
         <p:panel id='cuentaPanel'
                  header="Mantenimiento de Cuenta">
 

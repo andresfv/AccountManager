@@ -22,9 +22,13 @@
             <p:menuitem value="Regresar" 
                         url="/faces/cuentaListForm.xhtml" 
                         icon="ui-icon-arrowreturnthick-1-w" />
+
+
         </p:menubar>
 
-
+        <p:fileUpload fileUploadListener="#{cuentaBean.handleFileUpload}" 
+                      mode="simple" dragDropSupport="false"
+                      update="messages" allowTypes="/(\.|\/)(xls|xlsx)$/" />
         <p:panel id='cuentaPanel'
                  header="Mantenimiento de Cuenta">
 
@@ -55,7 +59,7 @@
                         listener="#{movimientoBean.onRowEdit}"
                         update="@this, #{p:component('messages')}, 
                         :#{p:component('totalesOutputPanel')}"/>
-                
+
                 <p:ajax event="rowEditCancel"
                         listener="#{movimientoBean.onRowCancel}"
                         update="@this, #{p:component('messages')}, 

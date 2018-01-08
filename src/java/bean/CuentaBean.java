@@ -7,6 +7,7 @@ package bean;
 
 import dao.HibernateService;
 import impl.HibernateServiceImpl;
+
 import model.Cuenta;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,22 @@ import javax.faces.event.ComponentSystemEvent;
 import javax.faces.model.SelectItem;
 import model.Movimiento;
 import org.primefaces.event.RowEditEvent;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Iterator;
+
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.primefaces.event.FileUploadEvent;
 
 /**
  *
@@ -34,15 +51,10 @@ public class CuentaBean {
     List<Cuenta> listaCuentasFiltradas;
     List<Movimiento> listaMovimientos;
     List<Movimiento> listaMovimientosFiltrados;
-    List<Movimiento> consultaMovimientos;
-    List<Movimiento> consultaMovimientosFiltrados;
     MovimientoBean movimientoBean;
     Double totalIngresosMontoMovimientos;
     Double totalGastosMontoMovimientos;
     Double saldoMontoMovimientos;
-    Double totalIngresosMontoMovimientosConsultados;
-    Double totalGastosMontoMovimientosConsultados;
-    Double saldoMovimientosConsultados;
 
     @PostConstruct
     public void init() {
@@ -52,16 +64,11 @@ public class CuentaBean {
         listaCuentasFiltradas = new ArrayList<Cuenta>();
         listaMovimientos = new ArrayList<Movimiento>();
         listaMovimientosFiltrados = new ArrayList<Movimiento>();
-        consultaMovimientos = new ArrayList<Movimiento>();
-        consultaMovimientosFiltrados = new ArrayList<Movimiento>();
         movimientoBean = new MovimientoBean();
         movimientoBean.init();
         totalIngresosMontoMovimientos = 0.0;
         totalGastosMontoMovimientos = 0.0;
         saldoMontoMovimientos = 0.0;
-        totalIngresosMontoMovimientosConsultados = 0.0;
-        totalGastosMontoMovimientosConsultados = 0.0;
-        saldoMovimientosConsultados = 0.0;
     }
 
     public void initDefaults(ComponentSystemEvent event) {
@@ -72,20 +79,10 @@ public class CuentaBean {
         cargaMovimientosCuenta();
     }
 
-    public void initDetailsConsulta(ComponentSystemEvent event) {
-        consultaMovimientosCuenta();
-    }
-
     public void cargaMovimientosCuenta() {
         this.listaMovimientos.clear();
         this.listaMovimientos.addAll(movimientoBean.cargaListaMovimientosPorCuenta(cuenta.getIdCuenta()));
         listaMovimientosFiltrados = this.listaMovimientos;
-    }
-
-    public void consultaMovimientosCuenta() {
-        this.consultaMovimientos.clear();
-        this.consultaMovimientos.addAll(movimientoBean.consultaListaMovimientosPorCuenta(cuenta.getIdCuenta()));
-        consultaMovimientosFiltrados = this.consultaMovimientos;
     }
 
     public List<Cuenta> getListaCuentas() {
@@ -110,22 +107,6 @@ public class CuentaBean {
 
     public void setListaMovimientos(List<Movimiento> listaMovimientos) {
         this.listaMovimientos = listaMovimientos;
-    }
-
-    public List<Movimiento> getConsultaMovimientos() {
-        return consultaMovimientos;
-    }
-
-    public void setConsultaMovimientos(List<Movimiento> consultaMovimientos) {
-        this.consultaMovimientos = consultaMovimientos;
-    }
-
-    public List<Movimiento> getConsultaMovimientosFiltrados() {
-        return consultaMovimientosFiltrados;
-    }
-
-    public void setConsultaMovimientosFiltrados(List<Movimiento> consultaMovimientosFiltrados) {
-        this.consultaMovimientosFiltrados = consultaMovimientosFiltrados;
     }
 
     public List<Movimiento> getListaMovimientosFiltrados() {
@@ -168,33 +149,6 @@ public class CuentaBean {
         saldoMontoMovimientos = 0.0;
         saldoMontoMovimientos = getTotalIngresosMontoMovimientos() - getTotalGastosMontoMovimientos();
         return saldoMontoMovimientos;
-    }
-
-    public Double getTotalIngresosMontoMovimientosConsultados() {
-        totalIngresosMontoMovimientosConsultados = 0.0;
-        for (Movimiento movimiento : consultaMovimientosFiltrados) {
-            if (movimiento.getTipoMovimiento().getIdTipoMovimiento() == 3) {
-                totalIngresosMontoMovimientosConsultados += movimiento.getMonto();
-            }
-        }
-        return totalIngresosMontoMovimientosConsultados;
-    }
-
-    public Double getTotalGastosMontoMovimientosConsultados() {
-        totalGastosMontoMovimientosConsultados = 0.0;
-        for (Movimiento movimiento : consultaMovimientosFiltrados) {
-            if (movimiento.getTipoMovimiento().getIdTipoMovimiento() == 2) {
-                totalGastosMontoMovimientosConsultados += movimiento.getMonto();
-            }
-        }
-        return totalGastosMontoMovimientosConsultados;
-    }
-
-    public Double getSaldoMontoMovimientosConsultados() {
-        saldoMovimientosConsultados = 0.0;
-        saldoMovimientosConsultados = 0.0;
-        saldoMovimientosConsultados = totalIngresosMontoMovimientosConsultados - totalGastosMontoMovimientosConsultados;
-        return saldoMovimientosConsultados;
     }
 
     public List<Cuenta> cargaListaCuentas() {
@@ -266,5 +220,62 @@ public class CuentaBean {
             hibernateService.delete(this.cuenta);
         } catch (Exception e) {
         }
+    }
+
+    public void handleFileUpload(FileUploadEvent event) {
+        FacesMessage message = new FacesMessage("Archivo", event.getFile().getFileName() + " cargado.");
+        FacesContext.getCurrentInstance().addMessage(null, message);
+        //readXLSFile(event.getFile().getInputstream());
+    }
+
+    public void readXLSFile(FileInputStream file) throws IOException {
+        InputStream ExcelFileToRead = file;
+        HSSFWorkbook wb = new HSSFWorkbook(ExcelFileToRead);
+
+        HSSFSheet sheet = wb.getSheetAt(0);
+        HSSFRow row;
+        HSSFCell cell;
+
+        Iterator rows = sheet.rowIterator();
+
+        while (rows.hasNext()) {
+            row = (HSSFRow) rows.next();
+            Iterator cells = row.cellIterator();
+
+            while (cells.hasNext()) {
+                cell = (HSSFCell) cells.next();
+
+                if (cell.getCellType() == HSSFCell.CELL_TYPE_STRING) {
+                    System.out.print(cell.getStringCellValue() + " ");
+                } else if (cell.getCellType() == HSSFCell.CELL_TYPE_NUMERIC) {
+                    System.out.print(cell.getNumericCellValue() + " ");
+                } else {
+                    //U Can Handel Boolean, Formula, Errors
+                }
+            }
+            System.out.println();
+        }
+    }
+
+    public static void readXLSXFile() throws IOException {
+        InputStream ExcelFileToRead = new FileInputStream("C:\\Users\\Utkarsh\\Desktop\\test.xlsx");
+        XSSFWorkbook wb = new XSSFWorkbook(ExcelFileToRead);
+        XSSFSheet sheet = wb.getSheetAt(0);
+        XSSFRow row;
+        XSSFCell cell;
+        Iterator rows = sheet.rowIterator();
+        String Test1 = sheet.getRow(0).getCell(0).getStringCellValue();
+
+        for (int i = 1; i <= 5; i++) {
+            InsertProduct(sheet, i);
+        }
+    }
+
+    public static void InsertProduct(XSSFSheet sheet, int row) {
+        String ProductName = sheet.getRow(row).getCell(0).getStringCellValue();
+        String category = sheet.getRow(row).getCell(1).getStringCellValue();
+        String subcategory = sheet.getRow(row).getCell(2).getStringCellValue();
+        String subsubcategory = sheet.getRow(row).getCell(3).getStringCellValue();
+        String classd = sheet.getRow(row).getCell(4).getStringCellValue();
     }
 }

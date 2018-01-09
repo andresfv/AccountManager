@@ -231,7 +231,7 @@ public class CuentaBean {
         InputStream fileInputStream = event.getFile().getInputstream();
 
         if (formato.equals("xlsx")) {
-//                extraerExcelXlsx(fileInputStream);
+            readXLSXFile(fileInputStream);
         } else if (formato.equals("xls")) {
             readXLSFile(fileInputStream);
         }
@@ -247,7 +247,8 @@ public class CuentaBean {
 
         while (rows.hasNext()) {
             row = (HSSFRow) rows.next();
-            insertaMovimientoXLS(row);
+            //insertaMovimientoXLS(row);
+            testReadXls(row);
         }
     }
 
@@ -260,7 +261,7 @@ public class CuentaBean {
 
         while (rows.hasNext()) {
             row = (XSSFRow) rows.next();
-            insertaMovimientoXLSX(row);
+            testReadXlsx(row);
         }
     }
 
@@ -278,5 +279,23 @@ public class CuentaBean {
 
     public void insertaMovimientoXLSX(XSSFRow row) {
         String ProductName = row.getCell(0).getStringCellValue();
+    }
+
+    public void testReadXls(HSSFRow row) {
+        System.out.println(row.getCell(0).getStringCellValue());
+        System.out.println(row.getCell(1).getStringCellValue());
+        System.out.println(row.getCell(2).getStringCellValue());
+        System.out.println(row.getCell(3).getStringCellValue());
+        System.out.println(row.getCell(4).getStringCellValue());
+        System.out.println(row.getCell(5).getStringCellValue());
+    }
+
+    public void testReadXlsx(XSSFRow row) {
+        System.out.println(row.getCell(0).getStringCellValue());
+        System.out.println(row.getCell(1).getStringCellValue());
+        System.out.println(row.getCell(2).getStringCellValue());
+        System.out.println(row.getCell(3).getStringCellValue());
+        System.out.println(row.getCell(4).getStringCellValue());
+        System.out.println(row.getCell(5).getStringCellValue());
     }
 }

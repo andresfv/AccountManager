@@ -45,4 +45,5 @@ Contributor(s):
   <table-filter match-name="movimiento"/>
   <table-filter match-name="cuenta"/>
   <table-filter match-name="categoria_movimiento"/>
+  <table-filter match-name="parametro"/>
 </hibernate-reverse-engineering>

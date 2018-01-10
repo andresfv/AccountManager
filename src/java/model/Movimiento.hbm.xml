@@ -26,7 +26,7 @@
       <column length="10" name="FECHA_MOVIMIENTO" not-null="true"/>
     </property>
     <property name="fechaContable" type="date">
-      <column length="10" name="FECHA_CONTABLE" not-null="true"/>
+      <column length="10" name="FECHA_CONTABLE" not-null="false"/>
     </property>
   </class>
 </hibernate-mapping>

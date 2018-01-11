@@ -21,11 +21,14 @@ import javax.faces.model.SelectItem;
 import model.Movimiento;
 import org.primefaces.event.RowEditEvent;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
 import com.google.common.io.Files;
+import dao.ParametroService;
+import impl.ParametroServiceImpl;
+import model.Parametro;
+import model.TipoMovimiento;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -47,6 +50,7 @@ import org.primefaces.event.FileUploadEvent;
 public class CuentaBean {
 
     HibernateService hibernateService;
+    ParametroService parametroService;
     Cuenta cuenta;
     List<Cuenta> listaCuentas;
     List<Cuenta> listaCuentasFiltradas;
@@ -60,6 +64,7 @@ public class CuentaBean {
     @PostConstruct
     public void init() {
         hibernateService = new HibernateServiceImpl();
+        parametroService = new ParametroServiceImpl();
         cuenta = new Cuenta();
         listaCuentas = new ArrayList<Cuenta>();
         listaCuentasFiltradas = new ArrayList<Cuenta>();
@@ -271,7 +276,7 @@ public class CuentaBean {
         movimientoExcel.setFechaMovimiento(row.getCell(1).getDateCellValue());
         movimientoExcel.setDetalle(row.getCell(3).getStringCellValue());
         if (row.getCell(5).getNumericCellValue() > 0) {
-//            movimientoExcel.setTipoMovimiento(2);
+//            movimientoExcel.setTipoMovimiento();
 //            movimientoExcel.setMonto(row.getCell(5).getNumericCellValue());
         }
         movimientoExcel.setDetalle(row.getCell(3).getStringCellValue());
@@ -297,5 +302,17 @@ public class CuentaBean {
         System.out.println(row.getCell(3).getStringCellValue());
         System.out.println(row.getCell(4).getStringCellValue());
         System.out.println(row.getCell(5).getStringCellValue());
+    }
+
+    public TipoMovimiento getTipoMovimientoGasto() {
+        Parametro parametro = (Parametro) parametroService.findByLlave("tipo_movimiento_gasto");
+        TipoMovimiento tipoMovimiento = (TipoMovimiento) hibernateService.findById(Integer.parseInt(parametro.getValor()), "Parametro");
+        return tipoMovimiento;
+    }
+    
+    public TipoMovimiento getTipoMovimientoIngreso() {
+        Parametro parametro = (Parametro) parametroService.findByLlave("tipo_movimiento_ingreso");
+        TipoMovimiento tipoMovimiento = (TipoMovimiento) hibernateService.findById(Integer.parseInt(parametro.getValor()), "Parametro");
+        return tipoMovimiento;
     }
 }

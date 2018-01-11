@@ -34,27 +34,30 @@
 
                     <h:form id="menuForm">
                         <p:menu>
-                            <p:submenu label="Mantenimientos"
-                                       icon="ui-icon-gear">
-
-                                <p:menuitem value="Lista de Categorias de Movimiento"                    
-                                            url="/faces/categoriaMovimientoListForm.xhtml"/>
-
-                                <p:menuitem value="Lista de Tipos de Movimiento" 
-                                            url="/faces/tipoMovimientoListForm.xhtml"/>
-                            </p:submenu>
-
                             <p:submenu label="Transacciones"
                                        icon="ui-icon-calculator">
 
                                 <p:menuitem value="Lista de Cuentas"
                                             url="/faces/cuentaListForm.xhtml"/>
                             </p:submenu>
-                            
+
                             <p:submenu label="Consultas"
                                        icon="ui-icon-search">
                                 <p:menuitem value="Consulta de Movimientos por Cuenta"
                                             url="/faces/consultaCuentasForm.xhtml"/>
+                            </p:submenu>
+
+                            <p:submenu label="Administración del Sistema"
+                                       icon="ui-icon-gear">
+
+                                <p:menuitem value="Lista de Parametros"                    
+                                            url="/faces/parametroListForm.xhtml"/>
+
+                                <p:menuitem value="Lista de Categorias de Movimiento"                    
+                                            url="/faces/categoriaMovimientoListForm.xhtml"/>
+
+                                <p:menuitem value="Lista de Tipos de Movimiento" 
+                                            url="/faces/tipoMovimientoListForm.xhtml"/>
                             </p:submenu>
                         </p:menu>
                     </h:form>
@@ -64,9 +67,9 @@
                 <p:layoutUnit position="center">    
                     <h:form id="centerForm">
                         <p:growl id="messages" 
-                                    showDetail="true" 
-                                    globalOnly="true"
-                                    life="3000"/>
+                                 showDetail="true" 
+                                 globalOnly="true"
+                                 life="3000"/>
                         <ui:insert name="center"/>
                     </h:form>
                 </p:layoutUnit>

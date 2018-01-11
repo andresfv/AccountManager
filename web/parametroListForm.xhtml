@@ -1,0 +1,127 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="index.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    
+
+  
+
+    
+    <ui:define name="center">
+        <f:event type="preRenderView" listener="#{parametroBean.initDefaults}"/>
+        
+        <p:dialog id="dlg"
+                  header="Nuevo Parametro" 
+                  widgetVar="dlg" 
+                  resizable="false">
+            <h:panelGrid columns="2">
+                <p:outputLabel id='llaveOutputLabel'
+                               value="Llave"
+                               for="llaveInputText"/>
+                <p:inputText id="llaveInputText"
+                             value="#{parametroBean.parametro.llave}"
+                             required="true"/>
+                
+                <p:outputLabel id='valorOutputLabel'
+                               value="Valor"
+                               for="valorInputText"/>
+                <p:inputText id="valorInputText"
+                             value="#{parametroBean.parametro.valor}"
+                             required="true"/>
+
+            </h:panelGrid>
+            <f:facet name="footer">
+                <h:panelGrid columns="2">
+                    <p:commandButton id="parametroSaveCommandButton"
+                                     value="Guardar"
+                                     action="#{parametroBean.onSave()}"
+                                     oncomplete="PF('dlg').hide();"
+                                     update="#{p:component('parametroDataTable')}, #{p:component('messages')}"
+                                     process="@this, llaveInputText, valorInputText"/>
+                    
+                    <p:commandButton id="parametroCancelCommandButton"
+                                     value="Cancelar"
+                                     onclick="PF('dlg').hide();"/>
+                </h:panelGrid>
+            </f:facet>  
+
+        </p:dialog>
+
+        <p:panel id='parametroPanel'
+                 header="Mantenimiento de Parametros">
+
+            <p:dataTable id="parametroDataTable"
+                         widgetVar="parametroDataTable"
+                         var="object" 
+                         value="#{parametroBean.listaParametros}"
+                         rows="10"
+                         scrollable="true"
+                         scrollHeight="300"
+                         draggableColumns="true"
+                         emptyMessage="No se encontraron registros"
+                         filterEvent="enter"
+                         filteredValue="#{parametroBean.listaParametrosFiltrados}"
+                         editable="true">
+
+                <p:ajax event="rowEdit"
+                        listener="#{parametroBean.onRowEdit}"
+                        update="@this, #{p:component('messages')}"/>
+                <p:ajax event="rowEditCancel"
+                        listener="#{parametroBean.onRowCancel}"
+                        update="@this, #{p:component('messages')}"/>
+
+                <f:facet name="header">
+                    Lista de Tipos de Movimiento
+                    <p:commandButton id="tipoMovimientoNewCommandButton"
+                                     actionListener="#{parametroBean.newParametro()}"
+                                     oncomplete="PF('dlg').show();"
+                                     icon="ui-icon-plus"
+                                     style="float:left; width:20px;height:20px"
+                                     update=":#{p:component('dlg')}"
+                                     process="@this"/>
+                </f:facet>
+
+                <p:column headerText="Llave"
+                          filterBy="#{object.llave}"
+                          filterMatchMode="contains">
+                    <p:cellEditor>
+                        <f:facet name="input">
+                            <p:inputText value="#{object.llave}" />
+                        </f:facet>
+                        <f:facet name="output">
+                            <h:outputText value="#{object.llave}" />
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+                
+                <p:column headerText="Valor"
+                          filterBy="#{object.valor}"
+                          filterMatchMode="contains">
+                    <p:cellEditor>
+                        <f:facet name="input">
+                            <p:inputText value="#{object.valor}" />
+                        </f:facet>
+                        <f:facet name="output">
+                            <h:outputText value="#{object.valor}" />
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+
+                <p:column headerText="Acciones" style="width:50px">
+                    <p:rowEditor/>
+                    <p:commandLink id="parametroEliminarBtn"
+                                     styleClass="ui-icon ui-icon-trash"
+                                     title="Elimina parametro"
+                                     action="#{parametroBean.onDelete(object)}"
+                                     update="#{p:component('parametroDataTable')}, #{p:component('messages')}"
+                                     process="@this"/>
+                </p:column>
+            </p:dataTable>
+
+        </p:panel>
+    </ui:define>
+</ui:composition>

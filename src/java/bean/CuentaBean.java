@@ -287,18 +287,38 @@ public class CuentaBean {
     }
 
     public void testReadXls(HSSFRow row) {
-        for (int i = 0; i <= 4; i++) {
-            if (row.getCell(i) != null) {
-                System.out.println(row.getCell(i).getStringCellValue());
-            }
+        if (row.getCell(0) != null) {
+            System.out.println(row.getCell(0).getStringCellValue());
+        }
+        if (row.getCell(1) != null) {
+            System.out.println(row.getCell(1).getStringCellValue());
+        }
+        if (row.getCell(2) != null) {
+            System.out.println(row.getCell(2).getStringCellValue());
+        }
+        if (row.getCell(3) != null) {
+            System.out.println(row.getCell(3).getStringCellValue());
+        }
+        if (row.getCell(4) != null) {
+            System.out.println(row.getCell(4).getStringCellValue());
         }
     }
 
     public void testReadXlsx(XSSFRow row) {
-        for (int i = 0; i <= 4; i++) {
-            if (row.getCell(i) != null) {
-                System.out.println(row.getCell(i).getStringCellValue());
-            }
+        if (row.getCell(0) != null) {
+            System.out.println(row.getCell(0).getDateCellValue());
+        }
+        if (row.getCell(1) != null) {
+            System.out.println(row.getCell(1).getDateCellValue());
+        }
+        if (row.getCell(2) != null) {
+            System.out.println(row.getCell(2).getStringCellValue());
+        }
+        if (row.getCell(3) != null) {
+            System.out.println(row.getCell(3).getStringCellValue());
+        }
+        if (row.getCell(4) != null) {
+            System.out.println(row.getCell(4).getStringCellValue());
         }
     }
 

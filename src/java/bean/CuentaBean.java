@@ -287,21 +287,19 @@ public class CuentaBean {
     }
 
     public void testReadXls(HSSFRow row) {
-        System.out.println(row.getCell(0).getStringCellValue());
-        System.out.println(row.getCell(1).getStringCellValue());
-        System.out.println(row.getCell(2).getStringCellValue());
-        System.out.println(row.getCell(3).getStringCellValue());
-        System.out.println(row.getCell(4).getStringCellValue());
-        System.out.println(row.getCell(5).getStringCellValue());
+        for (int i = 0; i <= 4; i++) {
+            if (row.getCell(i) != null) {
+                System.out.println(row.getCell(i).getStringCellValue());
+            }
+        }
     }
 
     public void testReadXlsx(XSSFRow row) {
-        System.out.println(row.getCell(0).getStringCellValue());
-        System.out.println(row.getCell(1).getStringCellValue());
-        System.out.println(row.getCell(2).getStringCellValue());
-        System.out.println(row.getCell(3).getStringCellValue());
-        System.out.println(row.getCell(4).getStringCellValue());
-        System.out.println(row.getCell(5).getStringCellValue());
+        for (int i = 0; i <= 4; i++) {
+            if (row.getCell(i) != null) {
+                System.out.println(row.getCell(i).getStringCellValue());
+            }
+        }
     }
 
     public TipoMovimiento getTipoMovimientoGasto() {
@@ -309,7 +307,7 @@ public class CuentaBean {
         TipoMovimiento tipoMovimiento = (TipoMovimiento) hibernateService.findById(Integer.parseInt(parametro.getValor()), "Parametro");
         return tipoMovimiento;
     }
-    
+
     public TipoMovimiento getTipoMovimientoIngreso() {
         Parametro parametro = (Parametro) parametroService.findByLlave("tipo_movimiento_ingreso");
         TipoMovimiento tipoMovimiento = (TipoMovimiento) hibernateService.findById(Integer.parseInt(parametro.getValor()), "Parametro");

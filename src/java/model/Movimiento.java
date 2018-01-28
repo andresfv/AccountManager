@@ -32,6 +32,15 @@ public class Movimiento implements java.io.Serializable {
         hibernateService = new HibernateServiceImpl();
     }
 
+    public Movimiento(CategoriaMovimiento categoriaMovimiento, Cuenta cuenta, String detalle, double monto, Date fechaMovimiento, Date fechaContable) {
+        this.categoriaMovimiento = categoriaMovimiento;
+        this.cuenta = cuenta;
+        this.detalle = detalle;
+        this.monto = monto;
+        this.fechaMovimiento = fechaMovimiento;
+        this.fechaContable = fechaContable;
+    }
+    
     public Integer getIdMovimiento() {
         return this.idMovimiento;
     }

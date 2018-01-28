@@ -5,9 +5,7 @@
  */
 package dao;
 
-import java.util.List;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
+import model.Parametro;
 
 /**
  *
@@ -15,6 +13,6 @@ import org.hibernate.Session;
  */
 public interface ParametroService {
 
-    public Object findByLlave(String llave);
+    public Parametro findByLlave(String llave);
 
 }

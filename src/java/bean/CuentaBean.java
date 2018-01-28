@@ -27,13 +27,16 @@ import java.util.Iterator;
 import com.google.common.io.Files;
 import dao.ParametroService;
 import impl.ParametroServiceImpl;
+import model.CategoriaMovimiento;
 import model.Parametro;
 import model.TipoMovimiento;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.CellType;
 
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -252,8 +255,8 @@ public class CuentaBean {
 
         while (rows.hasNext()) {
             row = (HSSFRow) rows.next();
-            //insertaMovimientoXLS(row);
-            testReadXls(row);
+            insertaMovimientoXLS(row);
+            //testReadXls(row);
         }
     }
 
@@ -266,41 +269,305 @@ public class CuentaBean {
 
         while (rows.hasNext()) {
             row = (XSSFRow) rows.next();
-            testReadXlsx(row);
+            insertaMovimientoXLSX(row);
+//            testReadXlsx(row);
         }
     }
 
     public void insertaMovimientoXLS(HSSFRow row) {
+        int rowNumber = row.getRowNum() + 1;
+        boolean agregarLinea = true;
         Movimiento movimientoExcel = new Movimiento();
-        movimientoExcel.setFechaContable(row.getCell(0).getDateCellValue());
-        movimientoExcel.setFechaMovimiento(row.getCell(1).getDateCellValue());
-        movimientoExcel.setDetalle(row.getCell(3).getStringCellValue());
-        if (row.getCell(5).getNumericCellValue() > 0) {
-//            movimientoExcel.setTipoMovimiento();
-//            movimientoExcel.setMonto(row.getCell(5).getNumericCellValue());
+        movimientoExcel.setCuenta(this.cuenta);
+        movimientoExcel.setCategoriaMovimiento(getCategoriaMovimientoDefault());
+        //------------------------------SET FECHA_CONTABLE-------------------------------
+        if (row.getCell(0) != null) {
+            if (row.getCell(0).getCellTypeEnum() == CellType.NUMERIC) {
+                if (HSSFDateUtil.isCellDateFormatted(row.getCell(0))) {
+                    movimientoExcel.setFechaContable(row.getCell(0).getDateCellValue());
+                } else {
+                    agregarLinea = false;
+                    System.out.println("Error en fila #" + rowNumber + " \n"
+                            + "Solo puede ingresar fechas en la columna fecha contable");
+                }
+            }
         }
-        movimientoExcel.setDetalle(row.getCell(3).getStringCellValue());
+
+        //------------------------------SET FECHA_MOVIMIENTO-------------------------------
+        if (row.getCell(1) != null) {
+            if (row.getCell(1).getCellTypeEnum() == CellType.NUMERIC) {
+                if (HSSFDateUtil.isCellDateFormatted(row.getCell(1))) {
+                    movimientoExcel.setFechaMovimiento(row.getCell(1).getDateCellValue());
+                } else {
+                    agregarLinea = false;
+                    System.out.println("Error en fila #" + rowNumber + " \n"
+                            + "Solo puede ingresar fechas en la columna fecha movimiento");
+                }
+            } else {
+                agregarLinea = false;
+                System.out.println("Error en fila #" + rowNumber + " \n"
+                        + "Solo puede ingresar fechas en la columna fecha movimiento");
+            }
+        } else {
+            agregarLinea = false;
+            System.out.println("Error en fila #" + rowNumber + " \n"
+                    + "No se encontraron valores en la columna de fecha movimiento");
+        }
+
+        //------------------------------SET DETALLE-------------------------------
+        if (row.getCell(2) != null) {
+            if (row.getCell(2).getCellTypeEnum() == CellType.STRING) {
+                movimientoExcel.setDetalle(row.getCell(2).getStringCellValue());
+            } else {
+                agregarLinea = false;
+                System.out.println("Error en fila #" + rowNumber + " \n"
+                        + "La celda descripción debe tener un formato de texto");
+            }
+        } else {
+            agregarLinea = false;
+            System.out.println("Error en fila #" + rowNumber + " \n"
+                    + "No se encontraron valores en la columna descripción");
+        }
+
+        //------------------------------SET MONTO_DEBITO-------------------------------
+        if (row.getCell(3) != null) {
+            double monto = 0.0;
+            if (row.getCell(3).getCellTypeEnum() == CellType.STRING) {
+                try {
+                    String montoTexto = row.getCell(3).getStringCellValue().replace(",", "");
+                    montoTexto = montoTexto.replace(".", "_");
+                    String montoTextoArray[] = montoTexto.split("_");
+                    double entero = Double.parseDouble(montoTextoArray[0]);
+                    double decimales = Double.parseDouble(montoTextoArray[1]) / 100;
+                    monto = entero + decimales;
+                    movimientoExcel.setMonto(monto);
+                    movimientoExcel.setTipoMovimiento(getTipoMovimientoGasto());
+                } catch (Exception e) {
+                    System.out.println("Error en fila #" + rowNumber + " \n"
+                            + "Solo se aceptan números en la columna debito");
+                }
+
+            } else if (row.getCell(3).getCellTypeEnum() == CellType.NUMERIC) {
+                monto = row.getCell(3).getNumericCellValue();
+                movimientoExcel.setMonto(monto);
+                movimientoExcel.setTipoMovimiento(getTipoMovimientoGasto());
+            }
+        }
+
+        //------------------------------SET MONTO_CREDITO-------------------------------
+        if (movimientoExcel.getMonto() == 0) {
+            if (row.getCell(4) != null) {
+                double monto = 0.0;
+                if (row.getCell(4).getCellTypeEnum() == CellType.STRING) {
+                    try {
+                        String montoTexto = row.getCell(4).getStringCellValue().replace(",", "");
+                        montoTexto = montoTexto.replace(".", "_");
+                        String montoTextoArray[] = montoTexto.split("_");
+                        double entero = Double.parseDouble(montoTextoArray[0]);
+                        double decimales = Double.parseDouble(montoTextoArray[1]) / 100;
+                        monto = entero + decimales;
+                        //Se compruba que monto sea 0 para validar que no se halla escrito un valor en las columnas credito y debito en una sola fila
+                        if (movimientoExcel.getMonto() == 0) {
+                            movimientoExcel.setMonto(monto);
+                            movimientoExcel.setTipoMovimiento(getTipoMovimientoIngreso());
+                        } else {
+                            agregarLinea = false;
+                            System.out.println("Error en fila #" + rowNumber + " \n"
+                                    + "No pueden haber valores en la columna debito y credito en un mismo movimiento \n"
+                                    + "o no se econtraron valores en ninguna de las dos columnas");
+                        }
+
+                    } catch (Exception e) {
+                        System.out.println("Error en fila #" + rowNumber + " \n"
+                                + "Solo se aceptan números en la columna credito");
+                    }
+                } else if (row.getCell(4).getCellTypeEnum() == CellType.NUMERIC) {
+                    monto = row.getCell(4).getNumericCellValue();
+                    movimientoExcel.setMonto(monto);
+                    movimientoExcel.setTipoMovimiento(getTipoMovimientoIngreso());
+                } else {
+                    agregarLinea = false;
+                    System.out.println("Error en fila #" + rowNumber + " \n"
+                            + "Solo se aceptan números en la columna credito");
+                }
+            } else {
+                agregarLinea = false;
+                System.out.println("Error en fila #" + rowNumber + " \n"
+                        + "No pueden haber valores en la columna debito y credito en un mismo movimiento \n"
+                        + "o no se econtraron valores en ninguna de las dos columnas");
+            }
+        }
+        if (agregarLinea) {
+            movimientoBean.saveMovimiento(movimientoExcel);
+            System.out.println("Fila #" + rowNumber + " importada correctamente");
+        }
     }
 
     public void insertaMovimientoXLSX(XSSFRow row) {
-        String ProductName = row.getCell(0).getStringCellValue();
+        int rowNumber = row.getRowNum() + 1;
+        boolean agregarLinea = true;
+        Movimiento movimientoExcel = new Movimiento();
+        movimientoExcel.setCuenta(this.cuenta);
+        movimientoExcel.setCategoriaMovimiento(getCategoriaMovimientoDefault());
+        //------------------------------SET FECHA_CONTABLE-------------------------------
+        if (row.getCell(0) != null) {
+            if (row.getCell(0).getCellTypeEnum() == CellType.NUMERIC) {
+                if (HSSFDateUtil.isCellDateFormatted(row.getCell(0))) {
+                    movimientoExcel.setFechaContable(row.getCell(0).getDateCellValue());
+                } else {
+                    agregarLinea = false;
+                    System.out.println("Error en fila #" + rowNumber + " \n"
+                            + "Solo puede ingresar fechas en la columna fecha contable");
+                }
+            }
+        }
+
+        //------------------------------SET FECHA_MOVIMIENTO-------------------------------
+        if (row.getCell(1) != null) {
+            if (row.getCell(1).getCellTypeEnum() == CellType.NUMERIC) {
+                if (HSSFDateUtil.isCellDateFormatted(row.getCell(1))) {
+                    movimientoExcel.setFechaMovimiento(row.getCell(1).getDateCellValue());
+                } else {
+                    agregarLinea = false;
+                    System.out.println("Error en fila #" + rowNumber + " \n"
+                            + "Solo puede ingresar fechas en la columna fecha movimiento");
+                }
+            } else {
+                agregarLinea = false;
+                System.out.println("Error en fila #" + rowNumber + " \n"
+                        + "Solo puede ingresar fechas en la columna fecha movimiento");
+            }
+        } else {
+            agregarLinea = false;
+            System.out.println("Error en fila #" + rowNumber + " \n"
+                    + "No se encontraron valores en la columna de fecha movimiento");
+        }
+
+        //------------------------------SET DETALLE-------------------------------
+        if (row.getCell(2) != null) {
+            if (row.getCell(2).getCellTypeEnum() == CellType.STRING) {
+                movimientoExcel.setDetalle(row.getCell(2).getStringCellValue());
+            } else {
+                agregarLinea = false;
+                System.out.println("Error en fila #" + rowNumber + " \n"
+                        + "La celda descripción debe tener un formato de texto");
+            }
+        } else {
+            agregarLinea = false;
+            System.out.println("Error en fila #" + rowNumber + " \n"
+                    + "No se encontraron valores en la columna descripción");
+        }
+
+        //------------------------------SET MONTO_DEBITO-------------------------------
+        if (row.getCell(3) != null) {
+            double monto = 0.0;
+            if (row.getCell(3).getCellTypeEnum() == CellType.STRING) {
+                try {
+                    String montoTexto = row.getCell(3).getStringCellValue().replace(",", "");
+                    montoTexto = montoTexto.replace(".", "_");
+                    String montoTextoArray[] = montoTexto.split("_");
+                    double entero = Double.parseDouble(montoTextoArray[0]);
+                    double decimales = Double.parseDouble(montoTextoArray[1]) / 100;
+                    monto = entero + decimales;
+                    movimientoExcel.setMonto(monto);
+                    movimientoExcel.setTipoMovimiento(getTipoMovimientoGasto());
+                } catch (Exception e) {
+                    System.out.println("Error en fila #" + rowNumber + " \n"
+                            + "Solo se aceptan números en la columna debito");
+                }
+
+            } else if (row.getCell(3).getCellTypeEnum() == CellType.NUMERIC) {
+                monto = row.getCell(3).getNumericCellValue();
+                movimientoExcel.setMonto(monto);
+                movimientoExcel.setTipoMovimiento(getTipoMovimientoGasto());
+            }
+        }
+
+        //------------------------------SET MONTO_CREDITO-------------------------------
+        if (movimientoExcel.getMonto() == 0) {
+            if (row.getCell(4) != null) {
+                double monto = 0.0;
+                if (row.getCell(4).getCellTypeEnum() == CellType.STRING) {
+                    try {
+                        String montoTexto = row.getCell(4).getStringCellValue().replace(",", "");
+                        montoTexto = montoTexto.replace(".", "_");
+                        String montoTextoArray[] = montoTexto.split("_");
+                        double entero = Double.parseDouble(montoTextoArray[0]);
+                        double decimales = Double.parseDouble(montoTextoArray[1]) / 100;
+                        monto = entero + decimales;
+                        //Se compruba que monto sea 0 para validar que no se halla escrito un valor en las columnas credito y debito en una sola fila
+                        if (movimientoExcel.getMonto() == 0) {
+                            movimientoExcel.setMonto(monto);
+                            movimientoExcel.setTipoMovimiento(getTipoMovimientoIngreso());
+                        } else {
+                            agregarLinea = false;
+                            System.out.println("Error en fila #" + rowNumber + " \n"
+                                    + "No pueden haber valores en la columna debito y credito en un mismo movimiento \n"
+                                    + "o no se econtraron valores en ninguna de las dos columnas");
+                        }
+
+                    } catch (Exception e) {
+                        System.out.println("Error en fila #" + rowNumber + " \n"
+                                + "Solo se aceptan números en la columna credito");
+                    }
+                } else if (row.getCell(4).getCellTypeEnum() == CellType.NUMERIC) {
+                    monto = row.getCell(4).getNumericCellValue();
+                    movimientoExcel.setMonto(monto);
+                    movimientoExcel.setTipoMovimiento(getTipoMovimientoIngreso());
+                } else {
+                    agregarLinea = false;
+                    System.out.println("Error en fila #" + rowNumber + " \n"
+                            + "Solo se aceptan números en la columna credito");
+                }
+            } else {
+                agregarLinea = false;
+                System.out.println("Error en fila #" + rowNumber + " \n"
+                        + "No pueden haber valores en la columna debito y credito en un mismo movimiento \n"
+                        + "o no se econtraron valores en ninguna de las dos columnas");
+            }
+        }
+        if (agregarLinea) {
+            movimientoBean.saveMovimiento(movimientoExcel);
+            System.out.println("Fila #" + rowNumber + " importada correctamente");
+        }
     }
 
     public void testReadXls(HSSFRow row) {
+        int rowNumber = row.getRowNum() + 1;
+        System.out.println("MOVIMIENTO #" + rowNumber);
         if (row.getCell(0) != null) {
-            System.out.println(row.getCell(0).getStringCellValue());
+            if (row.getCell(0).getCellTypeEnum() == CellType.NUMERIC) {
+                if (HSSFDateUtil.isCellDateFormatted(row.getCell(0))) {
+                    System.out.println("Fecha Contable: " + row.getCell(0).getDateCellValue());
+                }
+            }
+
         }
         if (row.getCell(1) != null) {
-            System.out.println(row.getCell(1).getStringCellValue());
+            if (row.getCell(1).getCellTypeEnum() == CellType.NUMERIC) {
+                if (HSSFDateUtil.isCellDateFormatted(row.getCell(1))) {
+                    System.out.println("Fecha Movimiento: " + row.getCell(1).getDateCellValue());
+                }
+            }
         }
         if (row.getCell(2) != null) {
-            System.out.println(row.getCell(2).getStringCellValue());
+            if (row.getCell(2).getCellTypeEnum() == CellType.STRING) {
+                System.out.println("Descripción: " + row.getCell(2).getStringCellValue());
+            }
         }
         if (row.getCell(3) != null) {
-            System.out.println(row.getCell(3).getStringCellValue());
+            if (row.getCell(3).getCellTypeEnum() == CellType.STRING) {
+                System.out.println("Debito: " + row.getCell(3).getStringCellValue());
+            } else if (row.getCell(3).getCellTypeEnum() == CellType.NUMERIC) {
+                System.out.println("Debito: " + row.getCell(3).getNumericCellValue());
+            }
         }
         if (row.getCell(4) != null) {
-            System.out.println(row.getCell(4).getStringCellValue());
+            if (row.getCell(4).getCellTypeEnum() == CellType.STRING) {
+                System.out.println("Credito: " + row.getCell(4).getStringCellValue());
+            } else if (row.getCell(4).getCellTypeEnum() == CellType.NUMERIC) {
+                System.out.println("Credito: " + row.getCell(4).getNumericCellValue());
+            }
         }
     }
 
@@ -324,13 +591,19 @@ public class CuentaBean {
 
     public TipoMovimiento getTipoMovimientoGasto() {
         Parametro parametro = (Parametro) parametroService.findByLlave("tipo_movimiento_gasto");
-        TipoMovimiento tipoMovimiento = (TipoMovimiento) hibernateService.findById(Integer.parseInt(parametro.getValor()), "Parametro");
+        TipoMovimiento tipoMovimiento = (TipoMovimiento) hibernateService.findById(Integer.parseInt(parametro.getValor()), "TipoMovimiento");
         return tipoMovimiento;
     }
 
     public TipoMovimiento getTipoMovimientoIngreso() {
         Parametro parametro = (Parametro) parametroService.findByLlave("tipo_movimiento_ingreso");
-        TipoMovimiento tipoMovimiento = (TipoMovimiento) hibernateService.findById(Integer.parseInt(parametro.getValor()), "Parametro");
+        TipoMovimiento tipoMovimiento = (TipoMovimiento) hibernateService.findById(Integer.parseInt(parametro.getValor()), "TipoMovimiento");
         return tipoMovimiento;
+    }
+
+    public CategoriaMovimiento getCategoriaMovimientoDefault() {
+        Parametro parametro = parametroService.findByLlave("categoria_movimiento_default");
+        CategoriaMovimiento categoriaMovimiento = (CategoriaMovimiento) hibernateService.findById(Integer.parseInt(parametro.getValor()), "CategoriaMovimiento");
+        return categoriaMovimiento;
     }
 }

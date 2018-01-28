@@ -6,6 +6,7 @@
 package impl;
 
 import dao.ParametroService;
+import model.Parametro;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -17,10 +18,10 @@ import util.HibernateUtil;
  * @author Luis Andrés Fallas Valenciano
  */
 public class ParametroServiceImpl implements ParametroService {
-    
+
     @Override
-    public Object findByLlave(String llave) {
-        Object object = new Object();
+    public Parametro findByLlave(String llave) {
+        Parametro parametro = new Parametro();
         //Se crea Objeto Session
         Session session; //Se abre una sesion
         try {
@@ -28,12 +29,12 @@ public class ParametroServiceImpl implements ParametroService {
         } catch (HibernateException ex) {
             session = HibernateUtil.getSessionFactory().openSession();
         }
-        
+
         Transaction tx = session.beginTransaction(); //Se inicia una transacción
         try {
-            String queryString = "from Parametro p where p.llave = " + llave;
+            String queryString = "from Parametro p where p.llave = '" + llave+"'";
             Query query = session.createQuery(queryString);
-            object = query.uniqueResult();
+            parametro = (Parametro) query.uniqueResult();
             tx.commit(); //Se comitea en la base de datos
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -43,6 +44,6 @@ public class ParametroServiceImpl implements ParametroService {
                 session.close();
             }
         }
-        return object;
+        return parametro;
     }
 }

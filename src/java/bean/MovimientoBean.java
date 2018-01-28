@@ -12,6 +12,7 @@ import model.Cuenta;
 import model.Movimiento;
 import model.TipoMovimiento;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -58,6 +59,11 @@ public class MovimientoBean {
     public void initDefaults(ComponentSystemEvent event) {
         cargaCategoriasMovimiento();
         cargaTiposMovimiento();
+        if (this.movimiento.getIdMovimiento() == null) {
+            this.movimiento.setFechaMovimiento(new Date());
+            this.movimiento.setFechaContable(this.movimiento.getFechaMovimiento());
+        }
+
     }
 
     public Cuenta getCuenta() {
@@ -103,8 +109,7 @@ public class MovimientoBean {
     public List<Movimiento> cargaListaMovimientosPorCuenta(Integer idCuenta) {
         listaMovimientos.clear();
         List<Object> listaObjetos = new ArrayList<Object>();
-            listaObjetos.addAll(hibernateService.findAllByEqual("Movimiento", "cuenta", idCuenta));
-       
+        listaObjetos.addAll(hibernateService.findAllByEqual("Movimiento", "cuenta", idCuenta));
 
         if (!listaObjetos.isEmpty()) {
             for (Object objeto : listaObjetos) {
@@ -114,14 +119,14 @@ public class MovimientoBean {
         listaMovimientosFiltrados = listaMovimientos;
         return listaMovimientos;
     }
-    
+
     public List<Movimiento> consultaListaMovimientosPorCuenta(Integer idCuenta) {
         listaMovimientos.clear();
         List<Object> listaObjetos = new ArrayList<Object>();
         if (idCuenta != null) {
             listaObjetos.addAll(hibernateService.findAllByEqual("Movimiento", "cuenta", idCuenta));
         } else {
-             listaObjetos.addAll(hibernateService.findAll("Movimiento"));
+            listaObjetos.addAll(hibernateService.findAll("Movimiento"));
         }
 
         if (!listaObjetos.isEmpty()) {

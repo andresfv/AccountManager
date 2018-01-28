@@ -36,7 +36,7 @@
                           mode="advanced" 
                           auto="true"
                           dragDropSupport="false"
-                          update="messages, movimientoDataTable" 
+                          update="messages, movimientoDataTable, totalesOutputPanel" 
                           allowTypes="/(\.|\/)(xls|xlsx)$/" 
                           invalidFileMessage="Solo se admiten formatos xls o xlsx"/>
         </h:panelGrid>
@@ -213,7 +213,8 @@
                                    styleClass="ui-icon ui-icon-trash"
                                    title="Elimina el movimiento"
                                    action="#{movimientoBean.onDelete(object)}"
-                                   update="#{p:component('movimientoDataTable')}, #{p:component('messages')}"
+                                   update="#{p:component('movimientoDataTable')}, #{p:component('messages')},
+                                   :#{p:component('totalesOutputPanel')}"
                                    actionListener="#{cuentaBean.cargaMovimientosCuenta()}"
                                    process="@this"/>
                 </p:column>

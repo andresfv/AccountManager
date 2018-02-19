@@ -9,16 +9,14 @@ import dao.HibernateService;
 import impl.HibernateServiceImpl;
 import model.Cuenta;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
 import javax.faces.model.SelectItem;
 import model.Movimiento;
-import org.primefaces.event.RowEditEvent;
 
 /**
  *
@@ -38,6 +36,8 @@ public class ConsultaCuentaBean {
     Double totalIngresosMontoMovimientosConsultados;
     Double totalGastosMontoMovimientosConsultados;
     Double saldoMovimientosConsultados;
+    Date fechaDesde;
+    Date fechaHasta;
 
     @PostConstruct
     public void init() {
@@ -67,6 +67,24 @@ public class ConsultaCuentaBean {
         this.consultaMovimientos.addAll(movimientoBean.consultaListaMovimientosPorCuenta(cuenta.getIdCuenta()));
         consultaMovimientosFiltrados = this.consultaMovimientos;
     }
+
+    public Date getFechaDesde() {
+        return fechaDesde;
+    }
+
+    public void setFechaDesde(Date fechaDesde) {
+        this.fechaDesde = fechaDesde;
+    }
+
+    public Date getFechaHasta() {
+        return fechaHasta;
+    }
+
+    public void setFechaHasta(Date fechaHasta) {
+        this.fechaHasta = fechaHasta;
+    }
+    
+    
 
     public List<Cuenta> getListaCuentas() {
         return listaCuentas;

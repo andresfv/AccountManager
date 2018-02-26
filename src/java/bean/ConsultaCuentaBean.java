@@ -7,8 +7,10 @@ package bean;
 
 import dao.HibernateService;
 import impl.HibernateServiceImpl;
+import java.text.SimpleDateFormat;
 import model.Cuenta;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -55,6 +57,22 @@ public class ConsultaCuentaBean {
     }
 
     public void initDefaults(ComponentSystemEvent event) {
+         Calendar filtroCalendar = Calendar.getInstance();
+//Asigna el primer día del mes actual
+            if (fechaDesde == null) {
+                filtroCalendar.set(Calendar.DATE, 1);
+                filtroCalendar.set(Calendar.HOUR, 00);
+                filtroCalendar.set(Calendar.MINUTE, 00);
+                fechaDesde = filtroCalendar.getTime();
+            }
+//Asigna el ultimo días del mes
+            if (fechaHasta == null) {
+                filtroCalendar.set(Calendar.DATE, filtroCalendar.getActualMaximum(Calendar.DATE));
+                filtroCalendar.set(Calendar.HOUR, filtroCalendar.getActualMaximum(Calendar.HOUR));
+                filtroCalendar.set(Calendar.MINUTE, filtroCalendar.getActualMaximum(Calendar.MINUTE));
+                filtroCalendar.set(Calendar.SECOND, filtroCalendar.getActualMaximum(Calendar.SECOND));
+                fechaHasta = filtroCalendar.getTime();
+            }
         cargaListaCuentas();
     }
 
@@ -65,9 +83,11 @@ public class ConsultaCuentaBean {
     public void consultaMovimientosCuenta() {
         List<Object> listaObjetos = new ArrayList<Object>();
         this.consultaMovimientos.clear();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyy-MM-dd");
+ 
 
-        listaObjetos.addAll(hibernateService.runQuery("from Movimiento as mv where mv.cuenta = "
-                + " and mv.fechaMovimiento between " + " and " + " order by mv.fechaMovimiento"));
+        listaObjetos.addAll(hibernateService.runQuery("from Movimiento as mv where mv.cuenta = " + cuenta.getIdCuenta()
+                + " and mv.fechaMovimiento between " +simpleDateFormat.format(fechaDesde)+" and " +simpleDateFormat.format(fechaHasta)+ " order by mv.fechaMovimiento"));
 
         if (!listaObjetos.isEmpty()) {
             for (Object objeto : listaObjetos) {

@@ -63,8 +63,17 @@ public class ConsultaCuentaBean {
     }
 
     public void consultaMovimientosCuenta() {
+        List<Object> listaObjetos = new ArrayList<Object>();
         this.consultaMovimientos.clear();
-        this.consultaMovimientos.addAll(movimientoBean.consultaListaMovimientosPorCuenta(cuenta.getIdCuenta()));
+
+        listaObjetos.addAll(hibernateService.runQuery("from Movimiento as mv where mv.cuenta = "
+                + " and mv.fechaMovimiento between " + " and " + " order by mv.fechaMovimiento"));
+
+        if (!listaObjetos.isEmpty()) {
+            for (Object objeto : listaObjetos) {
+                this.consultaMovimientos.add((Movimiento) objeto);
+            }
+        }
         consultaMovimientosFiltrados = this.consultaMovimientos;
     }
 
@@ -83,8 +92,6 @@ public class ConsultaCuentaBean {
     public void setFechaHasta(Date fechaHasta) {
         this.fechaHasta = fechaHasta;
     }
-    
-    
 
     public List<Cuenta> getListaCuentas() {
         return listaCuentas;

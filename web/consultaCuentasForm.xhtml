@@ -43,7 +43,12 @@
                                     locale="es"
                                     navigator="true"
                                     pattern="dd/MM/yyyy"
-                                    required="true"/>
+                                    required="true">
+                            <p:ajax process="@this"
+                                    update="movimientoDataTable, totalesOutputPanel"
+                                    event="dateSelect"
+                                    listener="#{consultaCuentaBean.consultaMovimientosCuenta()}"/>
+                        </p:calendar>
 
                         <p:outputLabel id='fechaHastaOutputLabel'
                                        value="Hasta"
@@ -54,7 +59,12 @@
                                     locale="es"
                                     navigator="true"
                                     pattern="dd/MM/yyyy"
-                                    required="true"/>
+                                    required="true">
+                            <p:ajax process="@this"
+                                    update="movimientoDataTable, totalesOutputPanel"
+                                    event="dateSelect"
+                                    listener="#{consultaCuentaBean.consultaMovimientosCuenta()}"/>
+                        </p:calendar>
 
                     </h:panelGrid>
                 </p:fieldset>

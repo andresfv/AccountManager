@@ -83,11 +83,11 @@ public class ConsultaCuentaBean {
     public void consultaMovimientosCuenta() {
         List<Object> listaObjetos = new ArrayList<Object>();
         this.consultaMovimientos.clear();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyy-MM-dd");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyy/MM/dd");
  
 
         listaObjetos.addAll(hibernateService.runQuery("from Movimiento as mv where mv.cuenta = " + cuenta.getIdCuenta()
-                + " and mv.fechaMovimiento between " +simpleDateFormat.format(fechaDesde)+" and " +simpleDateFormat.format(fechaHasta)+ " order by mv.fechaMovimiento"));
+                + " and mv.fechaMovimiento between '" +simpleDateFormat.format(fechaDesde)+"' and '" +simpleDateFormat.format(fechaHasta)+ "' order by mv.fechaMovimiento"));
 
         if (!listaObjetos.isEmpty()) {
             for (Object objeto : listaObjetos) {

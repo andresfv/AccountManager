@@ -34,6 +34,32 @@
                 </p:fieldset>
                 <p:fieldset legend="Filtrar por fecha movimiento">
                     <h:panelGrid columns="4">
+                        <p:outputLabel id='mesLabel'
+                                       value="Mes"
+                                       for="mesSelectOneMenu"/>
+                        <p:selectOneMenu id="mesSelectOneMenu"
+                                         value="#{consultaCuentaBean.mes}">
+                            <f:selectItem itemLabel="Enero" itemValue="0"/>
+                            <f:selectItem itemLabel="Febrero" itemValue="1"/>
+                            <f:selectItem itemLabel="Marzo" itemValue="2"/>
+                            <f:selectItem itemLabel="Abril" itemValue="3"/>
+                            <f:selectItem itemLabel="Mayo" itemValue="4"/>
+                            <f:selectItem itemLabel="Junio" itemValue="5"/>
+                            <f:selectItem itemLabel="Julio" itemValue="6"/>
+                            <f:selectItem itemLabel="Agosto" itemValue="7"/>
+                            <f:selectItem itemLabel="Septiembre" itemValue="8"/>
+                            <f:selectItem itemLabel="Octubre" itemValue="9"/>
+                            <f:selectItem itemLabel="Noviembre" itemValue="10"/>
+                            <f:selectItem itemLabel="Diciembre" itemValue="11"/>
+
+                            <p:ajax process="@this"
+                                    event="change"
+                                    update="movimientoDataTable, 
+                                    totalesOutputPanel, 
+                                    fechaDesdeCalendar, 
+                                    fechaHastaCalendar"
+                                    listener="#{consultaCuentaBean.consultaMovimientosCuenta()}"/>
+                        </p:selectOneMenu>
                         <p:outputLabel id='fechaDesdeOutputLabel'
                                        value="Desde"
                                        for="fechaDesdeCalendar"/>
@@ -45,10 +71,24 @@
                                     pattern="dd/MM/yyyy"
                                     required="true">
                             <p:ajax process="@this"
-                                    update="movimientoDataTable, totalesOutputPanel"
+                                    update="mesSelectOneMenu, anioSelectOneMenu, movimientoDataTable, totalesOutputPanel"
                                     event="dateSelect"
                                     listener="#{consultaCuentaBean.consultaMovimientosCuenta()}"/>
                         </p:calendar>
+                        <p:outputLabel id='anioLabel'
+                                       value="Año"
+                                       for="anioSelectOneMenu"/>
+                        <p:selectOneMenu id="anioSelectOneMenu"
+                                         value="#{consultaCuentaBean.anio}">           
+                            <f:selectItems value="#{consultaCuentaBean.cargaListaAnios()}"/>
+                            <p:ajax process="@this"
+                                    event="change"
+                                    update="movimientoDataTable, 
+                                    totalesOutputPanel, 
+                                    fechaDesdeCalendar, 
+                                    fechaHastaCalendar"
+                                    listener="#{consultaCuentaBean.consultaMovimientosCuenta()}"/>
+                        </p:selectOneMenu>
 
                         <p:outputLabel id='fechaHastaOutputLabel'
                                        value="Hasta"
@@ -91,7 +131,7 @@
                 <p:column headerText="Detalle"
                           filterBy="#{object.detalle}"
                           filterMatchMode="contains"
-                          >
+                          sortBy="#{object.detalle}">
                     <p:cellEditor>
                         <f:facet name="input">
                             <p:inputText value="#{object.detalle}"
@@ -105,7 +145,8 @@
 
                 <p:column headerText="Monto"
                           filterBy="#{object.monto}"
-                          filterMatchMode="contains">
+                          filterMatchMode="contains"
+                          sortBy="#{object.monto}">
                     <p:cellEditor>
                         <f:facet name="input">
                             <p:inputNumber id="montoInputText"
@@ -126,7 +167,8 @@
 
                 <p:column headerText="Categoria"
                           filterBy="#{object.categoriaMovimientoNombre}"
-                          filterMatchMode="contains">
+                          filterMatchMode="contains"
+                          sortBy="#{object.categoriaMovimientoNombre}">
                     <p:cellEditor>
                         <f:facet name="input">
                             <p:selectOneMenu id="categoriaMovimientoSelectOneMenu"
@@ -143,7 +185,8 @@
 
                 <p:column headerText="Tipo"
                           filterBy="#{object.tipoMovimientoNombre}"
-                          filterMatchMode="contains">
+                          filterMatchMode="contains"
+                          sortBy="#{object.tipoMovimientoNombre}">
                     <p:cellEditor>
                         <f:facet name="input">
                             <p:selectOneMenu id="tipoMovimientoSelectOneMenu"
@@ -159,7 +202,8 @@
 
                 <p:column headerText="Fecha Movimiento"
                           filterBy="#{object.fechaMovimiento}"
-                          filterMatchMode="contains">
+                          filterMatchMode="contains"
+                          sortBy="#{object.fechaMovimiento}">
                     <p:cellEditor>
                         <f:facet name="input">
                             <p:calendar id="fechaMovimientoCalendarIn" 
@@ -184,7 +228,8 @@
 
                 <p:column headerText="Fecha Contable"
                           filterBy="#{object.fechaContable}"
-                          filterMatchMode="contains">
+                          filterMatchMode="contains"
+                          sortBy="#{object.fechaContable}">
                     <p:cellEditor>
                         <f:facet name="input">
                             <p:calendar id="fechaContableMovimientoCalendarIn" 

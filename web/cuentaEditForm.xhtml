@@ -90,7 +90,9 @@
 
                 <p:column headerText="Detalle"
                           filterBy="#{object.detalle}"
-                          filterMatchMode="contains">
+                          filterMatchMode="contains"
+                          sortBy="#{object.detalle}">
+                    
                     <p:cellEditor>
                         <f:facet name="input">
                             <p:inputText value="#{object.detalle}"
@@ -105,7 +107,8 @@
 
                 <p:column headerText="Monto"
                           filterBy="#{object.monto}"
-                          filterMatchMode="contains">
+                          filterMatchMode="contains"
+                          sortBy="#{object.monto}">
                     <p:cellEditor>
                         <f:facet name="input">
                             <p:inputNumber id="montoInputText"
@@ -126,7 +129,8 @@
 
                 <p:column headerText="Categoria"
                           filterBy="#{object.categoriaMovimientoNombre}"
-                          filterMatchMode="contains">
+                          filterMatchMode="contains"
+                          sortBy="#{object.categoriaMovimientoNombre}">
                     <p:cellEditor>
                         <f:facet name="input">
                             <p:selectOneMenu id="categoriaMovimientoSelectOneMenu"
@@ -143,7 +147,8 @@
 
                 <p:column headerText="Tipo"
                           filterBy="#{object.tipoMovimientoNombre}"
-                          filterMatchMode="contains">
+                          filterMatchMode="contains"
+                          sortBy="#{object.tipoMovimientoNombre}">
                     <p:cellEditor>
                         <f:facet name="input">
                             <p:selectOneMenu id="tipoMovimientoSelectOneMenu"
@@ -159,7 +164,8 @@
 
                 <p:column headerText="Fecha Movimiento"
                           filterBy="#{object.fechaMovimiento}"
-                          filterMatchMode="contains">
+                          filterMatchMode="contains"
+                          sortBy="#{object.fechaMovimiento}">
                     <p:cellEditor>
                         <f:facet name="input">
                             <p:calendar id="fechaMovimientoCalendarIn" 
@@ -184,7 +190,8 @@
 
                 <p:column headerText="Fecha Contable"
                           filterBy="#{object.fechaContable}"
-                          filterMatchMode="contains">
+                          filterMatchMode="contains"
+                          sortBy="#{object.fechaContable}">
                     <p:cellEditor>
                         <f:facet name="input">
                             <p:calendar id="fechaContableMovimientoCalendarIn" 

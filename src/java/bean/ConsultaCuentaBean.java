@@ -40,6 +40,8 @@ public class ConsultaCuentaBean {
     Double saldoMovimientosConsultados;
     Date fechaDesde;
     Date fechaHasta;
+    int mes = -1;
+    int anio = -1;
 
     @PostConstruct
     public void init() {
@@ -57,22 +59,23 @@ public class ConsultaCuentaBean {
     }
 
     public void initDefaults(ComponentSystemEvent event) {
-         Calendar filtroCalendar = Calendar.getInstance();
-//Asigna el primer día del mes actual
-            if (fechaDesde == null) {
-                filtroCalendar.set(Calendar.DATE, 1);
-                filtroCalendar.set(Calendar.HOUR, 00);
-                filtroCalendar.set(Calendar.MINUTE, 00);
-                fechaDesde = filtroCalendar.getTime();
-            }
-//Asigna el ultimo días del mes
-            if (fechaHasta == null) {
-                filtroCalendar.set(Calendar.DATE, filtroCalendar.getActualMaximum(Calendar.DATE));
-                filtroCalendar.set(Calendar.HOUR, filtroCalendar.getActualMaximum(Calendar.HOUR));
-                filtroCalendar.set(Calendar.MINUTE, filtroCalendar.getActualMaximum(Calendar.MINUTE));
-                filtroCalendar.set(Calendar.SECOND, filtroCalendar.getActualMaximum(Calendar.SECOND));
-                fechaHasta = filtroCalendar.getTime();
-            }
+        if (mes == -1) {
+            Calendar calendar = Calendar.getInstance();
+            mes = calendar.get(Calendar.MONTH);
+            anio = calendar.get(Calendar.YEAR);
+            fechaDesde = obtieneFechaMinimaMes(mes, anio);
+            fechaHasta = obtieneFechaMaximaMes(mes, anio);
+        }
+
+////Asigna el primer día del mes actual
+//        if (fechaDesde == null) {
+//            fechaDesde = obtieneFechaMinimaMes(mes, anio);
+//        }
+//
+////Asigna el ultimo días del mes
+//        if (fechaHasta == null) {
+//            fechaHasta = obtieneFechaMaximaMes(mes, anio);
+//        }
         cargaListaCuentas();
     }
 
@@ -84,10 +87,9 @@ public class ConsultaCuentaBean {
         List<Object> listaObjetos = new ArrayList<Object>();
         this.consultaMovimientos.clear();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyy/MM/dd");
- 
 
-        listaObjetos.addAll(hibernateService.runQuery("from Movimiento as mv where mv.cuenta = " + cuenta.getIdCuenta()
-                + " and mv.fechaMovimiento between '" +simpleDateFormat.format(fechaDesde)+"' and '" +simpleDateFormat.format(fechaHasta)+ "' order by mv.fechaMovimiento"));
+        listaObjetos.addAll(hibernateService.runQuery("from Movimiento as mv where mv.cuenta = coalesce(" + cuenta.getIdCuenta()
+                + ",mv.cuenta) and mv.fechaMovimiento between '" + simpleDateFormat.format(fechaDesde) + "' and '" + simpleDateFormat.format(fechaHasta) + "' order by mv.fechaMovimiento"));
 
         if (!listaObjetos.isEmpty()) {
             for (Object objeto : listaObjetos) {
@@ -103,6 +105,9 @@ public class ConsultaCuentaBean {
 
     public void setFechaDesde(Date fechaDesde) {
         this.fechaDesde = fechaDesde;
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(fechaDesde);
+        mes = calendar.get(Calendar.MONTH);
     }
 
     public Date getFechaHasta() {
@@ -111,6 +116,59 @@ public class ConsultaCuentaBean {
 
     public void setFechaHasta(Date fechaHasta) {
         this.fechaHasta = fechaHasta;
+    }
+
+    public int getMes() {
+        return mes;
+    }
+
+    public int getAnio() {
+        return anio;
+    }
+
+    public void setAnio(int anio) {
+        this.anio = anio;
+        fechaDesde = obtieneFechaMinimaMes(mes, anio);
+        fechaHasta = obtieneFechaMaximaMes(mes, anio);
+    }
+
+    public void setMes(int mes) {
+        this.mes = mes;
+        fechaDesde = obtieneFechaMinimaMes(mes, anio);
+        fechaHasta = obtieneFechaMaximaMes(mes, anio);
+    }
+
+    public Date obtieneFechaMinimaMes(int mes, int anio) {
+        Calendar filtroCalendar = Calendar.getInstance();
+        filtroCalendar.set(Calendar.YEAR, anio);
+        filtroCalendar.set(Calendar.MONTH, mes);
+        filtroCalendar.set(Calendar.DATE, 1);
+        filtroCalendar.set(Calendar.HOUR, 00);
+        filtroCalendar.set(Calendar.MINUTE, 00);
+        return filtroCalendar.getTime();
+
+    }
+
+    public Date obtieneFechaMaximaMes(int mes, int anio) {
+        Calendar filtroCalendar = Calendar.getInstance();
+        filtroCalendar.set(Calendar.YEAR, anio);
+        filtroCalendar.set(Calendar.MONTH, mes);
+        filtroCalendar.set(Calendar.DATE, filtroCalendar.getActualMaximum(Calendar.DATE));
+        filtroCalendar.set(Calendar.HOUR, filtroCalendar.getActualMaximum(Calendar.HOUR));
+        filtroCalendar.set(Calendar.MINUTE, filtroCalendar.getActualMaximum(Calendar.MINUTE));
+        filtroCalendar.set(Calendar.SECOND, filtroCalendar.getActualMaximum(Calendar.SECOND));
+        return filtroCalendar.getTime();
+    }
+
+    public List<SelectItem> cargaListaAnios() {
+        Calendar calendar = Calendar.getInstance();
+        int anioInicio = (calendar.get(Calendar.YEAR)) - 100;
+        int anioFin = (calendar.get(Calendar.YEAR)) + 101;
+        List<SelectItem> listaAnios = new ArrayList<SelectItem>();
+        for (int i = anioInicio; i < anioFin; i++) {
+            listaAnios.add(new SelectItem(i + "", i + ""));
+        }
+        return listaAnios;
     }
 
     public List<Cuenta> getListaCuentas() {

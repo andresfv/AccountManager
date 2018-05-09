@@ -28,5 +28,11 @@
     <property name="fechaContable" type="date">
       <column length="10" name="FECHA_CONTABLE" not-null="false"/>
     </property>
+    <property name="fechaCreacion" type="date">
+        <column length="10" name="FECHA_CREACION" not-null="false"/>
+    </property>
+    <property name="fechaModificacion" type="date">
+        <column length="10" name="FECHA_MODIFICACION" not-null="false"/>
+    </property>
   </class>
 </hibernate-mapping>

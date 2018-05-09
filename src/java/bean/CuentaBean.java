@@ -27,6 +27,7 @@ import java.util.Iterator;
 import com.google.common.io.Files;
 import dao.ParametroService;
 import impl.ParametroServiceImpl;
+import java.util.Date;
 import model.CategoriaMovimiento;
 import model.Parametro;
 import model.TipoMovimiento;
@@ -218,6 +219,10 @@ public class CuentaBean {
 
     public void saveCuenta(Cuenta cuentaObj) {
         try {
+            if (cuentaObj.getFechaCreacion() == null) {
+                cuentaObj.setFechaCreacion(new Date());
+            }
+            cuentaObj.setFechaModificacion(new Date());
             hibernateService.save(cuentaObj);
         } catch (Exception e) {
         }

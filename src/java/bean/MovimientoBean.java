@@ -194,6 +194,10 @@ public class MovimientoBean {
 
     public void saveMovimiento(Movimiento movimiento) {
         try {
+            if (movimiento.getFechaCreacion() == null) {
+                movimiento.setFechaCreacion(new Date());
+            }
+            movimiento.setFechaModificacion(new Date());
             hibernateService.save(movimiento);
         } catch (Exception e) {
             System.out.println("Error " + e);

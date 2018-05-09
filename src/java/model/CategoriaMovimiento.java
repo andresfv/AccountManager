@@ -2,6 +2,7 @@ package model;
 // Generated 11/08/2017 09:51:54 AM by Hibernate Tools 4.3.1
 
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,7 +14,8 @@ public class CategoriaMovimiento  implements java.io.Serializable {
 
      private Integer idCategoriaMovimiento;
      private String nombre;
-     //private Set movimientos = new HashSet(0);
+     private Date fechaCreacion;
+     private Date fechaModificacion;
 
     public CategoriaMovimiento() {
     }
@@ -41,17 +43,22 @@ public class CategoriaMovimiento  implements java.io.Serializable {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
-//    public Set getMovimientos() {
-//        return this.movimientos;
-//    }
-    
-//    public void setMovimientos(Set movimientos) {
-//        this.movimientos = movimientos;
-//    }
 
+    public Date getFechaCreacion() {
+        return fechaCreacion;
+    }
 
+    public void setFechaCreacion(Date fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
 
+    public Date getFechaModificacion() {
+        return fechaModificacion;
+    }
 
+    public void setFechaModificacion(Date fechaModificacion) {
+        this.fechaModificacion = fechaModificacion;
+    }
 }
 
 

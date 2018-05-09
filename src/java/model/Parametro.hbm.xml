@@ -2,16 +2,22 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <!-- Generated 11/08/2017 09:51:55 AM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
-  <class catalog="account_manager" name="model.Parametro" optimistic-lock="version" table="parametro">
-    <id name="idParametro" type="java.lang.Integer">
-      <column name="ID_PARAMETRO"/>
-      <generator class="identity"/>
-    </id>
-    <property name="llave" type="string">
-      <column length="100" name="LLAVE" not-null="true" unique="true"/>
-    </property>
-    <property name="valor" type="string">
-      <column length="100" name="VALOR" not-null="true" />
-    </property>
-  </class>
+    <class catalog="account_manager" name="model.Parametro" optimistic-lock="version" table="parametro">
+        <id name="idParametro" type="java.lang.Integer">
+            <column name="ID_PARAMETRO"/>
+            <generator class="identity"/>
+        </id>
+        <property name="llave" type="string">
+            <column length="100" name="LLAVE" not-null="true" unique="true"/>
+        </property>
+        <property name="valor" type="string">
+            <column length="100" name="VALOR" not-null="true" />
+        </property>
+        <property name="fechaCreacion" type="date">
+            <column length="10" name="FECHA_CREACION" not-null="false"/>
+        </property>
+        <property name="fechaModificacion" type="date">
+            <column length="10" name="FECHA_MODIFICACION" not-null="false"/>
+        </property>
+    </class>
 </hibernate-mapping>

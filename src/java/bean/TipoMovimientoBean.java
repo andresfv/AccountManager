@@ -9,6 +9,7 @@ import dao.HibernateService;
 import impl.HibernateServiceImpl;
 import model.TipoMovimiento;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -67,8 +68,8 @@ public class TipoMovimientoBean {
     public void setTipoMovimiento(TipoMovimiento tipoMovimiento) {
         this.tipoMovimiento = tipoMovimiento;
     }
-    
-      public TipoMovimiento getTipoMovimientoSeleccionado(Integer id) {
+
+    public TipoMovimiento getTipoMovimientoSeleccionado(Integer id) {
         if (id == null) {
             throw new IllegalArgumentException("no id provided");
         }
@@ -137,6 +138,10 @@ public class TipoMovimientoBean {
 
     public void saveTipoMovimiento(TipoMovimiento tipoMovimientoObj) {
         try {
+            if (tipoMovimientoObj.getFechaCreacion() == null) {
+                tipoMovimientoObj.setFechaCreacion(new Date());
+            }
+            tipoMovimientoObj.setFechaModificacion(new Date());
             hibernateService.save(tipoMovimientoObj);
         } catch (Exception e) {
         }

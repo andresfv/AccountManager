@@ -8,6 +8,7 @@ package bean;
 import dao.HibernateService;
 import impl.HibernateServiceImpl;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -67,8 +68,8 @@ public class ParametroBean {
     public void setParametro(Parametro parametro) {
         this.parametro = parametro;
     }
-    
-      public Parametro getParametroSeleccionado(Integer id) {
+
+    public Parametro getParametroSeleccionado(Integer id) {
         if (id == null) {
             throw new IllegalArgumentException("no id provided");
         }
@@ -137,6 +138,10 @@ public class ParametroBean {
 
     public void saveParametro(Parametro parametro) {
         try {
+            if (parametro.getFechaCreacion() == null) {
+                parametro.setFechaCreacion(new Date());
+            }
+            parametro.setFechaModificacion(new Date());
             hibernateService.save(parametro);
         } catch (Exception e) {
         }

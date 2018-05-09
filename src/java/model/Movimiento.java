@@ -22,7 +22,9 @@ public class Movimiento implements java.io.Serializable {
     private HibernateService hibernateService;
     private int idCategoriaMovimiento;
     private int idTipoMovimiento;
-    
+    private Date fechaCreacion;
+    private Date fechaModificacion;
+
     @Transient
     private String categoriaMovimientoNombre;
     @Transient
@@ -40,7 +42,7 @@ public class Movimiento implements java.io.Serializable {
         this.fechaMovimiento = fechaMovimiento;
         this.fechaContable = fechaContable;
     }
-    
+
     public Integer getIdMovimiento() {
         return this.idMovimiento;
     }
@@ -130,5 +132,21 @@ public class Movimiento implements java.io.Serializable {
 
     public String getTipoMovimientoNombre() {
         return tipoMovimientoNombre = tipoMovimiento != null ? tipoMovimiento.getNombre() : "";
+    }
+
+    public Date getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(Date fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    public Date getFechaModificacion() {
+        return fechaModificacion;
+    }
+
+    public void setFechaModificacion(Date fechaModificacion) {
+        this.fechaModificacion = fechaModificacion;
     }
 }

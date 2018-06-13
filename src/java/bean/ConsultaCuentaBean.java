@@ -233,7 +233,6 @@ public class ConsultaCuentaBean {
 
     public Double getSaldoMontoMovimientosConsultados() {
         saldoMovimientosConsultados = 0.0;
-        saldoMovimientosConsultados = 0.0;
         saldoMovimientosConsultados = totalIngresosMontoMovimientosConsultados - totalGastosMontoMovimientosConsultados;
         return saldoMovimientosConsultados;
     }

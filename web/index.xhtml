@@ -33,8 +33,8 @@
                               collapsible="true">
 
                     <h:form id="menuForm">
-                        <p:menu>
-                            <p:submenu label="Transacciones"
+                        <p:menu toggleable="true" >
+                            <p:submenu label="Acciones"
                                        icon="ui-icon-calculator">
 
                                 <p:menuitem value="Lista de Cuentas"
@@ -42,21 +42,23 @@
                             </p:submenu>
 
                             <p:submenu label="Consultas"
-                                       icon="ui-icon-search">
+                                       icon="ui-icon-search"
+                                       expanded="false">
                                 <p:menuitem value="Consulta de Movimientos por Cuenta"
                                             url="/faces/consultaCuentasForm.xhtml"/>
                             </p:submenu>
 
                             <p:submenu label="Administración del Sistema"
-                                       icon="ui-icon-gear">
+                                       icon="ui-icon-gear"
+                                       expanded="false">
 
-                                <p:menuitem value="Lista de Parametros"                    
+                                <p:menuitem value="Valores por Defecto"                    
                                             url="/faces/parametroListForm.xhtml"/>
 
-                                <p:menuitem value="Lista de Categorias de Movimiento"                    
+                                <p:menuitem value="Categorias de Movimiento"                    
                                             url="/faces/categoriaMovimientoListForm.xhtml"/>
 
-                                <p:menuitem value="Lista de Tipos de Movimiento" 
+                                <p:menuitem value="Tipos de Movimiento" 
                                             url="/faces/tipoMovimientoListForm.xhtml"/>
                             </p:submenu>
                         </p:menu>
@@ -71,6 +73,7 @@
                                  globalOnly="true"
                                  life="3000"/>
                         <ui:insert name="center"/>
+                        <!--<f:event type="preRenderView" listener="{cuentaBean.redirect()}"/>-->
                     </h:form>
                 </p:layoutUnit>
             </p:layout>

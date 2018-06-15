@@ -241,9 +241,8 @@ public class CuentaBean {
         return "cuentaListForm";
     }
 
-    public String newCuenta() {
+    public void newCuenta() {
         this.cuenta = new Cuenta();
-        return "cuentaEditForm";
     }
 
     public String editCuenta(Cuenta cuenta) {

@@ -30,6 +30,36 @@
                                      type="button" />
                 </p:confirmDialog>-->
 
+        <p:dialog id="dlg"
+                  header="Nueva Cuenta" 
+                  widgetVar="dlg" 
+                  resizable="false">
+            <h:panelGrid columns="2">
+                <p:outputLabel id='nombreCuentaOutputLabel'
+                               value="Nombre"
+                               for="nombreCuentaInputText"/>
+                <p:inputText id="nombreCuentaInputText"
+                             value="#{cuentaBean.cuenta.nombre}"
+                             required="true"/>
+
+            </h:panelGrid>
+            <f:facet name="footer">
+                <h:panelGrid columns="2">
+                    <p:commandButton id="cuentaSaveCommandButton"
+                                     value="Guardar"
+                                     action="#{cuentaBean.onSave()}"
+                                     oncomplete="PF('dlg').hide();"
+                                     update="#{p:component('cuentaDataTable')}, #{p:component('messages')}"
+                                     process="@this, nombreCategriaMovimientoInputText"/>
+
+                    <p:commandButton id="cuentaCancelCommandButton"
+                                     value="Cancelar"
+                                     onclick="PF('dlg').hide();"/>
+                </h:panelGrid>
+            </f:facet>  
+
+        </p:dialog>
+
         <p:panel id='cuentaPanel'
                  header="Lista de Cuentas">
 
@@ -43,7 +73,8 @@
                          draggableColumns="true"
                          emptyMessage="No se encontraron registros"
                          filterEvent="enter"
-                         filteredValue="#{cuentaBean.listaCuentasFiltradas}">
+                         filteredValue="#{cuentaBean.listaCuentasFiltradas}"
+                         editable="true">
 
                 <p:ajax event="rowEdit"
                         listener="#{cuentaBean.onRowEdit}"
@@ -55,9 +86,11 @@
                 <f:facet name="header">
                     Lista de Cuentas de Movimiento
                     <p:commandButton id="cuentaNewCommandButton"
-                                     action="#{cuentaBean.newCuenta()}"        
+                                     actionListener="#{cuentaBean.newCuenta()}"
+                                     oncomplete="PF('dlg').show();"
                                      icon="ui-icon-plus"
                                      style="float:left; width:20px;height:20px"
+                                     update=":#{p:component('dlg')}"
                                      process="@this"/>
                 </f:facet>
 
@@ -76,10 +109,10 @@
 
                 <p:column headerText="Acciones" style="width:50px">
                     <p:commandLink id="cuentaEditCommandButton"
-                                     action="#{cuentaBean.editCuenta(object)}"        
-                                     styleClass="ui-icon ui-icon-pencil"
-                                     style="float:left; width:20px;height:20px"
-                                     process="@this"/>
+                                   action="#{cuentaBean.editCuenta(object)}"        
+                                   styleClass="ui-icon ui-icon-pencil"
+                                   style="float:left; width:20px;height:20px"
+                                   process="@this"/>
 
                     <p:commandLink id="cuentaEliminaBtn"
                                    styleClass="ui-icon ui-icon-trash"

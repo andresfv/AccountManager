@@ -17,8 +17,8 @@
                         icon="ui-icon-disk"
                         action="#{cuentaBean.onSave()}"
                         update="#{p:component('messages')}"
-                        process="@form, nombreCuentaInputText" />
-            
+                        process="@form" />
+
             <p:menuitem id="importarExcelCommandButton"
                         value="Importar Excel"
                         icon="ui-icon-arrowthick-1-s"
@@ -26,8 +26,19 @@
 
             <p:menuitem value="Regresar" 
                         url="/faces/cuentaListForm.xhtml" 
-                        icon="ui-icon-arrowreturnthick-1-w" />
+                        icon="ui-icon-arrowreturnthick-1-w" 
+
+                        />
         </p:menubar>
+        
+        <p:commandLink id="movimientoEliminaBtn"
+                       styleClass="ui-icon ui-icon-trash"
+                       title="Elimina Movimientos Cuenta"
+                       action="#{cuentaBean.limpiaListaMovimientos()}"
+                       update="#{p:component('movimientoDataTable')}, #{p:component('messages')},
+                       :#{p:component('totalesOutputPanel')}"
+                       actionListener="#{cuentaBean.cargaMovimientosCuenta()}"
+                       process="@this"/>
         
         <p:dialog id="dlg"
                   header="Información de importación" 
@@ -90,7 +101,7 @@
                                      value="Aplicar"
                                      onclick="PF('dlg2').show();"
                                      oncomplete="PF('dlg').hide();"
-                                     process="@this, "/>
+                                     process="@this, dlg"/>
 
                     <p:commandButton id="configuracionImportacionExcelCancelCommandButton"
                                      value="Cancelar"
@@ -114,27 +125,16 @@
                               auto="true"
                               dragDropSupport="false"
                               update="messages, movimientoDataTable, totalesOutputPanel" 
-                              allowTypes="/(\.|\/)(xls|xlsx)$/" 
+                              allowTypes="/(\.|\/)(xls|xlsx|XLS|XLSX)$/" 
                               invalidFileMessage="Solo se admiten formatos xls o xlsx"/>
                 <p:commandButton id="cargarArchivoExcelCancelCommandButton"
                                  value="Cancelar"
                                  onclick="PF('dlg2').hide();"/>
             </h:panelGrid>
         </p:dialog>
-        
+
         <p:panel id='cuentaPanel'
                  header="Mantenimiento de Cuenta">
-
-            <h:panelGrid columns="2">
-                <p:outputLabel id='nombreCuentaOutputLabel'
-                               value="Nombre"
-                               for="nombreCuentaInputText"/>
-                <p:inputText id="nombreCuentaInputText"
-                             value="#{cuentaBean.cuenta.nombre}"
-                             required="true"/>
-
-            </h:panelGrid>
-
             <p:fieldset legend="Filtros" toggleable="true" toggleSpeed="500" collapsed="true">
                 <p:fieldset legend="Filtrar por cuenta">
                     <h:panelGrid columns="2">
@@ -242,7 +242,10 @@
                          emptyMessage="No se encontraron registros"
                          filterEvent="enter"
                          filteredValue="#{cuentaBean.listaMovimientosFiltrados}"
-                         editable="true">
+                         editable="true"
+                         paginator="true"
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="5,10,15">
 
                 <p:ajax event="rowEdit"
                         listener="#{movimientoBean.onRowEdit}"

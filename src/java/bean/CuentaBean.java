@@ -40,6 +40,7 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.DataFormatter;
 
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -127,6 +128,12 @@ public class CuentaBean {
         this.listaMovimientos.clear();
         this.listaMovimientos.addAll(movimientoBean.cargaListaMovimientosPorCuenta(cuenta.getIdCuenta()));
         listaMovimientosFiltrados = this.listaMovimientos;
+    }
+
+    public void limpiaListaMovimientos() {
+        for (Movimiento movimiento : listaMovimientos) {
+            movimientoBean.onDelete(movimiento);
+        }
     }
 
     public List<Cuenta> getListaCuentas() {
@@ -445,6 +452,7 @@ public class CuentaBean {
     }
 
     public void insertaMovimientoXLSX(XSSFRow row) {
+        DataFormatter dataFormatter = new DataFormatter();
         int rowNumber = row.getRowNum() + 1;
         boolean agregarFila = true;
         Movimiento movimientoExcel = new Movimiento();
@@ -472,6 +480,7 @@ public class CuentaBean {
                     agregarFila = false;
                     System.out.println("Error en fila #" + rowNumber + " \n"
                             + "Solo puede ingresar fechas en la columna fecha movimiento");
+                    System.out.println("Valor erroneo: " + dataFormatter.formatCellValue(row.getCell(columnaFechaMovimiento)));
                 }
             } else {
                 agregarFila = false;
@@ -744,23 +753,23 @@ public class CuentaBean {
     }
 
     public void setColumnaFechaContable(int columnaFechaContable) {
-        this.columnaFechaContable = columnaFechaContable;
+        this.columnaFechaContable = columnaFechaContable - 1;
     }
 
     public void setColumnaFechaMovimiento(int columnaFechaMovimiento) {
-        this.columnaFechaMovimiento = columnaFechaMovimiento;
+        this.columnaFechaMovimiento = columnaFechaMovimiento - 1;
     }
 
     public void setColumnaDetalle(int columnaDetalle) {
-        this.columnaDetalle = columnaDetalle;
+        this.columnaDetalle = columnaDetalle - 1;
     }
 
     public void setColumnaMontoDebito(int columnaMontoDebito) {
-        this.columnaMontoDebito = columnaMontoDebito;
+        this.columnaMontoDebito = columnaMontoDebito - 1;
     }
 
     public void setColumnaMontoCredito(int columnaMontoCredito) {
-        this.columnaMontoCredito = columnaMontoCredito;
+        this.columnaMontoCredito = columnaMontoCredito - 1;
     }
 
     public Date obtieneFechaMinimaMes(int mes, int anio) {

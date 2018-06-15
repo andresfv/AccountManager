@@ -18,26 +18,110 @@
                         action="#{cuentaBean.onSave()}"
                         update="#{p:component('messages')}"
                         process="@form, nombreCuentaInputText" />
+            
+            <p:menuitem id="importarExcelCommandButton"
+                        value="Importar Excel"
+                        icon="ui-icon-arrowthick-1-s"
+                        onclick="PF('dlg').show();"/>
 
             <p:menuitem value="Regresar" 
                         url="/faces/cuentaListForm.xhtml" 
                         icon="ui-icon-arrowreturnthick-1-w" />
         </p:menubar>
+        
+        <p:dialog id="dlg"
+                  header="Información de importación" 
+                  widgetVar="dlg" 
+                  resizable="false">
+            <h:panelGrid columns="2">
+                <p:outputLabel id='columnaFechaContableOutputLabel'
+                               value="Número de columna Fecha Contable"
+                               for="columnaFechaContableInputText"/>
+                <p:inputText id="columnaFechaContableInputText"
+                             value="#{cuentaBean.columnaFechaContable}"
+                             required="true"/>
 
-        <h:panelGrid columns="2">
-            <p:outputLabel id='cargaArchivoExcelOutputLabel'
-                           value="Cargar desde archivo excel"
-                           for="cargaArchivoExcel"/>
+                <p:outputLabel id='columnaFechaMovimientoOutputLabel'
+                               value="Número de columna Fecha Movimiento"
+                               for="columnaFechaMovimientoInputText"/>
+                <p:inputText id="columnaFechaMovimientoInputText"
+                             value="#{cuentaBean.columnaFechaMovimiento}"
+                             required="true"/>
 
-            <p:fileUpload id="cargaArchivoExcel"
-                          fileUploadListener="#{cuentaBean.handleFileUpload}"
-                          mode="advanced" 
-                          auto="true"
-                          dragDropSupport="false"
-                          update="messages, movimientoDataTable, totalesOutputPanel" 
-                          allowTypes="/(\.|\/)(xls|xlsx)$/" 
-                          invalidFileMessage="Solo se admiten formatos xls o xlsx"/>
-        </h:panelGrid>
+                <p:outputLabel id='columnaDetalleOutputLabel'
+                               value="Número de columna Detalle"
+                               for="columnaDetalleInputText"/>
+                <p:inputText id="columnaDetalleInputText"
+                             value="#{cuentaBean.columnaDetalle}"
+                             required="true"/>
+
+                <p:outputLabel id='columnaMontoDebitoOutputLabel'
+                               value="Número de columna Monto Debito"
+                               for="columnaMontoDebitoInputText"/>
+                <p:inputText id="columnaMontoDebitoInputText"
+                             value="#{cuentaBean.columnaMontoDebito}"
+                             required="true"/>
+
+                <p:outputLabel id='columnaMontoCreditoOutputLabel'
+                               value="Número de columna Monto Credito"
+                               for="columnaMontoCreditoInputText"/>
+                <p:inputText id="columnaMontoCreditoInputText"
+                             value="#{cuentaBean.columnaMontoCredito}"
+                             required="true"/>
+
+                <p:outputLabel id='filaDesdeOutputLabel'
+                               value="Número de Fila Inicial"
+                               for="filaDesdeInputText"/>
+                <p:inputText id="filaDesdeInputText"
+                             value="#{cuentaBean.filaDesde}"
+                             required="true"/>
+
+                <p:outputLabel id='filaHastaOutputLabel'
+                               value="Número de Fila Final"
+                               for="filaHastaInputText"/>
+                <p:inputText id="filaHastaInputText"
+                             value="#{cuentaBean.filaHasta}"
+                             required="true"/>
+            </h:panelGrid>
+
+            <f:facet name="footer">
+                <h:panelGrid columns="2">
+                    <p:commandButton id="configuracionImportacionExcelSaveCommandButton"
+                                     value="Aplicar"
+                                     onclick="PF('dlg2').show();"
+                                     oncomplete="PF('dlg').hide();"
+                                     process="@this, "/>
+
+                    <p:commandButton id="configuracionImportacionExcelCancelCommandButton"
+                                     value="Cancelar"
+                                     onclick="PF('dlg').hide();"/>
+                </h:panelGrid>
+            </f:facet>  
+        </p:dialog>
+
+        <p:dialog id="dlg2"
+                  header="Importar Excel" 
+                  widgetVar="dlg2" 
+                  resizable="false">
+            <h:panelGrid columns="2">
+                <p:outputLabel id='cargaArchivoExcelOutputLabel'
+                               value="Cargar desde archivo excel"
+                               for="cargaArchivoExcel"/>
+
+                <p:fileUpload id="cargaArchivoExcel"
+                              fileUploadListener="#{cuentaBean.handleFileUpload}"
+                              mode="advanced" 
+                              auto="true"
+                              dragDropSupport="false"
+                              update="messages, movimientoDataTable, totalesOutputPanel" 
+                              allowTypes="/(\.|\/)(xls|xlsx)$/" 
+                              invalidFileMessage="Solo se admiten formatos xls o xlsx"/>
+                <p:commandButton id="cargarArchivoExcelCancelCommandButton"
+                                 value="Cancelar"
+                                 onclick="PF('dlg2').hide();"/>
+            </h:panelGrid>
+        </p:dialog>
+        
         <p:panel id='cuentaPanel'
                  header="Mantenimiento de Cuenta">
 
@@ -50,7 +134,7 @@
                              required="true"/>
 
             </h:panelGrid>
-            
+
             <p:fieldset legend="Filtros" toggleable="true" toggleSpeed="500" collapsed="true">
                 <p:fieldset legend="Filtrar por cuenta">
                     <h:panelGrid columns="2">
@@ -186,7 +270,7 @@
                           filterBy="#{object.detalle}"
                           filterMatchMode="contains"
                           sortBy="#{object.detalle}">
-                    
+
                     <p:cellEditor>
                         <f:facet name="input">
                             <p:inputText value="#{object.detalle}"

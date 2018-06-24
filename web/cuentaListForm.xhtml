@@ -50,7 +50,7 @@
                                      action="#{cuentaBean.onSave()}"
                                      oncomplete="PF('dlg').hide();"
                                      update="#{p:component('cuentaDataTable')}, #{p:component('messages')}"
-                                     process="@this, nombreCategriaMovimientoInputText"/>
+                                     process="@this, nombreCuentaInputText"/>
 
                     <p:commandButton id="cuentaCancelCommandButton"
                                      value="Cancelar"
@@ -108,12 +108,12 @@
                 </p:column>
 
                 <p:column headerText="Acciones" style="width:50px">
-                    <p:commandLink id="cuentaEditCommandButton"
-                                   action="#{cuentaBean.editCuenta(object)}"        
-                                   styleClass="ui-icon ui-icon-pencil"
-                                   style="float:left; width:20px;height:20px"
-                                   process="@this"/>
-
+                    <!--                    <p:commandLink id="cuentaEditCommandButton"
+                                                       action="{cuentaBean.editCuenta(object)}"        
+                                                       styleClass="ui-icon ui-icon-pencil"
+                                                       style="float:left; width:20px;height:20px"
+                                                       process="@this"/>-->
+                    <p:rowEditor/>
                     <p:commandLink id="cuentaEliminaBtn"
                                    styleClass="ui-icon ui-icon-trash"
                                    title="Elimina cuenta"

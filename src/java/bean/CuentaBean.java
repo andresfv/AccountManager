@@ -454,62 +454,64 @@ public class CuentaBean {
 
     public void insertaMovimientoXLSX(XSSFRow row) {
         DataFormatter dataFormatter = new DataFormatter(); //Permite obtener el valor String de una celda
-        DateFormat format = new SimpleDateFormat("dd, M, yyyy"); //Permite dar formato a las fechas
+        DateFormat format = new SimpleDateFormat("MM/dd/yy"); //Permite dar formato a las fechas
         int rowNumber = row.getRowNum() + 1;
         boolean agregarFila = true;
         String valorCelda; //Almacena el valor string de la fila
         Movimiento movimientoExcel = new Movimiento();
         movimientoExcel.setCuenta(this.cuenta);
         movimientoExcel.setCategoriaMovimiento(getCategoriaMovimientoDefault());
-        //------------------------------SET FECHA_CONTABLE-------------------------------
-        //Comprueba que la celda no este vacia.
-        if (row.getCell(columnaFechaContable) != null && rowNumber >= filaDesde && rowNumber <= filaHasta) {
-            try {
-                valorCelda = dataFormatter.formatCellValue(row.getCell(columnaFechaContable));
-                Date fechaContable = format.parse(valorCelda);
-                movimientoExcel.setFechaContable(fechaContable);
-            } catch (Exception e) {
-                agregarFila = false;
-                System.out.println("Error en fila #" + rowNumber + " Columna fecha contable" + " \n"
-                        + "Causa: " + e.getMessage());
+
+        if (rowNumber >= filaDesde && rowNumber <= filaHasta) {//Se comprueba que la fila este dentro del rango establecido
+
+            //------------------------------SET FECHA_CONTABLE-------------------------------
+            //Comprueba que la celda no este vacia.
+            if (row.getCell(columnaFechaContable) != null) {
+                try {
+                    valorCelda = dataFormatter.formatCellValue(row.getCell(columnaFechaContable)).trim();
+                    Date fechaContable = format.parse(valorCelda);
+                    movimientoExcel.setFechaContable(fechaContable);
+                } catch (Exception e) {
+                    agregarFila = false;
+                    System.out.println("Error en fila #" + rowNumber + " Columna fecha contable" + " \n"
+                            + "Causa: " + e.getMessage());
+                }
             }
-        }
 
-        //------------------------------SET FECHA_MOVIMIENTO-------------------------------
-        if (row.getCell(columnaFechaMovimiento) != null && rowNumber >= filaDesde && rowNumber <= filaHasta) {
-            try {
-                valorCelda = dataFormatter.formatCellValue(row.getCell(columnaFechaMovimiento));
-                Date fechaMovimiento = format.parse(valorCelda);
-                movimientoExcel.setFechaMovimiento(fechaMovimiento);
+            //------------------------------SET FECHA_MOVIMIENTO-------------------------------
+            if (row.getCell(columnaFechaMovimiento) != null) {
+                try {
+                    valorCelda = dataFormatter.formatCellValue(row.getCell(columnaFechaMovimiento)).trim();
+                    Date fechaMovimiento = format.parse(valorCelda);
+                    movimientoExcel.setFechaMovimiento(fechaMovimiento);
 
-            } catch (Exception e) {
-                agregarFila = false;
-                System.out.println("Error en fila #" + rowNumber + " Columna fecha movimiento" + " \n"
-                        + "Causa: " + e.getMessage());
+                } catch (Exception e) {
+                    agregarFila = false;
+                    System.out.println("Error en fila #" + rowNumber + " Columna fecha movimiento" + " \n"
+                            + "Causa: " + e.getMessage());
+                }
             }
-        }
 
-        //------------------------------SET DETALLE-------------------------------
-        if (row.getCell(columnaDetalle) != null && rowNumber >= filaDesde && rowNumber <= filaHasta) {
-            try {
-                valorCelda = dataFormatter.formatCellValue(row.getCell(columnaDetalle));
-                movimientoExcel.setDetalle(valorCelda);
-            } catch (Exception e) {
-                System.out.println("Error en fila #" + rowNumber + " Columna detalle" + " \n"
-                        + "Causa: " + e.getMessage());
+            //------------------------------SET DETALLE-------------------------------
+            if (row.getCell(columnaDetalle) != null) {
+                try {
+                    valorCelda = dataFormatter.formatCellValue(row.getCell(columnaDetalle)).trim();
+                    movimientoExcel.setDetalle(valorCelda);
+                } catch (Exception e) {
+                    System.out.println("Error en fila #" + rowNumber + " Columna detalle" + " \n"
+                            + "Causa: " + e.getMessage());
+                }
             }
-        }
 
-        //------------------------------SET MONTO_DEBITO o CREDITO-------------------------------
-        if (rowNumber >= filaDesde && rowNumber <= filaHasta) {//Se comprueba que es la fila correcta
+            //------------------------------SET MONTO_DEBITO o CREDITO-------------------------------
             int flagDebitoCredito = 0;//0= nulo, 1= debito, 2= credito
             String montoTexto;
             try {
                 double monto = 0.0;
                 if (row.getCell(columnaMontoDebito) != null
                         && row.getCell(columnaMontoCredito) != null) {//Se valida si en debito y credito hay un valor
-                    String valorCeldaDebito = dataFormatter.formatCellValue(row.getCell(columnaMontoDebito));
-                    String valorCeldaCredito = dataFormatter.formatCellValue(row.getCell(columnaMontoDebito));
+                    String valorCeldaDebito = dataFormatter.formatCellValue(row.getCell(columnaMontoDebito)).trim();
+                    String valorCeldaCredito = dataFormatter.formatCellValue(row.getCell(columnaMontoCredito)).trim();
 
                     if (!valorCeldaDebito.equals("") && !valorCeldaCredito.equals("")
                             && !valorCeldaDebito.contains("+") && !valorCeldaCredito.contains("-")) {//Se valida si debito y credito no son espacios vacios
@@ -525,12 +527,12 @@ public class CuentaBean {
                     }
 
                 } else if (row.getCell(columnaMontoDebito) != null) {
-                    String valorCeldaDebito = dataFormatter.formatCellValue(row.getCell(columnaMontoDebito));
+                    String valorCeldaDebito = dataFormatter.formatCellValue(row.getCell(columnaMontoDebito)).trim();
                     if (!valorCeldaDebito.equals("") && !valorCeldaDebito.contains("+")) {
                         flagDebitoCredito = 1;
                     }
                 } else if (row.getCell(columnaMontoCredito) != null) {
-                    String valorCeldaCredito = dataFormatter.formatCellValue(row.getCell(columnaMontoDebito));
+                    String valorCeldaCredito = dataFormatter.formatCellValue(row.getCell(columnaMontoDebito)).trim();
                     if (!valorCeldaCredito.equals("") && !valorCeldaCredito.contains("-")) {
                         flagDebitoCredito = 2;
                     }
@@ -538,7 +540,7 @@ public class CuentaBean {
 
                 switch (flagDebitoCredito) {
                     case 1:  //------------------------------SET MONTO_DEBITO-------------------------------
-                        valorCelda = dataFormatter.formatCellValue(row.getCell(columnaMontoDebito));
+                        valorCelda = dataFormatter.formatCellValue(row.getCell(columnaMontoDebito)).trim();
                         montoTexto = valorCelda.replace(",", "");
                         if (!montoTexto.contains("+")) {
                             montoTexto = montoTexto.replace(".", "_");
@@ -552,9 +554,10 @@ public class CuentaBean {
                         break;
 
                     case 2:  //------------------------------SET MONTO_CREDITO-------------------------------
-                        valorCelda = dataFormatter.formatCellValue(row.getCell(columnaMontoCredito));
-                        montoTexto = valorCelda.replace(".", "_");
+                        valorCelda = dataFormatter.formatCellValue(row.getCell(columnaMontoCredito)).trim();
+                        montoTexto = valorCelda.replace(",", "");
                         if (!montoTexto.contains("-")) {
+                            montoTexto = montoTexto.replace(".", "_");
                             String montoTextoArray[] = montoTexto.split("_");
                             double entero = Double.parseDouble(montoTextoArray[0]);
                             double decimales = Double.parseDouble(montoTextoArray[1]) / 100;
@@ -575,6 +578,8 @@ public class CuentaBean {
                 System.out.println("Error en fila #" + rowNumber + " Columna monto debito" + " \n"
                         + "Causa: " + e.getMessage());
             }
+        } else {
+            agregarFila = false;
         }
 
 //Salva el movimiento en la base de datos.

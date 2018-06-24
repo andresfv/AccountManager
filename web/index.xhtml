@@ -36,16 +36,12 @@
                         <p:menu toggleable="true" >
                             <p:submenu label="Acciones"
                                        icon="ui-icon-calculator">
-
-                                <p:menuitem value="Lista de Cuentas"
+                                <p:menuitem value="Categorias de Movimiento"                    
+                                            url="/faces/categoriaMovimientoListForm.xhtml"/>
+                                <p:menuitem value="Cuentas"
                                             url="/faces/cuentaListForm.xhtml"/>
-                            </p:submenu>
-
-                            <p:submenu label="Consultas"
-                                       icon="ui-icon-search"
-                                       expanded="false">
-                                <p:menuitem value="Consulta de Movimientos por Cuenta"
-                                            url="/faces/consultaCuentasForm.xhtml"/>
+                                <p:menuitem value="Movimientos"
+                                            url="/faces/cuentaEditForm.xhtml"/>
                             </p:submenu>
 
                             <p:submenu label="Administración del Sistema"
@@ -54,9 +50,6 @@
 
                                 <p:menuitem value="Valores por Defecto"                    
                                             url="/faces/parametroListForm.xhtml"/>
-
-                                <p:menuitem value="Categorias de Movimiento"                    
-                                            url="/faces/categoriaMovimientoListForm.xhtml"/>
 
                                 <p:menuitem value="Tipos de Movimiento" 
                                             url="/faces/tipoMovimientoListForm.xhtml"/>

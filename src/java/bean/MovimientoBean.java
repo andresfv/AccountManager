@@ -13,7 +13,9 @@ import model.Movimiento;
 import model.TipoMovimiento;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -21,6 +23,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
 import javax.faces.model.SelectItem;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.RowEditEvent;
 
 /**
@@ -180,10 +183,29 @@ public class MovimientoBean {
         return "";
     }
 
-    public String onSave() {
+    public void onSave() {
         saveMovimiento(this.movimiento);
+        RequestContext.getCurrentInstance().closeDialog(null);
+    }
+
+    public void onReturn() {
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Guardado", "Registro almacenado correctamente"));
-        return "cuentaEditForm";
+    }
+
+    public void abreNuevoMovimientoDialog() {
+        Map<String, Object> options = new HashMap<String, Object>();
+        options.put("modal", true);
+        options.put("contentWidth", "100%");
+        options.put("contentHeight", "100%");
+        options.put("headerElement", "Nuevo Movimiento");
+
+        RequestContext.getCurrentInstance().
+                openDialog("/pages/movimientoEditForm.jsf",
+                        options, null);
+    }
+
+    public void closeDialog() {
+        RequestContext.getCurrentInstance().closeDialog(null);
     }
 
     public String newMovimiento(Cuenta cuenta) {

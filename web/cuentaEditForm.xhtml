@@ -12,13 +12,6 @@
         <f:event type="preRenderView" listener="#{cuentaBean.initDetails}"/>
 
         <p:menubar>
-            <p:menuitem id="cuentaSaveCommandButton"
-                        value="Guardar"
-                        icon="ui-icon-disk"
-                        action="#{cuentaBean.onSave()}"
-                        update="#{p:component('messages')}"
-                        process="@form" />
-
             <p:menuitem id="importarExcelCommandButton"
                         value="Importar Excel"
                         icon="ui-icon-arrowthick-1-s"
@@ -58,7 +51,7 @@
                             update="movimientoDataTable, totalesOutputPanel"
                             listener="#{cuentaBean.consultaMovimientosCuenta()}"/>
                 </p:selectOneMenu>
-                
+
                 <p:outputLabel id='columnaFechaContableOutputLabel'
                                value="Número de columna Fecha Contable"
                                for="columnaFechaContableInputText"/>
@@ -278,7 +271,10 @@
                                      action="#{movimientoBean.newMovimiento(cuentaBean.cuenta)}"  
                                      icon="ui-icon-plus"
                                      style="float:left; width:20px;height:20px"
-                                     process="@this"/>
+                                     process="@this">
+                        <p:ajax event="dialogReturn" listener="#{movimientoBean.onReturn()}" 
+                                update="#{p:component('messages')}"/>
+                    </p:commandButton>
                 </f:facet>
 
                 <p:column headerText="Detalle"

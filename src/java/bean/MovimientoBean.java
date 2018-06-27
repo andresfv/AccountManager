@@ -23,6 +23,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
 import javax.faces.model.SelectItem;
+import org.primefaces.PrimeFaces;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.RowEditEvent;
 
@@ -193,25 +194,18 @@ public class MovimientoBean {
     }
 
     public void abreNuevoMovimientoDialog() {
+        this.movimiento = new Movimiento();
+        movimiento.setCuenta(cuenta);
         Map<String, Object> options = new HashMap<String, Object>();
-        options.put("modal", true);
+        options.put("width", 640);
+        options.put("height", 340);
         options.put("contentWidth", "100%");
         options.put("contentHeight", "100%");
-        options.put("headerElement", "Nuevo Movimiento");
-
-        RequestContext.getCurrentInstance().
-                openDialog("/pages/movimientoEditForm.jsf",
-                        options, null);
+        PrimeFaces.current().dialog().openDynamic("movimientoEditForm", options, null);
     }
 
     public void closeDialog() {
         RequestContext.getCurrentInstance().closeDialog(null);
-    }
-
-    public String newMovimiento(Cuenta cuenta) {
-        this.movimiento = new Movimiento();
-        movimiento.setCuenta(cuenta);
-        return "movimientoEditForm";
     }
 
     public void saveMovimiento(Movimiento movimiento) {
@@ -224,7 +218,6 @@ public class MovimientoBean {
         } catch (Exception e) {
             System.out.println("Error " + e);
         }
-
     }
 
     public void deleteMovimiento() {

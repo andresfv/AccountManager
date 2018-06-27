@@ -6,8 +6,13 @@
       lang="es">
 
     <h:head>
+        <style type="text/css">
+            .ui-widget {
+                font-size: 90%;
+            }
+        </style>
+        <h:outputScript name="jquery/jquery-plugins.js" library="primefaces"/>
         <f:event type="preRenderView" listener="#{movimientoBean.initDefaults}"/>
-        <h:outputStylesheet library="css" name="standard.css"/>
         <title>Nuevo Movimiento</title>
     </h:head>
 
@@ -88,7 +93,6 @@
                                      update="formMantenimiento"
                                      value="Guardar"
                                      actionListener= "#{movimientoBean.onSave()}"
-                                     update="#{p:component('messages')}"
                                      process="@form"/>
 
                     <p:commandButton id="movimientoCerrarCommandButton"

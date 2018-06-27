@@ -268,13 +268,9 @@
                 <f:facet name="header">
                     Lista de Movimientos
                     <p:commandButton id="movimientoNewCommandButton"
-                                     action="#{movimientoBean.newMovimiento(cuentaBean.cuenta)}"  
+                                     actionListener="#{movimientoBean.abreNuevoMovimientoDialog}"  
                                      icon="ui-icon-plus"
-                                     style="float:left; width:20px;height:20px"
-                                     process="@this">
-                        <p:ajax event="dialogReturn" listener="#{movimientoBean.onReturn()}" 
-                                update="#{p:component('messages')}"/>
-                    </p:commandButton>
+                                     style="float:left; width:20px;height:20px"/>
                 </f:facet>
 
                 <p:column headerText="Detalle"

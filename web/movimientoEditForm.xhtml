@@ -9,99 +9,106 @@
         <style type="text/css">
             .ui-widget {
                 font-size: 90%;
-            }
+                color: white;}
+
         </style>
-        <h:outputScript name="jquery/jquery-plugins.js" library="primefaces"/>
         <f:event type="preRenderView" listener="#{movimientoBean.initDefaults}"/>
         <title>Nuevo Movimiento</title>
     </h:head>
 
     <h:body>
         <h:form id="formMantenimiento">
-            <p:panel id='movimientoPanel'
-                     header="Nuevo Movimiento">
+            <h:panelGrid columns="2">
+                
+                   <p:outputLabel id='cuentaOutputLabel'
+                                   value="Cuenta"
+                                   for="cuentaSelectOneMenu"/>
 
-                <h:panelGrid columns="2">
-
-                    <p:outputLabel id='detalleMovimientoOutputLabel'
-                                   value="Detalle"
-                                   for="detalleMovimientoInputText"/>
-                    <p:inputText id="detalleMovimientoInputText"
-                                 value="#{movimientoBean.movimiento.detalle}"
-                                 required="true"/>
-
-                    <p:outputLabel id='montoMovimientoOutputLabel'
-                                   value="Monto"
-                                   for="montoMovimientoInputText"/>
-
-                    <p:inputNumber id="montoMovimientoInputText"
-                                   value="#{movimientoBean.movimiento.monto}"
-                                   required="true"
-                                   minValue="0"
-                                   symbol="¢"
-                                   thousandSeparator="."
-                                   decimalSeparator=","/>
-
-                    <p:outputLabel id='fechaMovimientoOutputLabel'
-                                   value="Fecha del Movimiento"
-                                   for="fechaMovimientoCalendar"/>
-
-                    <p:calendar id="fechaMovimientoCalendar" 
-                                value="#{movimientoBean.movimiento.fechaMovimiento}"
-                                showOn="button"
-                                locale="es"
-                                navigator="true"
-                                pattern="dd/MM/yyyy"
-                                required="true"/>
-
-                    <p:outputLabel id='fechaContableMovimientoOutputLabel'
-                                   value="Fecha Contable"
-                                   for="fechaContableMovimientoCalendar"/>
-
-                    <p:calendar id="fechaContableMovimientoCalendar" 
-                                value="#{movimientoBean.movimiento.fechaContable}"
-                                showOn="button"
-                                locale="es"
-                                navigator="true"
-                                pattern="dd/MM/yyyy"
-                                required="true"/>
-
-                    <p:outputLabel id='categoriaMovimientoOutputLabel'
-                                   value="Categoria del Movimiento"
-                                   for="categoriaMovimientoSelectOneMenu"/>
-
-                    <p:selectOneMenu id="categoriaMovimientoSelectOneMenu"
-                                     value="#{movimientoBean.movimiento.idCategoriaMovimiento}"
-                                     required="true">
-                        <f:selectItems value="#{movimientoBean.llenarCategorias()}"/>
-                        <p:ajax process="@this" 
-                                event="change"/>
+                    <p:selectOneMenu id="cuentaSelectOneMenu"
+                                     value="#{cuentaBean.cuenta.idCuenta}">
+                        <f:selectItems value="#{cuentaBean.llenarCuentas()}"/>
                     </p:selectOneMenu>
 
-                    <p:outputLabel id='tipoMovimientoOutputLabel'
-                                   value="Tipo del Movimiento"
-                                   for="tipoMovimientoSelectOneMenu"/>
+                <p:outputLabel id='detalleMovimientoOutputLabel'
+                               value="Detalle"
+                               for="detalleMovimientoInputText"/>
+                <p:inputText id="detalleMovimientoInputText"
+                             value="#{movimientoBean.movimiento.detalle}"
+                             required="true"/>
 
-                    <p:selectOneMenu id="tipoMovimientoSelectOneMenu"
-                                     value="#{movimientoBean.movimiento.idTipoMovimiento}">
-                        <f:selectItems value="#{movimientoBean.llenarTipos()}"/>
-                        <p:ajax process="@this" 
-                                event="change"/>
-                    </p:selectOneMenu>
+                <p:outputLabel id='montoMovimientoOutputLabel'
+                               value="Monto"
+                               for="montoMovimientoInputText"/>
 
-                    <p:commandButton id="movimientoGuardarCommandButton"
-                                     update="formMantenimiento"
-                                     value="Guardar"
-                                     actionListener= "#{movimientoBean.onSave()}"
-                                     process="@form"/>
+                <p:inputNumber id="montoMovimientoInputText"
+                               value="#{movimientoBean.movimiento.monto}"
+                               required="true"
+                               minValue="0"
+                               symbol="¢"
+                               thousandSeparator="."
+                               decimalSeparator=","/>
 
-                    <p:commandButton id="movimientoCerrarCommandButton"
-                                     value="Cerrar"
-                                     update="formMantenimiento"
-                                     process="@this"
-                                     actionListener="#{movimientoBean.closeDialog()}"/>
-                </h:panelGrid>
-            </p:panel>
+                <p:outputLabel id='fechaMovimientoOutputLabel'
+                               value="Fecha del Movimiento"
+                               for="fechaMovimientoCalendar"/>
+
+                <p:calendar id="fechaMovimientoCalendar" 
+                            value="#{movimientoBean.movimiento.fechaMovimiento}"
+                            showOn="button"
+                            locale="es"
+                            navigator="true"
+                            pattern="dd/MM/yyyy"
+                            required="true"/>
+
+                <p:outputLabel id='fechaContableMovimientoOutputLabel'
+                               value="Fecha Contable"
+                               for="fechaContableMovimientoCalendar"/>
+
+                <p:calendar id="fechaContableMovimientoCalendar" 
+                            value="#{movimientoBean.movimiento.fechaContable}"
+                            showOn="button"
+                            locale="es"
+                            navigator="true"
+                            pattern="dd/MM/yyyy"
+                            required="true"/>
+
+                <p:outputLabel id='categoriaMovimientoOutputLabel'
+                               value="Categoria del Movimiento"
+                               for="categoriaMovimientoSelectOneMenu"/>
+
+                <p:selectOneMenu id="categoriaMovimientoSelectOneMenu"
+                                 value="#{movimientoBean.movimiento.idCategoriaMovimiento}"
+                                 required="true">
+                    <f:selectItems value="#{movimientoBean.llenarCategorias()}"/>
+                    <p:ajax process="@this" 
+                            event="change"/>
+                </p:selectOneMenu>
+
+                <p:outputLabel id='tipoMovimientoOutputLabel'
+                               value="Tipo del Movimiento"
+                               for="tipoMovimientoSelectOneMenu"/>
+
+                <p:selectOneMenu id="tipoMovimientoSelectOneMenu"
+                                 value="#{movimientoBean.movimiento.idTipoMovimiento}">
+                    <f:selectItems value="#{movimientoBean.llenarTipos()}"/>
+                    <p:ajax process="@this" 
+                            event="change"/>
+                </p:selectOneMenu>
+            </h:panelGrid>
+            <p:outputPanel/>
+            <h:panelGrid columns="2">
+                <p:commandButton id="movimientoGuardarCommandButton"
+                                 update="formMantenimiento"
+                                 value="Guardar"
+                                 actionListener= "#{movimientoBean.onSave()}"
+                                 process="@form"/>
+
+                <p:commandButton id="movimientoCerrarCommandButton"
+                                 value="Cerrar"
+                                 update="formMantenimiento"
+                                 process="@this"
+                                 actionListener="#{movimientoBean.closeDialog()}"/>
+            </h:panelGrid>
         </h:form>
     </h:body>
 </html>

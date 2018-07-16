@@ -197,15 +197,15 @@ public class MovimientoBean {
         this.movimiento = new Movimiento();
         movimiento.setCuenta(cuenta);
         Map<String, Object> options = new HashMap<String, Object>();
-        options.put("width", 640);
-        options.put("height", 340);
-        options.put("contentWidth", "100%");
-        options.put("contentHeight", "100%");
+        options.put("width", 410);
+        options.put("modal", true);
+        options.put("resizable", false);
+        options.put("draggable", false);
         PrimeFaces.current().dialog().openDynamic("movimientoEditForm", options, null);
     }
 
     public void closeDialog() {
-        RequestContext.getCurrentInstance().closeDialog(null);
+        PrimeFaces.current().dialog().closeDynamic(null);
     }
 
     public void saveMovimiento(Movimiento movimiento) {

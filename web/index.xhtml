@@ -7,6 +7,14 @@
 
     <f:view contentType="text/html">
         <h:head>
+            <style type="text/css">
+                .ui-layout-unit .ui-layout-unit-content {
+                    border: 0px none !important;
+                    border-style: hidden !important;;
+                    overflow: auto !important;
+                }
+            </style>
+
             <f:facet name="first">
                 <meta content='text/html; charset=UTF-8' 
                       http-equiv="Content-Type"/>
@@ -16,15 +24,13 @@
 
         <h:body>
 
-            <p:layout fullPage="true">
+            <p:layout fullPage="true" >
 
                 <p:layoutUnit position="north" 
-                              size="100" 
                               resizable="false" 
                               closable="false" 
-                              collapsible="false">           
-                    ACCOUNT MANAGER
-                </p:layoutUnit>
+                              collapsible="false"
+                              header="ACCOUNT MANAGER"/>
 
                 <p:layoutUnit position="west" 
                               size="237" 
@@ -36,11 +42,8 @@
                         <p:menu toggleable="true" >
                             <p:submenu label="Acciones"
                                        icon="ui-icon-calculator">
-                                <p:menuitem value="Categorias de Movimiento"                    
-                                            url="/faces/categoriaMovimientoListForm.xhtml"/>
-                                <p:menuitem value="Cuentas"
-                                            url="/faces/cuentaListForm.xhtml"/>
-                                <p:menuitem value="Movimientos"
+
+                                <p:menuitem value="Lista de Movimientos"
                                             url="/faces/cuentaEditForm.xhtml"/>
                             </p:submenu>
 
@@ -48,11 +51,17 @@
                                        icon="ui-icon-gear"
                                        expanded="false">
 
-                                <p:menuitem value="Valores por Defecto"                    
-                                            url="/faces/parametroListForm.xhtml"/>
+                                <p:menuitem value="Administrar Categorias de Movimiento"                    
+                                            url="/faces/categoriaMovimientoListForm.xhtml"/>
 
-                                <p:menuitem value="Tipos de Movimiento" 
+                                <p:menuitem value="Administrar Cuentas"
+                                            url="/faces/cuentaListForm.xhtml"/>
+
+                                <p:menuitem value="Administrar Tipos de Movimiento" 
                                             url="/faces/tipoMovimientoListForm.xhtml"/>
+
+                                <p:menuitem value="Administrar Valores por Defecto"                    
+                                            url="/faces/parametroListForm.xhtml"/>
                             </p:submenu>
                         </p:menu>
                     </h:form>

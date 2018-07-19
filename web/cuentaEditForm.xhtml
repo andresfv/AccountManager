@@ -17,21 +17,46 @@
                         icon="ui-icon-arrowthick-1-s"
                         onclick="PF('dlg').show();"/>
 
+            <p:menuitem id="eliminaMovimientosCommandButton"
+                        value="Borrar Movimientos"
+                        icon="ui-icon ui-icon-trash"
+                        onclick="PF('eliminaMovimientosConfirmDialog').show();"/>
+
             <p:menuitem value="Regresar" 
                         url="/faces/cuentaListForm.xhtml" 
-                        icon="ui-icon-arrowreturnthick-1-w" 
-
-                        />
+                        icon="ui-icon-arrowreturnthick-1-w"/>
         </p:menubar>
 
-        <p:commandLink id="movimientoEliminaBtn"
+<!--        <p:commandLink id="movimientoEliminaBtn"
                        styleClass="ui-icon ui-icon-trash"
                        title="Elimina Movimientos Cuenta"
-                       action="#{cuentaBean.limpiaListaMovimientos()}"
-                       update="#{p:component('movimientoDataTable')}, #{p:component('messages')},
-                       :#{p:component('totalesOutputPanel')}"
-                       actionListener="#{cuentaBean.cargaMovimientosCuenta()}"
-                       process="@this"/>
+                       action="{cuentaBean.limpiaListaMovimientos()}"
+                       update="{p:component('movimientoDataTable')}, {p:component('messages')},
+                       :{p:component('totalesOutputPanel')}"
+                       actionListener="{cuentaBean.cargaMovimientosCuenta()}"
+                       process="@this"/>-->
+
+        <p:confirmDialog id="eliminaMovimientosConfirmDialog"
+                         widgetVar="eliminaMovimientosConfirmDialog"
+                         showEffect="bounce" 
+                         hideEffect="fade" 
+                         severity="alert" 
+                         message="¿Desea eliminar todos los movimientos de la cuenta seleccionada?"
+                         appendTo="@(body)"
+                         closable="false">
+            <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" 
+                             action="#{cuentaBean.limpiaListaMovimientos()}"
+                             update="#{p:component('movimientoDataTable')}, #{p:component('messages')},
+                             :#{p:component('totalesOutputPanel')}"
+                             actionListener="#{cuentaBean.cargaMovimientosCuenta()}"
+                             process="@this"
+                             onclick="PF('eliminaMovimientosConfirmDialog').hide();"/>
+            <p:commandButton value="No" 
+                             type="button" 
+                             styleClass="ui-confirmdialog-no" 
+                             icon="ui-icon-close" 
+                             onclick="PF('eliminaMovimientosConfirmDialog').hide();"/>
+        </p:confirmDialog>
 
         <p:dialog id="dlg"
                   header="Información de importación" 

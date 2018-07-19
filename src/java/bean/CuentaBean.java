@@ -31,8 +31,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import model.CategoriaMovimiento;
 import model.Parametro;
 import model.TipoMovimiento;
@@ -48,7 +46,6 @@ import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 
 /**
@@ -76,13 +73,13 @@ public class CuentaBean {
     int mes = -1;
     int anio = -1;
     //Variables que sirven de coordenadas para importación de archivos excel
-    private int columnaFechaContable;
-    private int columnaFechaMovimiento;
-    private int columnaDetalle;
-    private int columnaMontoDebito;
-    private int columnaMontoCredito;
-    private int filaDesde;
-    private int filaHasta;
+    private int columnaFechaContable = 0;
+    private int columnaFechaMovimiento = 0;
+    private int columnaDetalle = 0;
+    private int columnaMontoDebito = 0;
+    private int columnaMontoCredito = 0;
+    private int filaDesde = 0;
+    private int filaHasta = 0;
 
     @PostConstruct
     public void init() {

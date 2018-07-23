@@ -260,6 +260,45 @@
 
                 </h:panelGrid>
             </p:fieldset>
+            
+            <p:outputPanel id="totalesOutputPanel">
+                <h:panelGrid columns="3">
+                    <p:outputLabel id='totalIngesosOutputLabel'
+                                   value="Total Ingresos"
+                                   for="totalIngresosInputText"/>
+
+                    <p:outputLabel id='totalGastosOutputLabel'
+                                   value="Total Gastos"
+                                   for="totalGastosInputText"/>
+
+                    <p:outputLabel id='saldoOutputLabel'
+                                   value="Saldo"
+                                   for="saldoInputText"/>
+
+                    <p:inputNumber id="totalIngresosInputText"
+                                   value="#{cuentaBean.totalIngresosMontoMovimientos}"
+                                   disabled="true"
+                                   minValue="0"
+                                   symbol="¢"
+                                   thousandSeparator="."
+                                   decimalSeparator=","/>
+
+                    <p:inputNumber id="totalGastosInputText"
+                                   value="#{cuentaBean.totalGastosMontoMovimientos}"
+                                   disabled="true"
+                                   minValue="0"
+                                   symbol="¢"
+                                   thousandSeparator="."
+                                   decimalSeparator=","/>
+
+                    <p:inputNumber id="saldoInputText"
+                                   value="#{cuentaBean.saldoMontoMovimientos}"
+                                   disabled="true"
+                                   symbol="¢"
+                                   thousandSeparator="."
+                                   decimalSeparator=","/>
+                </h:panelGrid>
+            </p:outputPanel>
 
             <p:dataTable id="movimientoDataTable"
                          widgetVar="movimientoDataTable"
@@ -437,44 +476,6 @@
                 </p:column>
 
             </p:dataTable>
-            <p:outputPanel id="totalesOutputPanel">
-                <h:panelGrid columns="3">
-                    <p:outputLabel id='totalIngesosOutputLabel'
-                                   value="Total Ingresos"
-                                   for="totalIngresosInputText"/>
-
-                    <p:outputLabel id='totalGastosOutputLabel'
-                                   value="Total Gastos"
-                                   for="totalGastosInputText"/>
-
-                    <p:outputLabel id='saldoOutputLabel'
-                                   value="Saldo"
-                                   for="saldoInputText"/>
-
-                    <p:inputNumber id="totalIngresosInputText"
-                                   value="#{cuentaBean.totalIngresosMontoMovimientos}"
-                                   disabled="true"
-                                   minValue="0"
-                                   symbol="¢"
-                                   thousandSeparator="."
-                                   decimalSeparator=","/>
-
-                    <p:inputNumber id="totalGastosInputText"
-                                   value="#{cuentaBean.totalGastosMontoMovimientos}"
-                                   disabled="true"
-                                   minValue="0"
-                                   symbol="¢"
-                                   thousandSeparator="."
-                                   decimalSeparator=","/>
-
-                    <p:inputNumber id="saldoInputText"
-                                   value="#{cuentaBean.saldoMontoMovimientos}"
-                                   disabled="true"
-                                   symbol="¢"
-                                   thousandSeparator="."
-                                   decimalSeparator=","/>
-                </h:panelGrid>
-            </p:outputPanel>
         </p:panel>
 
     </ui:define>

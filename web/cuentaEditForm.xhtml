@@ -27,14 +27,14 @@
                         icon="ui-icon-arrowreturnthick-1-w"/>
         </p:menubar>
 
-<!--        <p:commandLink id="movimientoEliminaBtn"
-                       styleClass="ui-icon ui-icon-trash"
-                       title="Elimina Movimientos Cuenta"
-                       action="{cuentaBean.limpiaListaMovimientos()}"
-                       update="{p:component('movimientoDataTable')}, {p:component('messages')},
-                       :{p:component('totalesOutputPanel')}"
-                       actionListener="{cuentaBean.cargaMovimientosCuenta()}"
-                       process="@this"/>-->
+        <!--        <p:commandLink id="movimientoEliminaBtn"
+                               styleClass="ui-icon ui-icon-trash"
+                               title="Elimina Movimientos Cuenta"
+                               action="{cuentaBean.limpiaListaMovimientos()}"
+                               update="{p:component('movimientoDataTable')}, {p:component('messages')},
+                               :{p:component('totalesOutputPanel')}"
+                               actionListener="{cuentaBean.cargaMovimientosCuenta()}"
+                               process="@this"/>-->
 
         <p:confirmDialog id="eliminaMovimientosConfirmDialog"
                          widgetVar="eliminaMovimientosConfirmDialog"
@@ -167,100 +167,102 @@
 
         <p:panel id='cuentaPanel'
                  header="Mantenimiento de Cuenta">
-            <p:fieldset legend="Filtrar por cuenta">
-                <h:panelGrid columns="2">
-                    <p:outputLabel id='cuentaOutputLabel'
-                                   value="Cuenta"
-                                   for="cuentaSelectOneMenu"/>
+            <p:fieldset legend="Filtros" toggleable="true" collapsed="false">
+                <p:fieldset legend="Filtrar por cuenta">
+                    <h:panelGrid columns="2">
+                        <p:outputLabel id='cuentaOutputLabel'
+                                       value="Cuenta"
+                                       for="cuentaSelectOneMenu"/>
 
-                    <p:selectOneMenu id="cuentaSelectOneMenu"
-                                     value="#{cuentaBean.cuenta.idCuenta}">
-                        <f:selectItem itemLabel="Todos" itemValue="" noSelectionOption="true"/>
-                        <f:selectItems value="#{cuentaBean.llenarCuentas()}"/>
-                        <p:ajax process="@this"
-                                event="change"
-                                update="movimientoDataTable, totalesOutputPanel"
-                                listener="#{cuentaBean.consultaMovimientosCuenta()}"/>
-                    </p:selectOneMenu>
-                </h:panelGrid>
+                        <p:selectOneMenu id="cuentaSelectOneMenu"
+                                         value="#{cuentaBean.cuenta.idCuenta}">
+                            <f:selectItem itemLabel="Todos" itemValue="" noSelectionOption="true"/>
+                            <f:selectItems value="#{cuentaBean.llenarCuentas()}"/>
+                            <p:ajax process="@this"
+                                    event="change"
+                                    update="movimientoDataTable, totalesOutputPanel"
+                                    listener="#{cuentaBean.consultaMovimientosCuenta()}"/>
+                        </p:selectOneMenu>
+                    </h:panelGrid>
+                </p:fieldset>
+                <p:fieldset legend="Filtrar por fecha movimiento">
+                    <h:panelGrid columns="4">
+                        <p:outputLabel id='mesLabel'
+                                       value="Mes"
+                                       for="mesSelectOneMenu"/>
+                        <p:selectOneMenu id="mesSelectOneMenu"
+                                         value="#{cuentaBean.mes}">
+                            <f:selectItem itemLabel="Enero" itemValue="0"/>
+                            <f:selectItem itemLabel="Febrero" itemValue="1"/>
+                            <f:selectItem itemLabel="Marzo" itemValue="2"/>
+                            <f:selectItem itemLabel="Abril" itemValue="3"/>
+                            <f:selectItem itemLabel="Mayo" itemValue="4"/>
+                            <f:selectItem itemLabel="Junio" itemValue="5"/>
+                            <f:selectItem itemLabel="Julio" itemValue="6"/>
+                            <f:selectItem itemLabel="Agosto" itemValue="7"/>
+                            <f:selectItem itemLabel="Septiembre" itemValue="8"/>
+                            <f:selectItem itemLabel="Octubre" itemValue="9"/>
+                            <f:selectItem itemLabel="Noviembre" itemValue="10"/>
+                            <f:selectItem itemLabel="Diciembre" itemValue="11"/>
+
+                            <p:ajax process="@this"
+                                    event="change"
+                                    update="movimientoDataTable, 
+                                    totalesOutputPanel, 
+                                    fechaDesdeCalendar, 
+                                    fechaHastaCalendar"
+                                    listener="#{cuentaBean.consultaMovimientosCuenta()}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel id='fechaDesdeOutputLabel'
+                                       value="Desde"
+                                       for="fechaDesdeCalendar"/>
+                        <p:calendar id="fechaDesdeCalendar" 
+                                    value="#{cuentaBean.fechaDesde}"
+                                    showOn="button"
+                                    locale="es"
+                                    navigator="true"
+                                    pattern="dd/MM/yyyy"
+                                    required="true">
+                            <p:ajax process="@this"
+                                    update="mesSelectOneMenu, anioSelectOneMenu, movimientoDataTable, totalesOutputPanel"
+                                    event="dateSelect"
+                                    listener="#{cuentaBean.consultaMovimientosCuenta()}"/>
+                        </p:calendar>
+                        <p:outputLabel id='anioLabel'
+                                       value="Año"
+                                       for="anioSelectOneMenu"/>
+                        <p:selectOneMenu id="anioSelectOneMenu"
+                                         value="#{cuentaBean.anio}">           
+                            <f:selectItems value="#{cuentaBean.cargaListaAnios()}"/>
+                            <p:ajax process="@this"
+                                    event="change"
+                                    update="movimientoDataTable, 
+                                    totalesOutputPanel, 
+                                    fechaDesdeCalendar, 
+                                    fechaHastaCalendar"
+                                    listener="#{cuentaBean.consultaMovimientosCuenta()}"/>
+                        </p:selectOneMenu>
+
+                        <p:outputLabel id='fechaHastaOutputLabel'
+                                       value="Hasta"
+                                       for="fechaHastaCalendar"/>
+                        <p:calendar id="fechaHastaCalendar" 
+                                    value="#{cuentaBean.fechaHasta}"
+                                    showOn="button"
+                                    locale="es"
+                                    navigator="true"
+                                    pattern="dd/MM/yyyy"
+                                    required="true">
+                            <p:ajax process="@this"
+                                    update="movimientoDataTable, totalesOutputPanel"
+                                    event="dateSelect"
+                                    listener="#{cuentaBean.consultaMovimientosCuenta()}"/>
+                        </p:calendar>
+
+                    </h:panelGrid>
+                </p:fieldset>
             </p:fieldset>
-            <p:fieldset legend="Filtrar por fecha movimiento">
-                <h:panelGrid columns="4">
-                    <p:outputLabel id='mesLabel'
-                                   value="Mes"
-                                   for="mesSelectOneMenu"/>
-                    <p:selectOneMenu id="mesSelectOneMenu"
-                                     value="#{cuentaBean.mes}">
-                        <f:selectItem itemLabel="Enero" itemValue="0"/>
-                        <f:selectItem itemLabel="Febrero" itemValue="1"/>
-                        <f:selectItem itemLabel="Marzo" itemValue="2"/>
-                        <f:selectItem itemLabel="Abril" itemValue="3"/>
-                        <f:selectItem itemLabel="Mayo" itemValue="4"/>
-                        <f:selectItem itemLabel="Junio" itemValue="5"/>
-                        <f:selectItem itemLabel="Julio" itemValue="6"/>
-                        <f:selectItem itemLabel="Agosto" itemValue="7"/>
-                        <f:selectItem itemLabel="Septiembre" itemValue="8"/>
-                        <f:selectItem itemLabel="Octubre" itemValue="9"/>
-                        <f:selectItem itemLabel="Noviembre" itemValue="10"/>
-                        <f:selectItem itemLabel="Diciembre" itemValue="11"/>
 
-                        <p:ajax process="@this"
-                                event="change"
-                                update="movimientoDataTable, 
-                                totalesOutputPanel, 
-                                fechaDesdeCalendar, 
-                                fechaHastaCalendar"
-                                listener="#{cuentaBean.consultaMovimientosCuenta()}"/>
-                    </p:selectOneMenu>
-                    <p:outputLabel id='fechaDesdeOutputLabel'
-                                   value="Desde"
-                                   for="fechaDesdeCalendar"/>
-                    <p:calendar id="fechaDesdeCalendar" 
-                                value="#{cuentaBean.fechaDesde}"
-                                showOn="button"
-                                locale="es"
-                                navigator="true"
-                                pattern="dd/MM/yyyy"
-                                required="true">
-                        <p:ajax process="@this"
-                                update="mesSelectOneMenu, anioSelectOneMenu, movimientoDataTable, totalesOutputPanel"
-                                event="dateSelect"
-                                listener="#{cuentaBean.consultaMovimientosCuenta()}"/>
-                    </p:calendar>
-                    <p:outputLabel id='anioLabel'
-                                   value="Año"
-                                   for="anioSelectOneMenu"/>
-                    <p:selectOneMenu id="anioSelectOneMenu"
-                                     value="#{cuentaBean.anio}">           
-                        <f:selectItems value="#{cuentaBean.cargaListaAnios()}"/>
-                        <p:ajax process="@this"
-                                event="change"
-                                update="movimientoDataTable, 
-                                totalesOutputPanel, 
-                                fechaDesdeCalendar, 
-                                fechaHastaCalendar"
-                                listener="#{cuentaBean.consultaMovimientosCuenta()}"/>
-                    </p:selectOneMenu>
-
-                    <p:outputLabel id='fechaHastaOutputLabel'
-                                   value="Hasta"
-                                   for="fechaHastaCalendar"/>
-                    <p:calendar id="fechaHastaCalendar" 
-                                value="#{cuentaBean.fechaHasta}"
-                                showOn="button"
-                                locale="es"
-                                navigator="true"
-                                pattern="dd/MM/yyyy"
-                                required="true">
-                        <p:ajax process="@this"
-                                update="movimientoDataTable, totalesOutputPanel"
-                                event="dateSelect"
-                                listener="#{cuentaBean.consultaMovimientosCuenta()}"/>
-                    </p:calendar>
-
-                </h:panelGrid>
-            </p:fieldset>
-            
             <p:outputPanel id="totalesOutputPanel">
                 <h:panelGrid columns="3">
                     <p:outputLabel id='totalIngesosOutputLabel'
@@ -313,7 +315,7 @@
                          editable="true"
                          paginator="true"
                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                         rowsPerPageTemplate="5,10,15">
+                         rowsPerPageTemplate="5,10,15,30,60">
 
                 <p:ajax event="rowEdit"
                         listener="#{movimientoBean.onRowEdit}"

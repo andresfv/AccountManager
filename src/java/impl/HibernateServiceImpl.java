@@ -207,8 +207,7 @@ public class HibernateServiceImpl implements HibernateService {
     }
     
     @Override
-    public List<Object> runQuery(String queryString
-    ) {
+    public List<Object> runQuery(String queryString) {
         List<Object> objects = new ArrayList<Object>();
         //Se crea Objeto Session
         Session session; //Se abre una sesion

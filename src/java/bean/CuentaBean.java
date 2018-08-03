@@ -25,10 +25,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
 import com.google.common.io.Files;
+import dao.MovimientoService;
 import dao.ParametroService;
+import impl.MovimientoServiceImpl;
 import impl.ParametroServiceImpl;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import model.CategoriaMovimiento;
@@ -57,12 +60,18 @@ import org.primefaces.event.FileUploadEvent;
 public class CuentaBean {
 
     HibernateService hibernateService;
+    MovimientoService movimientoService;
     ParametroService parametroService;
     Cuenta cuenta;
+    String detalle;
+    double montoDesde;
+    double montoHasta;
     List<Cuenta> listaCuentas;
     List<Cuenta> listaCuentasFiltradas;
     List<Movimiento> listaMovimientos;
     List<Movimiento> listaMovimientosFiltrados;
+    List<TipoMovimiento> listaTiposMovimiento;
+    List<CategoriaMovimiento> listaCategoriasMovimiento;
     MovimientoBean movimientoBean;
     Double totalIngresosMontoMovimientos;
     Double totalGastosMontoMovimientos;
@@ -84,12 +93,15 @@ public class CuentaBean {
     @PostConstruct
     public void init() {
         hibernateService = new HibernateServiceImpl();
+        movimientoService = new MovimientoServiceImpl();
         parametroService = new ParametroServiceImpl();
         cuenta = new Cuenta();
         listaCuentas = new ArrayList<Cuenta>();
         listaCuentasFiltradas = new ArrayList<Cuenta>();
         listaMovimientos = new ArrayList<Movimiento>();
         listaMovimientosFiltrados = new ArrayList<Movimiento>();
+        listaTiposMovimiento = new ArrayList<TipoMovimiento>();
+        listaCategoriasMovimiento = new ArrayList<CategoriaMovimiento>();
         movimientoBean = new MovimientoBean();
         movimientoBean.init();
         totalIngresosMontoMovimientos = 0.0;
@@ -169,12 +181,52 @@ public class CuentaBean {
         this.listaMovimientosFiltrados = listaMovimientosFiltrados;
     }
 
+    public List<TipoMovimiento> getListaTiposMovimiento() {
+        return listaTiposMovimiento;
+    }
+
+    public void setListaTiposMovimiento(List<TipoMovimiento> listaTiposMovimiento) {
+        this.listaTiposMovimiento = listaTiposMovimiento;
+    }
+
+    public List<CategoriaMovimiento> getListaCategoriasMovimiento() {
+        return listaCategoriasMovimiento;
+    }
+
+    public void setListaCategoriasMovimiento(List<CategoriaMovimiento> listaCategoriasMovimiento) {
+        this.listaCategoriasMovimiento = listaCategoriasMovimiento;
+    }
+
     public Cuenta getCuenta() {
         return cuenta;
     }
 
     public void setCuenta(Cuenta cuenta) {
         this.cuenta = cuenta;
+    }
+
+    public String getDetalle() {
+        return detalle;
+    }
+
+    public void setDetalle(String detalle) {
+        this.detalle = detalle;
+    }
+
+    public double getMontoDesde() {
+        return montoDesde;
+    }
+
+    public void setMontoDesde(double montoDesde) {
+        this.montoDesde = montoDesde;
+    }
+
+    public double getMontoHasta() {
+        return montoHasta;
+    }
+
+    public void setMontoHasta(double montoHasta) {
+        this.montoHasta = montoHasta;
     }
 
     public Double getTotalIngresosMontoMovimientos() {
@@ -666,18 +718,9 @@ public class CuentaBean {
 
     //---------------------------CONSULTA MOVIMIENTOS------------------------------
     public void consultaMovimientosCuenta() {
-        List<Object> listaObjetos = new ArrayList<Object>();
         this.listaMovimientos.clear();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyy/MM/dd");
-
-        listaObjetos.addAll(hibernateService.runQuery("from Movimiento as mv where mv.cuenta = coalesce(" + cuenta.getIdCuenta()
-                + ",mv.cuenta) and mv.fechaMovimiento between '" + simpleDateFormat.format(fechaDesde) + "' and '" + simpleDateFormat.format(fechaHasta) + "' order by mv.fechaMovimiento"));
-
-        if (!listaObjetos.isEmpty()) {
-            for (Object objeto : listaObjetos) {
-                this.listaMovimientos.add((Movimiento) objeto);
-            }
-        }
+        this.listaMovimientos.addAll(movimientoService.findMovimientosByParametros(cuenta, detalle, montoDesde, montoHasta,
+                fechaDesde, fechaHasta, listaTiposMovimiento, listaCategoriasMovimiento));
         listaMovimientosFiltrados = this.listaMovimientos;
     }
 

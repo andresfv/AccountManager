@@ -158,7 +158,8 @@
                               dragDropSupport="false"
                               update="messages, movimientoDataTable, totalesOutputPanel" 
                               allowTypes="/(\.|\/)(xls|xlsx|XLS|XLSX)$/" 
-                              invalidFileMessage="Solo se admiten formatos xls o xlsx"/>
+                              invalidFileMessage="Solo se admiten formatos xls o xlsx"
+                              oncomplete="PF('dlg2').hide();"/>
                 <p:commandButton id="cargarArchivoExcelCancelCommandButton"
                                  value="Cancelar"
                                  onclick="PF('dlg2').hide();"/>
@@ -261,6 +262,20 @@
 
                     </h:panelGrid>
                 </p:fieldset>
+                <p:fieldset legend="Filtrar por Tipo de Movimiento">
+                    <p:outputLabel for="tipoMovimientoCheckboxMenu" 
+                                   value="Tipos de Movimiento " />
+                    <p:selectCheckboxMenu id="tipoMovimientoCheckboxMenu" 
+                                          value="#{cuentaBean.listaTiposMovimiento}" 
+                                          label="Tipos de Movimiento" multiple="true"
+                                          filter="true" 
+                                          filterMatchMode="startsWith" 
+                                          panelStyle="width:250px">
+                        <f:selectItems value="#{movimientoBean.llenarTipos()}" />
+                        <p:ajax process="@this" 
+                                event="change"/>
+                    </p:selectCheckboxMenu>
+                </p:fieldset>
             </p:fieldset>
 
             <p:outputPanel id="totalesOutputPanel">
@@ -312,6 +327,7 @@
                          emptyMessage="No se encontraron registros"
                          filterEvent="enter"
                          filteredValue="#{cuentaBean.listaMovimientosFiltrados}"
+                         sortMode="multiple"
                          editable="true"
                          paginator="true"
                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
@@ -378,8 +394,6 @@
                 </p:column>
 
                 <p:column headerText="Categoria"
-                          filterBy="#{object.categoriaMovimientoNombre}"
-                          filterMatchMode="contains"
                           sortBy="#{object.categoriaMovimientoNombre}">
                     <p:cellEditor>
                         <f:facet name="input">
@@ -395,9 +409,7 @@
                     </p:cellEditor>
                 </p:column>
 
-                <p:column headerText="Tipo"
-                          filterBy="#{object.tipoMovimientoNombre}"
-                          filterMatchMode="contains"
+                <p:column headerText="Tipo"      
                           sortBy="#{object.tipoMovimientoNombre}">
                     <p:cellEditor>
                         <f:facet name="input">
@@ -413,8 +425,6 @@
                 </p:column>
 
                 <p:column headerText="Fecha Movimiento"
-                          filterBy="#{object.fechaMovimiento}"
-                          filterMatchMode="contains"
                           sortBy="#{object.fechaMovimiento}">
                     <p:cellEditor>
                         <f:facet name="input">
@@ -439,8 +449,6 @@
                 </p:column>
 
                 <p:column headerText="Fecha Contable"
-                          filterBy="#{object.fechaContable}"
-                          filterMatchMode="contains"
                           sortBy="#{object.fechaContable}">
                     <p:cellEditor>
                         <f:facet name="input">

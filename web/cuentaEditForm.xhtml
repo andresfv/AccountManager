@@ -262,19 +262,37 @@
 
                     </h:panelGrid>
                 </p:fieldset>
-                <p:fieldset legend="Filtrar por Tipo de Movimiento">
-                    <p:outputLabel for="tipoMovimientoCheckboxMenu" 
-                                   value="Tipos de Movimiento " />
-                    <p:selectCheckboxMenu id="tipoMovimientoCheckboxMenu" 
-                                          value="#{cuentaBean.listaTiposMovimiento}" 
-                                          label="Tipos de Movimiento" multiple="true"
-                                          filter="true" 
-                                          filterMatchMode="startsWith" 
-                                          panelStyle="width:250px">
-                        <f:selectItems value="#{movimientoBean.llenarTipos()}" />
-                        <p:ajax process="@this" 
-                                event="change"/>
-                    </p:selectCheckboxMenu>
+                <p:fieldset legend="Filtrar por Tipo y Categoria de Movimiento">
+                    <h:panelGrid columns="4">
+                        <p:outputLabel id="categoriaMovimientoOutputLabel"
+                                       for="categoriaMovimientoCheckboxMenu" 
+                                       value="Categoria de Movimiento" />
+                        <p:selectCheckboxMenu id="categoriaMovimientoCheckboxMenu" 
+                                              value="#{cuentaBean.listaCategoriasMovimiento}" 
+                                              label="Categorias de Movimiento" multiple="true"
+                                              filter="true" 
+                                              filterMatchMode="startsWith" 
+                                              panelStyle="width:250px"
+                                              converter="">
+                            <f:selectItems value="#{movimientoBean.llenarCategorias()}" />
+                            <p:ajax process="@this" 
+                                    event="change"/>
+                        </p:selectCheckboxMenu>
+
+                        <p:outputLabel id="tipoMovimientoOutputLabel"
+                                       for="tipoMovimientoCheckboxMenu" 
+                                       value="Tipos de Movimiento" />
+                        <p:selectCheckboxMenu id="tipoMovimientoCheckboxMenu" 
+                                              value="#{cuentaBean.listaTiposMovimiento}" 
+                                              label="Tipos de Movimiento" multiple="true"
+                                              filter="true" 
+                                              filterMatchMode="startsWith" 
+                                              panelStyle="width:250px">
+                            <f:selectItems value="#{movimientoBean.llenarTipos()}" />
+                            <p:ajax process="@this" 
+                                    event="change"/>
+                        </p:selectCheckboxMenu>
+                    </h:panelGrid>
                 </p:fieldset>
             </p:fieldset>
 

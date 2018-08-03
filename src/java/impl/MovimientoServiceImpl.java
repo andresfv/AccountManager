@@ -15,7 +15,6 @@ import model.Cuenta;
 import model.Movimiento;
 import model.TipoMovimiento;
 import org.hibernate.HibernateException;
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import util.HibernateUtil;
@@ -42,16 +41,20 @@ public class MovimientoServiceImpl implements MovimientoService {
         }
         Transaction tx = session.beginTransaction(); //Se inicia una transacción       
         try {
-            String queryString = "from Movimiento as mv where :cuenta is null or mv.cuenta = :cuenta "
-                    + "and :detalle is null or :detalle = '' or :detalle = mv.detalle "
-                    + "and :montoDesde is null or :montoHasta is null or mv.monto between :montoDesde and :montoHasta "
+            String queryString = "from Movimiento as mv where mv.cuenta = :cuenta "
+                    + "and mv.monto between :montoDesde and :montoHasta "
                     + "and mv.fechaMovimiento between :fechaMovimientoDesde and :fechaMovimientoHasta "
-                    + "and :tiposMovimiento is empty or mv.tipoMovimiento in :tiposMovimiento "
-                    + "and :categoriasMovimiento is empty or mv.categoriaMovimiento in :categoriasMovimiento "
+                    + "and mv.tipoMovimiento.idTipoMovimiento in :tiposMovimiento "
+                    + "and mv.categoriaMovimiento.idCategoriaMovimiento in :categoriasMovimiento "
                     + "order by mv.fechaMovimiento";
+            
+            if (!detalle.equals("")) {
+                queryString += "and mv.detalle like :detalle ";
+            }
+            
             movimientos = session.createQuery(queryString)
                     .setParameter("cuenta", cuenta.getIdCuenta())
-                    .setParameter("detalle", detalle)
+                    .setParameter("detalle", "%" + detalle + "%")
                     .setParameter("montoDesde", montoDesde)
                     .setParameter("montoHasta", montoHasta)
                     .setParameter("fechaMovimientoDesde", simpleDateFormat.parse(simpleDateFormat.format(fechaMovimientoDesde)))
@@ -73,3 +76,39 @@ public class MovimientoServiceImpl implements MovimientoService {
     }
 
 }
+//BASARSE EN
+//
+//Session session = sessionFactory.getCurrentSession();
+//        List<Plot> searchedLists = new ArrayList<Plot>();
+//        Map<String, Object> params = new HashMap<String,Object>();
+//        String hqlQuery = "from Plot where societyBlock.societyBlockId = :societyBlock";
+//        params.put( "societyBlock", societyId );
+//        if(plotType != null)
+//        {
+//            hqlQuery += " and type.typeId = :type";
+//            params.put( "type", plotType );
+//        }
+//        if(!plotSize.isEmpty() && plotSize != null && !plotSize.equals( "" ))
+//        {
+//            hqlQuery += " and size = :size";
+//            params.put( "size", plotSize );
+//        }
+//        if(min != null)
+//        {
+//            hqlQuery += " and price >= :pricemin";
+//            params.put( "pricemin", min );
+//        }
+//        if(max != null)
+//        {
+//            hqlQuery += " and price <= :pricemax";
+//            params.put( "pricemax", max );
+//        }
+//        Query query = session.createQuery( hqlQuery );
+//
+//        for (String str : query.getNamedParameters())
+//        {
+//            query.setParameter( str, params.get( str ) );
+//        }
+//        searchedLists = (List<Plot>) query.list();
+//        System.out.println( searchedLists.size() );
+//        return searchedLists;

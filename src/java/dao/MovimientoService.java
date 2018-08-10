@@ -18,6 +18,6 @@ import model.TipoMovimiento;
  */
 public interface MovimientoService {
 
-    public List<Movimiento> findMovimientosByParametros(Cuenta cuenta, String detalle, double montoDesde, double montoHasta, Date fechaMovimientoDesde, Date fechaMovimientoHasta,
+    public List<Movimiento> findMovimientosByParametros(Cuenta cuenta, String detalle, Date fechaMovimientoDesde, Date fechaMovimientoHasta,
             List<TipoMovimiento> tiposMovimiento, List<CategoriaMovimiento> categoriasMovimiento);
 }

@@ -11,7 +11,27 @@
         <f:event type="preRenderView" listener="#{movimientoBean.initDefaults}"/>
         <f:event type="preRenderView" listener="#{cuentaBean.initDetails}"/>
 
+        <script>
+            function myClick() {
+                document.getElementById("centerForm:movimientoNewCommandButton").click();
+            }
+        </script>
+
+        <p:commandButton id="movimientoNewCommandButton"
+                         widgetVar="movimientoNewCommandButton"
+                         actionListener="#{movimientoBean.abreNuevoMovimientoDialog}"
+                         style="display: none">
+            <p:ajax event="dialogReturn"
+                    update="movimientoDataTable, totalesOutputPanel"
+                    listener="#{movimientoBean.onReturn()}"/>
+        </p:commandButton>
+
         <p:menubar>
+            <p:menuitem id="crearMovimientoCommandButton"
+                        value="Añadir Nuevo Movimiento"
+                        icon="ui-icon ui-icon-plus"
+                        onclick="myClick()"/>
+
             <p:menuitem id="importarExcelCommandButton"
                         value="Importar Excel"
                         icon="ui-icon-arrowthick-1-s"
@@ -22,19 +42,11 @@
                         icon="ui-icon ui-icon-trash"
                         onclick="PF('eliminaMovimientosConfirmDialog').show();"/>
 
-            <p:menuitem value="Regresar" 
+            <p:menuitem id="regresarCommandButton"
+                        value="Regresar" 
                         url="/faces/cuentaListForm.xhtml" 
                         icon="ui-icon-arrowreturnthick-1-w"/>
         </p:menubar>
-
-        <!--        <p:commandLink id="movimientoEliminaBtn"
-                               styleClass="ui-icon ui-icon-trash"
-                               title="Elimina Movimientos Cuenta"
-                               action="{cuentaBean.limpiaListaMovimientos()}"
-                               update="{p:component('movimientoDataTable')}, {p:component('messages')},
-                               :{p:component('totalesOutputPanel')}"
-                               actionListener="{cuentaBean.cargaMovimientosCuenta()}"
-                               process="@this"/>-->
 
         <p:confirmDialog id="eliminaMovimientosConfirmDialog"
                          widgetVar="eliminaMovimientosConfirmDialog"
@@ -167,8 +179,8 @@
         </p:dialog>
 
         <p:panel id='cuentaPanel'
-                 header="Mantenimiento de Cuenta">
-            <p:fieldset legend="Filtros" toggleable="true" collapsed="false">
+                 header="Mantenimiento de Cuenta">         
+            <p:fieldset legend="Filtros" toggleable="true" collapsed="true">
                 <p:fieldset legend="Filtrar por cuenta">
                     <h:panelGrid columns="2">
                         <p:outputLabel id='cuentaOutputLabel'
@@ -184,6 +196,19 @@
                                     update="movimientoDataTable, totalesOutputPanel"
                                     listener="#{cuentaBean.consultaMovimientosCuenta()}"/>
                         </p:selectOneMenu>
+                    </h:panelGrid>
+                </p:fieldset>
+                <p:fieldset legend="Filtrar por detalle">
+                    <h:panelGrid columns="2">
+                        <p:outputLabel id='detalleOutputLabel'
+                                       value="Detalle"
+                                       for="detalleInputText"/>
+                        <p:inputText id="detalleInputText"
+                                     value="#{cuentaBean.detalle}">
+                            <p:ajax event="blur"
+                                    update="movimientoDataTable, totalesOutputPanel"
+                                    listener="#{cuentaBean.consultaMovimientosCuenta()}"/>
+                        </p:inputText>
                     </h:panelGrid>
                 </p:fieldset>
                 <p:fieldset legend="Filtrar por fecha movimiento">
@@ -272,11 +297,12 @@
                                               label="Categorias de Movimiento" multiple="true"
                                               filter="true" 
                                               filterMatchMode="startsWith" 
-                                              panelStyle="width:250px"
-                                              converter="">
+                                              panelStyle="width:250px">
                             <f:selectItems value="#{movimientoBean.llenarCategorias()}" />
                             <p:ajax process="@this" 
-                                    event="change"/>
+                                    event="change"
+                                    update="movimientoDataTable, totalesOutputPanel"
+                                    listener="#{cuentaBean.consultaMovimientosCuenta()}"/>
                         </p:selectCheckboxMenu>
 
                         <p:outputLabel id="tipoMovimientoOutputLabel"
@@ -290,7 +316,9 @@
                                               panelStyle="width:250px">
                             <f:selectItems value="#{movimientoBean.llenarTipos()}" />
                             <p:ajax process="@this" 
-                                    event="change"/>
+                                    event="change"
+                                    update="movimientoDataTable, totalesOutputPanel"
+                                    listener="#{cuentaBean.consultaMovimientosCuenta()}"/>
                         </p:selectCheckboxMenu>
                     </h:panelGrid>
                 </p:fieldset>
@@ -366,17 +394,10 @@
 
                 <f:facet name="header">
                     Lista de Movimientos
-                    <p:commandButton id="movimientoNewCommandButton"
-                                     actionListener="#{movimientoBean.abreNuevoMovimientoDialog}"  
-                                     icon="ui-icon-plus"
-                                     style="float:left; width:20px;height:20px"/>
                 </f:facet>
 
                 <p:column headerText="Detalle"
-                          filterBy="#{object.detalle}"
-                          filterMatchMode="contains"
                           sortBy="#{object.detalle}">
-
                     <p:cellEditor>
                         <f:facet name="input">
                             <p:inputText value="#{object.detalle}"
@@ -390,8 +411,6 @@
 
 
                 <p:column headerText="Monto"
-                          filterBy="#{object.monto}"
-                          filterMatchMode="contains"
                           sortBy="#{object.monto}">
                     <p:cellEditor>
                         <f:facet name="input">

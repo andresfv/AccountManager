@@ -8,7 +8,6 @@ package bean;
 import dao.HibernateService;
 import impl.HibernateServiceImpl;
 import model.CategoriaMovimiento;
-import model.Cuenta;
 import model.Movimiento;
 import model.TipoMovimiento;
 import java.util.ArrayList;
@@ -24,7 +23,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
 import javax.faces.model.SelectItem;
 import org.primefaces.PrimeFaces;
-import org.primefaces.context.RequestContext;
 import org.primefaces.event.RowEditEvent;
 
 /**
@@ -36,7 +34,6 @@ import org.primefaces.event.RowEditEvent;
 public class MovimientoBean {
 
     public HibernateService hibernateService;
-    public Cuenta cuenta;
     public Movimiento movimiento;
     public List<Movimiento> listaMovimientos;
     public List<Movimiento> listaMovimientosFiltrados;
@@ -48,7 +45,6 @@ public class MovimientoBean {
     @PostConstruct
     public void init() {
         hibernateService = new HibernateServiceImpl();
-        cuenta = new Cuenta();
         movimiento = new Movimiento();
         listaMovimientos = new ArrayList<Movimiento>();
         listaMovimientosFiltrados = new ArrayList<Movimiento>();
@@ -68,14 +64,6 @@ public class MovimientoBean {
             this.movimiento.setFechaContable(this.movimiento.getFechaMovimiento());
         }
 
-    }
-
-    public Cuenta getCuenta() {
-        return cuenta;
-    }
-
-    public void setCuenta(Cuenta cuenta) {
-        this.cuenta = cuenta;
     }
 
     public Movimiento getMovimiento() {
@@ -186,16 +174,16 @@ public class MovimientoBean {
 
     public void onSave() {
         saveMovimiento(this.movimiento);
-        RequestContext.getCurrentInstance().closeDialog(null);
+        PrimeFaces.current().dialog().closeDynamic(null);
     }
 
     public void onReturn() {
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Guardado", "Registro almacenado correctamente"));
+        FacesContext context = FacesContext.getCurrentInstance();
+        context.addMessage(null, new FacesMessage("Guardado", "Registro almacenado correctamente"));
     }
 
     public void abreNuevoMovimientoDialog() {
         this.movimiento = new Movimiento();
-        movimiento.setCuenta(cuenta);
         Map<String, Object> options = new HashMap<String, Object>();
         options.put("width", 410);
         options.put("modal", true);

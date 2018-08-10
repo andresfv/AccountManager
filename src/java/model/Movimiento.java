@@ -20,6 +20,7 @@ public class Movimiento implements java.io.Serializable {
     private Date fechaMovimiento;
     private Date fechaContable;
     private HibernateService hibernateService;
+    private int idCuenta;
     private int idCategoriaMovimiento;
     private int idTipoMovimiento;
     private Date fechaCreacion;
@@ -76,6 +77,16 @@ public class Movimiento implements java.io.Serializable {
     public void setIdTipoMovimiento(int idTipoMovimiento) {
         this.tipoMovimiento = (TipoMovimiento) hibernateService.findById(idTipoMovimiento, "TipoMovimiento");
         this.idTipoMovimiento = idTipoMovimiento;
+    }
+
+    public int getIdCuenta() {
+        idCuenta = cuenta != null ? cuenta.getIdCuenta() : idCuenta;
+        return idCuenta;
+    }
+
+    public void setIdCuenta(int idCuenta) {
+        this.cuenta = (Cuenta) hibernateService.findById(idCuenta, "Cuenta");
+        this.idCuenta = idCuenta;
     }
 
     public Cuenta getCuenta() {

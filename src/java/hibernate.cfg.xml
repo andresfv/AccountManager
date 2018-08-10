@@ -40,20 +40,20 @@ made subject to such option by the copyright holder.
 Contributor(s):
 -->
 <hibernate-configuration>
-  <session-factory>
-    <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-    <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/account_manager</property>
-    <property name="hibernate.connection.username">root</property>
-    <property name="hibernate.connection.password">root</property>
-    <property name="hibernate_show_sql">true</property>
-    <property name="hibernate_format_sql">true</property>
-    <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
-    <property name="hibernate.current_session_context_class">thread</property>
-    <property name="hibernate.enable_lazy_load_no_trans">true</property>
-    <mapping resource="model/TipoMovimiento.hbm.xml"/>
-    <mapping resource="model/Cuenta.hbm.xml"/>
-    <mapping resource="model/CategoriaMovimiento.hbm.xml"/>
-    <mapping resource="model/Movimiento.hbm.xml"/>
-    <mapping resource="model/Parametro.hbm.xml"/>
-  </session-factory>
+    <session-factory>
+        <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/account_manager</property>
+        <property name="hibernate.connection.username">root</property>
+        <property name="hibernate.connection.password">root</property>
+        <property name="hibernate_show_sql">true</property>
+        <property name="hibernate_format_sql">true</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+        <property name="hibernate.current_session_context_class">thread</property>
+        <property name="hibernate.enable_lazy_load_no_trans">true</property>
+        <mapping resource="model/TipoMovimiento.hbm.xml"/>
+        <mapping resource="model/Cuenta.hbm.xml"/>
+        <mapping resource="model/CategoriaMovimiento.hbm.xml"/>
+        <mapping resource="model/Movimiento.hbm.xml"/>
+        <mapping resource="model/Parametro.hbm.xml"/>
+    </session-factory>
 </hibernate-configuration>

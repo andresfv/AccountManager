@@ -31,7 +31,6 @@ import impl.MovimientoServiceImpl;
 import impl.ParametroServiceImpl;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import model.CategoriaMovimiento;
@@ -64,8 +63,6 @@ public class CuentaBean {
     ParametroService parametroService;
     Cuenta cuenta;
     String detalle;
-    double montoDesde;
-    double montoHasta;
     List<Cuenta> listaCuentas;
     List<Cuenta> listaCuentasFiltradas;
     List<Movimiento> listaMovimientos;
@@ -211,22 +208,6 @@ public class CuentaBean {
 
     public void setDetalle(String detalle) {
         this.detalle = detalle;
-    }
-
-    public double getMontoDesde() {
-        return montoDesde;
-    }
-
-    public void setMontoDesde(double montoDesde) {
-        this.montoDesde = montoDesde;
-    }
-
-    public double getMontoHasta() {
-        return montoHasta;
-    }
-
-    public void setMontoHasta(double montoHasta) {
-        this.montoHasta = montoHasta;
     }
 
     public Double getTotalIngresosMontoMovimientos() {
@@ -719,7 +700,7 @@ public class CuentaBean {
     //---------------------------CONSULTA MOVIMIENTOS------------------------------
     public void consultaMovimientosCuenta() {
         this.listaMovimientos.clear();
-        this.listaMovimientos.addAll(movimientoService.findMovimientosByParametros(cuenta, detalle, montoDesde, montoHasta,
+        this.listaMovimientos.addAll(movimientoService.findMovimientosByParametros(cuenta, detalle,
                 fechaDesde, fechaHasta, listaTiposMovimiento, listaCategoriasMovimiento));
         listaMovimientosFiltrados = this.listaMovimientos;
     }

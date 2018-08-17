@@ -23,11 +23,11 @@
 	</parameter>
 	<queryString>
 		<![CDATA[select * from movimiento mv 
-where mv.CUENTA = $P{cuenta} and mv.DETALLE like '%'||$P{detalle}||'%'
-and mv.TIPO_MOVIMIENTO = $P{tipoMovimiento}
-and mv.CATEGORIA_MOVIMIENTO = $P{categoriaMovimiento}
-and mv.FECHA_MOVIMIENTO between $P{fechaInicio}
-and  $P{fechaFin} order  by mv.FECHA_CONTABLE;]]>
+where mv.CUENTA = IFNULL(@cuenta, mv.CUENTA) 
+and mv.DETALLE like IFNULL('%'||@detalle||'%',mv.DETALLE)
+and mv.TIPO_MOVIMIENTO = IFNULL(@tipoMovimiento,mv.TIPO_MOVIMIENTO)
+and mv.CATEGORIA_MOVIMIENTO = IFNULL(@categoriaMovimiento, mv.CATEGORIA_MOVIMIENTO)
+order  by mv.FECHA_CONTABLE]]>
 	</queryString>
 	<field name="ID_MOVIMIENTO" class="java.lang.Integer">
 		<fieldDescription><![CDATA[]]></fieldDescription>

@@ -392,72 +392,7 @@
                 <f:facet name="header">
                     Lista de Movimientos
                 </f:facet>
-
-                <p:column headerText="Detalle"
-                          sortBy="#{object.detalle}">
-                    <p:cellEditor>
-                        <f:facet name="input">
-                            <p:inputText value="#{object.detalle}"
-                                         required="true"/>
-                        </f:facet>
-                        <f:facet name="output">
-                            <h:outputText value="#{object.detalle}" />
-                        </f:facet>
-                    </p:cellEditor>
-                </p:column>
-
-
-                <p:column headerText="Monto"
-                          sortBy="#{object.monto}">
-                    <p:cellEditor>
-                        <f:facet name="input">
-                            <p:inputNumber id="montoInputText"
-                                           value="#{object.monto}"
-                                           required="true"
-                                           minValue="0"
-                                           symbol="¢"
-                                           thousandSeparator="."
-                                           decimalSeparator=","/>
-                        </f:facet>
-                        <f:facet name="output">
-                            <h:outputText value="#{object.monto}">
-                                <f:convertNumber currencySymbol="¢" type="currency"/>
-                            </h:outputText>
-                        </f:facet>
-                    </p:cellEditor>
-                </p:column>
-
-                <p:column headerText="Categoria"
-                          sortBy="#{object.categoriaMovimientoNombre}">
-                    <p:cellEditor>
-                        <f:facet name="input">
-                            <p:selectOneMenu id="categoriaMovimientoSelectOneMenu"
-                                             value="#{object.idCategoriaMovimiento}"
-                                             required="true">
-                                <f:selectItems value="#{movimientoBean.llenarCategorias()}"/>
-                            </p:selectOneMenu>
-                        </f:facet>
-                        <f:facet name="output">
-                            <h:outputText value="#{object.categoriaMovimientoNombre}" />
-                        </f:facet>
-                    </p:cellEditor>
-                </p:column>
-
-                <p:column headerText="Tipo"      
-                          sortBy="#{object.tipoMovimientoNombre}">
-                    <p:cellEditor>
-                        <f:facet name="input">
-                            <p:selectOneMenu id="tipoMovimientoSelectOneMenu"
-                                             value="#{object.idTipoMovimiento}">
-                                <f:selectItems value="#{movimientoBean.llenarTipos()}"/>
-                            </p:selectOneMenu>
-                        </f:facet>
-                        <f:facet name="output">
-                            <h:outputText value="#{object.tipoMovimientoNombre}" />
-                        </f:facet>
-                    </p:cellEditor>
-                </p:column>
-
+                
                 <p:column headerText="Fecha Movimiento"
                           sortBy="#{object.fechaMovimiento}">
                     <p:cellEditor>
@@ -502,6 +437,70 @@
                                         navigator="true"
                                         pattern="dd/MM/yyyy"
                                         disabled="true"/>
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+
+                <p:column headerText="Detalle"
+                          sortBy="#{object.detalle}">
+                    <p:cellEditor>
+                        <f:facet name="input">
+                            <p:inputText value="#{object.detalle}"
+                                         required="true"/>
+                        </f:facet>
+                        <f:facet name="output">
+                            <h:outputText value="#{object.detalle}" />
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+
+                <p:column headerText="Categoria"
+                          sortBy="#{object.categoriaMovimientoNombre}">
+                    <p:cellEditor>
+                        <f:facet name="input">
+                            <p:selectOneMenu id="categoriaMovimientoSelectOneMenu"
+                                             value="#{object.idCategoriaMovimiento}"
+                                             required="true">
+                                <f:selectItems value="#{movimientoBean.llenarCategorias()}"/>
+                            </p:selectOneMenu>
+                        </f:facet>
+                        <f:facet name="output">
+                            <h:outputText value="#{object.categoriaMovimientoNombre}" />
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+
+                <p:column headerText="Tipo"      
+                          sortBy="#{object.tipoMovimientoNombre}">
+                    <p:cellEditor>
+                        <f:facet name="input">
+                            <p:selectOneMenu id="tipoMovimientoSelectOneMenu"
+                                             value="#{object.idTipoMovimiento}">
+                                <f:selectItems value="#{movimientoBean.llenarTipos()}"/>
+                            </p:selectOneMenu>
+                        </f:facet>
+                        <f:facet name="output">
+                            <h:outputText value="#{object.tipoMovimientoNombre}" />
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+
+                <p:column headerText="Monto"
+                          sortBy="#{object.monto}">
+                    <p:cellEditor>
+                        <f:facet name="input">
+                            <p:inputNumber id="montoInputText"
+                                           value="#{object.monto}"
+                                           required="true"
+                                           minValue="0"
+                                           symbol="¢"
+                                           thousandSeparator="."
+                                           decimalSeparator=","/>
+                        </f:facet>
+                        <f:facet name="output">
+                            <h:outputText value="#{object.monto}">
+                                <f:convertNumber currencySymbol="¢" type="currency"/>
+                            </h:outputText>
                         </f:facet>
                     </p:cellEditor>
                 </p:column>

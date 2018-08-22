@@ -33,10 +33,11 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import model.CategoriaMovimiento;
 import model.Parametro;
 import model.TipoMovimiento;
-
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -49,6 +50,7 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.primefaces.event.FileUploadEvent;
+import util.GeneradorReportes;
 
 /**
  *
@@ -59,6 +61,7 @@ import org.primefaces.event.FileUploadEvent;
 public class CuentaBean {
 
     HibernateService hibernateService;
+    GeneradorReportes generadorReportes;
     MovimientoService movimientoService;
     ParametroService parametroService;
     Cuenta cuenta;
@@ -90,6 +93,7 @@ public class CuentaBean {
     @PostConstruct
     public void init() {
         hibernateService = new HibernateServiceImpl();
+        generadorReportes = new GeneradorReportes();
         movimientoService = new MovimientoServiceImpl();
         parametroService = new ParametroServiceImpl();
         cuenta = new Cuenta();
@@ -831,5 +835,23 @@ public class CuentaBean {
             listaAnios.add(new SelectItem(i + "", i + ""));
         }
         return listaAnios;
+    }
+
+    public void lanzaReporteMovimientos() {
+        Map parametros = new HashMap();
+        String reportPath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/ReporteMovimientos.jasper");
+
+        Long idCuenta = this.getCuenta() != null ? Long.parseLong(this.getCuenta().getIdCuenta().toString()) : null;
+        Long idTipoMovimientoSeleccionado = this.getListaTiposMovimiento().isEmpty() ? null : Long.parseLong(this.getListaTiposMovimiento().get(0).toString());
+        Long idCategoriaMovimiento = this.getListaCategoriasMovimiento().isEmpty() ? null : Long.parseLong(this.getListaCategoriasMovimiento().get(0).toString());
+
+        parametros.put("cuenta", idCuenta);
+        parametros.put("detalle", this.getDetalle());
+        parametros.put("fechaInicio", this.getFechaDesde());
+        parametros.put("fechaFin", this.getFechaHasta());
+        parametros.put("tipoMovimiento", idTipoMovimientoSeleccionado);
+        parametros.put("categoriaMovimiento", idCategoriaMovimiento);
+
+        generadorReportes.generaReporteMovimientos(reportPath, parametros, hibernateService.getConection());
     }
 }

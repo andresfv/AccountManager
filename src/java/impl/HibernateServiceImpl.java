@@ -6,12 +6,14 @@
 package impl;
 
 import dao.HibernateService;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.internal.SessionImpl;
 import util.HibernateUtil;
 
 /**
@@ -19,7 +21,7 @@ import util.HibernateUtil;
  * @author Luis Andrés Fallas Valenciano
  */
 public class HibernateServiceImpl implements HibernateService {
-    
+
     @Override
     public void save(Object object) {
         //Se crea Objeto Session
@@ -41,9 +43,9 @@ public class HibernateServiceImpl implements HibernateService {
                 session.close();
             }
         }
-        
+
     }
-    
+
     @Override
     public void delete(Object object) {
         //Se crea Objeto Session
@@ -54,7 +56,7 @@ public class HibernateServiceImpl implements HibernateService {
         } catch (HibernateException ex) {
             session = HibernateUtil.getSessionFactory().openSession();
         }
-        
+
         Transaction tx = session.beginTransaction(); //Se inicia una transacción
         try {
             session.delete(object); //Se almacena el objeto deseado
@@ -68,7 +70,7 @@ public class HibernateServiceImpl implements HibernateService {
             }
         }
     }
-    
+
     @Override
     public List<Object> findAll(String objectName) {
         List<Object> objects = new ArrayList<Object>();
@@ -95,7 +97,7 @@ public class HibernateServiceImpl implements HibernateService {
         }
         return objects;
     }
-    
+
     @Override
     public Object findById(int idObject, String objectName) {
         Object object = new Object();
@@ -106,7 +108,7 @@ public class HibernateServiceImpl implements HibernateService {
         } catch (HibernateException ex) {
             session = HibernateUtil.getSessionFactory().openSession();
         }
-        
+
         Transaction tx = session.beginTransaction(); //Se inicia una transacción
         try {
             String queryString = "from " + objectName + " where id" + objectName + " = " + idObject;
@@ -122,9 +124,9 @@ public class HibernateServiceImpl implements HibernateService {
             }
         }
         return object;
-        
+
     }
-    
+
     @Override
     public List<Object> findAllByEqual(String objectName, String column, String value) {
         List<Object> objects = new ArrayList<Object>();
@@ -151,7 +153,7 @@ public class HibernateServiceImpl implements HibernateService {
         }
         return objects;
     }
-    
+
     @Override
     public List<Object> findAllByEqual(String objectName, String column, Integer value) {
         List<Object> objects = new ArrayList<Object>();
@@ -177,7 +179,7 @@ public class HibernateServiceImpl implements HibernateService {
         }
         return objects;
     }
-    
+
     @Override
     public List<Object> findAllByLike(String objectName, String column, String value) {
         List<Object> objects = new ArrayList<Object>();
@@ -205,7 +207,7 @@ public class HibernateServiceImpl implements HibernateService {
         }
         return objects;
     }
-    
+
     @Override
     public List<Object> runQuery(String queryString) {
         List<Object> objects = new ArrayList<Object>();
@@ -231,5 +233,29 @@ public class HibernateServiceImpl implements HibernateService {
             }
         }
         return objects;
+    }
+
+    @Override
+    public Connection getConection() {
+        Session session;
+        Connection conn = null;
+        
+        try {
+            session = HibernateUtil.getSessionFactory().getCurrentSession();
+        } catch (HibernateException ex) {
+            session = HibernateUtil.getSessionFactory().openSession();
+        }
+
+        try {
+            SessionImpl sessionImpl = (SessionImpl) session;
+            conn = sessionImpl.connection();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } finally {
+            if (session.isOpen()) {
+                session.close();
+            }
+        }
+        return conn;
     }
 }

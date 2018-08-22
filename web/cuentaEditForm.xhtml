@@ -41,6 +41,11 @@
                         value="Borrar Movimientos"
                         icon="ui-icon ui-icon-trash"
                         onclick="PF('eliminaMovimientosConfirmDialog').show();"/>
+            
+            <p:menuitem id="imprimirReporteMovimientosCommandButton"
+                        value="Imprimir Lista Movimientos"
+                        icon="ui-icon ui-icon-print"
+                        actionListener="#{cuentaBean.lanzaReporteMovimientos()}"/>
         </p:menubar>
 
         <p:confirmDialog id="eliminaMovimientosConfirmDialog"

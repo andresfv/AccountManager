@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="792" pageHeight="612" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="dc77181d-5e9d-497c-8249-b91693084ce0">
+	<property name="ireport.zoom" value="1.1000000000000003"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="cuenta" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="detalle" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fechaInicio" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fechaFin" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="tipoMovimiento" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="categoriaMovimiento" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select mv.FECHA_MOVIMIENTO, mv.FECHA_CONTABLE, mv.DETALLE, tm.NOMBRE as TIPO, 
+cm.NOMBRE as CATEGORIA, c.NOMBRE as NOMBRE_CUENTA, mv.MONTO
+from movimiento mv 
+inner join tipo_movimiento tm on tm.ID_TIPO_MOVIMIENTO = mv.TIPO_MOVIMIENTO
+inner join categoria_movimiento cm on cm.ID_CATEGORIA_MOVIMIENTO = mv.CATEGORIA_MOVIMIENTO
+inner join cuenta c on c.ID_CUENTA = mv.CUENTA
+where mv.CUENTA = IFNULL($P{cuenta}, mv.CUENTA) 
+and mv.DETALLE like IF($P{detalle}='',mv.DETALLE,'%'||$P{detalle}||'%')
+and mv.TIPO_MOVIMIENTO = IFNULL($P{tipoMovimiento},mv.TIPO_MOVIMIENTO)
+and mv.CATEGORIA_MOVIMIENTO = IFNULL($P{categoriaMovimiento}, mv.CATEGORIA_MOVIMIENTO)
+and mv.FECHA_MOVIMIENTO between $P{fechaInicio} and  $P{fechaFin}
+order  by mv.FECHA_CONTABLE]]>
+	</queryString>
+	<field name="FECHA_MOVIMIENTO" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="FECHA_CONTABLE" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="DETALLE" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="TIPO" class="java.lang.String"/>
+	<field name="CATEGORIA" class="java.lang.String"/>
+	<field name="NOMBRE_CUENTA" class="java.lang.String"/>
+	<field name="MONTO" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<variable name="MONTO_1" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{MONTO}]]></variableExpression>
+	</variable>
+	<variable name="MONTO_2" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{MONTO}]]></variableExpression>
+	</variable>
+	<group name="MONTH_GROUP">
+		<groupExpression><![CDATA[$F{FECHA_MOVIMIENTO}.getMonth()]]></groupExpression>
+		<groupHeader>
+			<band height="20">
+				<textField pattern="MMMMM yyyy">
+					<reportElement x="0" y="0" width="100" height="20" uuid="9db2b2a5-d63a-4827-af74-bb24ae368990"/>
+					<textElement verticalAlignment="Middle">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{FECHA_MOVIMIENTO}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="21">
+				<textField pattern="¤ #,##0.00">
+					<reportElement x="102" y="0" width="650" height="20" uuid="9b3641a7-a393-4dd8-bc7c-82afa4c63990"/>
+					<textElement verticalAlignment="Middle">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{MONTO_1}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="1" y="1" width="99" height="20" uuid="4c44ecaf-7db9-4d20-8518-afd7ee528ebe"/>
+					<textElement verticalAlignment="Middle">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Total Periodo:]]></text>
+				</staticText>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="46" splitType="Stretch">
+			<staticText>
+				<reportElement x="179" y="0" width="395" height="45" uuid="3ef3d78e-d6fa-4aac-96c7-77352219bcc3"/>
+				<textElement>
+					<font size="36"/>
+				</textElement>
+				<text><![CDATA[Lista de Movimientos]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="79" splitType="Stretch">
+			<textField>
+				<reportElement x="622" y="1" width="80" height="20" uuid="22d6d1e5-6417-4d9e-a4f5-0d0a4e62deae"/>
+				<textElement textAlignment="Right">
+					<font isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Página: "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="702" y="1" width="40" height="20" uuid="5d339f2b-5669-4c1f-9973-5b14986bc7bd"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="678" y="21" width="60" height="20" uuid="3d389d20-1fb5-4204-ac3d-bfdd092d059b"/>
+				<textElement textAlignment="Right">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="642" y="21" width="34" height="20" uuid="89814fcc-04fe-4d6f-82ad-305635af83fa"/>
+				<textElement>
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[Fecha:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="244" y="28" width="90" height="20" uuid="9117cc00-ae5a-45af-bc10-2bcf5ce6615f"/>
+				<textElement verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[$P{fechaInicio}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="382" y="28" width="100" height="20" uuid="ad478e92-df0a-433b-adf4-7f53f10cfc29"/>
+				<textElement verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[$P{fechaFin}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="205" y="28" width="38" height="20" uuid="3c1e9ba7-32ab-4f72-984e-8fd08278ad1b"/>
+				<textElement verticalAlignment="Bottom"/>
+				<text><![CDATA[Desde:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="343" y="28" width="38" height="20" uuid="f8859e43-0658-4daf-992a-aa05ddd5757e"/>
+				<textElement verticalAlignment="Bottom"/>
+				<text><![CDATA[Hasta:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="48" width="80" height="30" uuid="f5674b4f-7a76-4b42-a3ad-7ad1db57f74b"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha Movimiento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="82" y="48" width="72" height="30" uuid="c96ac6a0-d34c-4e30-917c-3d6cf6683e67"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha Contable]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="154" y="58" width="99" height="20" uuid="ccb1ea8a-4aec-4120-97ca-6550a72b59a1"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Detalle]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="473" y="58" width="52" height="20" uuid="cbf15644-19e2-4965-b2a1-0e3bc6f6e8d2"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tipo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="525" y="58" width="69" height="20" uuid="215b53ac-ed57-4834-a049-a81aa6779327"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Categoria]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="676" y="58" width="62" height="20" uuid="9a4ce2d2-a17e-4e8b-899c-14fcf1c433a4"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Monto]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="608" y="58" width="57" height="20" uuid="1cf8a394-fc63-4b97-87f2-8a5a9c5a9466"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cuenta]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="22" splitType="Stretch">
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="0" y="0" width="80" height="22" uuid="06212829-9625-4e15-ba0e-0b54f66c1d7a"/>
+				<textFieldExpression><![CDATA[$F{FECHA_MOVIMIENTO}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="81" y="0" width="72" height="21" uuid="d4ab547d-1959-4650-a7d1-dc27e2688c5c"/>
+				<textFieldExpression><![CDATA[$F{FECHA_CONTABLE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="153" y="1" width="319" height="20" uuid="22897d51-e469-4104-9d91-a2edaad84ea5"/>
+				<textFieldExpression><![CDATA[$F{DETALLE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="675" y="0" width="77" height="22" uuid="6d3ed9d7-e987-4841-ad05-401ffabc0031"/>
+				<textFieldExpression><![CDATA[$F{MONTO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="607" y="1" width="69" height="20" uuid="167c0dda-0f80-4800-a773-f8ad5f05ebe8"/>
+				<textFieldExpression><![CDATA[$F{NOMBRE_CUENTA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="472" y="1" width="52" height="20" uuid="28e1b630-f387-456b-ad4d-c288a9cb23a2"/>
+				<textFieldExpression><![CDATA[$F{TIPO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="524" y="1" width="83" height="20" uuid="766ab421-1ebc-4024-8995-8a932097f247"/>
+				<textFieldExpression><![CDATA[$F{CATEGORIA}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="21">
+			<textField pattern="¤ #,##0.00">
+				<reportElement x="102" y="0" width="650" height="21" uuid="15189346-077b-4919-85bc-b99baf6b5780"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{MONTO_2}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="1" y="1" width="99" height="20" uuid="dbb84f75-19c6-49dd-9a2f-37d31257055c"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Final:]]></text>
+			</staticText>
+		</band>
+	</summary>
+	<noData>
+		<band height="50">
+			<staticText>
+				<reportElement x="289" y="15" width="175" height="21" uuid="4ff561b5-c0c6-44eb-b2d1-af6cfad93ff7"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[No se encontraron datos]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

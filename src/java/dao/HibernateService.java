@@ -5,6 +5,7 @@
  */
 package dao;
 
+import java.sql.Connection;
 import java.util.List;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -30,4 +31,6 @@ public interface HibernateService {
     public List<Object> findAllByLike(String objectName, String column, String value);
 
     public List<Object> runQuery(String queryString);
+    
+    public Connection getConection();
 }

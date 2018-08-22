@@ -839,7 +839,7 @@ public class CuentaBean {
 
     public void lanzaReporteMovimientos() {
         Map parametros = new HashMap();
-        String reportPath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/ReporteMovimientos.jasper");
+        String reportPath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/reportes/ReporteMovimientos.jasper");
 
         Long idCuenta = this.getCuenta() != null ? Long.parseLong(this.getCuenta().getIdCuenta().toString()) : null;
         Long idTipoMovimientoSeleccionado = this.getListaTiposMovimiento().isEmpty() ? null : Long.parseLong(this.getListaTiposMovimiento().get(0).toString());

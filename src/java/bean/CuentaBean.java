@@ -29,6 +29,7 @@ import dao.MovimientoService;
 import dao.ParametroService;
 import impl.MovimientoServiceImpl;
 import impl.ParametroServiceImpl;
+import java.sql.Connection;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -838,20 +839,34 @@ public class CuentaBean {
     }
 
     public void lanzaReporteMovimientos() {
+        Connection connection = hibernateService.getConection();
         Map parametros = new HashMap();
         String reportPath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/reportes/ReporteMovimientos.jasper");
 
+//        TipoMovimiento tipoMovimientoSeleccionado = this.getListaTiposMovimiento().isEmpty() ? null : this.getListaTiposMovimiento().get(0);
+//        CategoriaMovimiento categoriaMovimientoSeleccionado = this.getListaCategoriasMovimiento().isEmpty() ? null : this.getListaCategoriasMovimiento().get(0);
         Long idCuenta = this.getCuenta() != null ? Long.parseLong(this.getCuenta().getIdCuenta().toString()) : null;
-        Long idTipoMovimientoSeleccionado = this.getListaTiposMovimiento().isEmpty() ? null : Long.parseLong(this.getListaTiposMovimiento().get(0).toString());
-        Long idCategoriaMovimiento = this.getListaCategoriasMovimiento().isEmpty() ? null : Long.parseLong(this.getListaCategoriasMovimiento().get(0).toString());
+//        Long idTipoMovimiento = tipoMovimientoSeleccionado != null ? Long.parseLong(tipoMovimientoSeleccionado.getIdTipoMovimiento().toString()) : null;
+//        Long idCategoriaMovimiento = categoriaMovimientoSeleccionado != null ? Long.parseLong(categoriaMovimientoSeleccionado.getIdCategoriaMovimiento().toString()) : null;
 
         parametros.put("cuenta", idCuenta);
         parametros.put("detalle", this.getDetalle());
         parametros.put("fechaInicio", this.getFechaDesde());
         parametros.put("fechaFin", this.getFechaHasta());
-        parametros.put("tipoMovimiento", idTipoMovimientoSeleccionado);
-        parametros.put("categoriaMovimiento", idCategoriaMovimiento);
+//        parametros.put("tipoMovimiento", idTipoMovimiento);
+//        parametros.put("categoriaMovimiento", idCategoriaMovimiento);
 
-        generadorReportes.generaReporteMovimientos(reportPath, parametros, hibernateService.getConection());
+        if (connection != null) {
+            generadorReportes.generaReporte(reportPath, parametros, connection);
+        } else {
+            System.out.println("ERROR: No hay conexión con la base de datos");
+        }
+    }
+
+    public void lanzaReporteCategorias() {
+        Connection connection = hibernateService.getConection();
+        Map parametros = new HashMap();
+        String reportPath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/reportes/Reporte Prueba.jasper");
+        generadorReportes.generaReporte(reportPath, parametros, connection);
     }
 }

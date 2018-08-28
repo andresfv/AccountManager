@@ -7,13 +7,17 @@ package impl;
 
 import dao.HibernateService;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.engine.jdbc.connections.spi.ConnectionProvider;
+import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.internal.SessionImpl;
+import org.hibernate.jdbc.ReturningWork;
 import util.HibernateUtil;
 
 /**
@@ -239,23 +243,37 @@ public class HibernateServiceImpl implements HibernateService {
     public Connection getConection() {
         Session session;
         Connection conn = null;
-        
+
         try {
             session = HibernateUtil.getSessionFactory().getCurrentSession();
         } catch (HibernateException ex) {
             session = HibernateUtil.getSessionFactory().openSession();
         }
 
+        Transaction tx = session.beginTransaction(); //Se inicia una transacción       
+
         try {
-            SessionImpl sessionImpl = (SessionImpl) session;
-            conn = sessionImpl.connection();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+            conn = session.doReturningWork((Connection conn1) -> conn1);
+            tx.commit();
+            // do your work using connection
+        } catch (HibernateException e) {
+            e.printStackTrace();
         } finally {
             if (session.isOpen()) {
                 session.close();
             }
         }
+
+//        try {
+//            SessionImpl sessionImpl = (SessionImpl) session;
+//            conn = sessionImpl.connection();
+//        } catch (Exception e) {
+//            System.out.println(e.getMessage());
+//        } finally {
+//            if (session.isOpen()) {
+//                session.close();
+//            }
+//        }
         return conn;
     }
 }

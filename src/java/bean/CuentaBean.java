@@ -843,18 +843,16 @@ public class CuentaBean {
         Map parametros = new HashMap();
         String reportPath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/reportes/ReporteMovimientos.jasper");
 
-//        TipoMovimiento tipoMovimientoSeleccionado = this.getListaTiposMovimiento().isEmpty() ? null : this.getListaTiposMovimiento().get(0);
-//        CategoriaMovimiento categoriaMovimientoSeleccionado = this.getListaCategoriasMovimiento().isEmpty() ? null : this.getListaCategoriasMovimiento().get(0);
-        Long idCuenta = this.getCuenta() != null ? Long.parseLong(this.getCuenta().getIdCuenta().toString()) : null;
-//        Long idTipoMovimiento = tipoMovimientoSeleccionado != null ? Long.parseLong(tipoMovimientoSeleccionado.getIdTipoMovimiento().toString()) : null;
-//        Long idCategoriaMovimiento = categoriaMovimientoSeleccionado != null ? Long.parseLong(categoriaMovimientoSeleccionado.getIdCategoriaMovimiento().toString()) : null;
+        int idCuenta = this.getCuenta() != null ? this.getCuenta().getIdCuenta() : 0;
+        int tipoMovimientoSeleccionado = this.getListaTiposMovimiento().isEmpty() ? 0 : Integer.parseInt(this.getListaTiposMovimiento().get(0).toString());
+        int categoriaMovimientoSeleccionado = this.getListaCategoriasMovimiento().isEmpty() ? 0 : Integer.parseInt(this.getListaCategoriasMovimiento().get(0).toString());
 
         parametros.put("cuenta", idCuenta);
         parametros.put("detalle", this.getDetalle());
         parametros.put("fechaInicio", this.getFechaDesde());
         parametros.put("fechaFin", this.getFechaHasta());
-//        parametros.put("tipoMovimiento", idTipoMovimiento);
-//        parametros.put("categoriaMovimiento", idCategoriaMovimiento);
+        parametros.put("tipoMovimiento", tipoMovimientoSeleccionado);
+        parametros.put("categoriaMovimiento", categoriaMovimientoSeleccionado);
 
         if (connection != null) {
             generadorReportes.generaReporte(reportPath, parametros, connection);

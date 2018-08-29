@@ -9,11 +9,11 @@ import java.sql.Connection;
 import java.util.Map;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletResponse;
-//import net.sf.jasperreports.engine.JasperExportManager;
-//import net.sf.jasperreports.engine.JasperFillManager;
-//import net.sf.jasperreports.engine.JasperPrint;
-//import net.sf.jasperreports.engine.JasperReport;
-//import net.sf.jasperreports.engine.util.JRLoader;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
 
 /**
  *
@@ -31,11 +31,11 @@ public class GeneradorReportes {
                 HttpServletResponse httpServletResponse = (HttpServletResponse) context.getExternalContext().getResponse();
                 httpServletResponse.addHeader("Content-disposition", "attachment; filename=" + "Reporte de Movimientos" + ".pdf");
 
-//                JasperReport jReport = (JasperReport) JRLoader.loadObjectFromLocation(ruta);
-//                JasperPrint jPrint = JasperFillManager.fillReport(ruta, parametros, connection);
-//            JasperPrintManager.printReportToPdf(jPrint);
+                JasperReport jReport = JasperCompileManager.compileReport(ruta);
+                JasperPrint jPrint = JasperFillManager.fillReport(jReport, parametros, connection);
+//                JasperPrintManager.printReportToPdf(jPrint);
 
-//                JasperExportManager.exportReportToPdfStream(jPrint, httpServletResponse.getOutputStream());
+                JasperExportManager.exportReportToPdfStream(jPrint, httpServletResponse.getOutputStream());
                 FacesContext.getCurrentInstance().responseComplete();
 
 

@@ -28,10 +28,10 @@ from movimiento mv
 inner join tipo_movimiento tm on tm.ID_TIPO_MOVIMIENTO = mv.TIPO_MOVIMIENTO
 inner join categoria_movimiento cm on cm.ID_CATEGORIA_MOVIMIENTO = mv.CATEGORIA_MOVIMIENTO
 inner join cuenta c on c.ID_CUENTA = mv.CUENTA
-where mv.CUENTA = IFNULL($P{cuenta}, mv.CUENTA) 
+where mv.CUENTA = IF($P{cuenta} = 0, mv.CUENTA, $P{cuenta}) 
 and mv.DETALLE like IF($P{detalle}='',mv.DETALLE,'%'||$P{detalle}||'%')
-and mv.TIPO_MOVIMIENTO = IFNULL($P{tipoMovimiento},mv.TIPO_MOVIMIENTO)
-and mv.CATEGORIA_MOVIMIENTO = IFNULL($P{categoriaMovimiento}, mv.CATEGORIA_MOVIMIENTO)
+and mv.TIPO_MOVIMIENTO = IF($P{tipoMovimiento} = 0,mv.TIPO_MOVIMIENTO, $P{tipoMovimiento})
+and mv.CATEGORIA_MOVIMIENTO = IF($P{categoriaMovimiento} = 0, mv.CATEGORIA_MOVIMIENTO, $P{categoriaMovimiento})
 and mv.FECHA_MOVIMIENTO between $P{fechaInicio} and  $P{fechaFin}
 order  by mv.FECHA_CONTABLE]]>
 	</queryString>
@@ -158,7 +158,7 @@ order  by mv.FECHA_CONTABLE]]>
 			</staticText>
 			<staticText>
 				<reportElement x="82" y="48" width="72" height="30" uuid="c96ac6a0-d34c-4e30-917c-3d6cf6683e67"/>
-				<textElement textAlignment="Justified" verticalAlignment="Middle">
+				<textElement verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[Fecha Contable]]></text>

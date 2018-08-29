@@ -842,7 +842,7 @@ public class CuentaBean {
     public void lanzaReporteMovimientos() {
         Connection connection = hibernateService.getConection();
         Map parametros = new HashMap();
-        String reportPath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/reportes/ReporteMovimientos.jasper");
+        String reportPath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/reportes/ReporteMovimientos.jrxml");
 
         int idCuenta = this.getCuenta() != null ? this.getCuenta().getIdCuenta() : 0;
         int tipoMovimientoSeleccionado = this.getListaTiposMovimiento().isEmpty() ? 0 : Integer.parseInt(this.getListaTiposMovimiento().get(0).toString());
@@ -860,12 +860,5 @@ public class CuentaBean {
         } else {
             System.out.println("ERROR: No hay conexión con la base de datos");
         }
-    }
-
-    public void lanzaReporteCategorias() {
-        Connection connection = hibernateService.getConection();
-        Map parametros = new HashMap();
-        String reportPath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/reportes/Reporte Prueba.jasper");
-        generadorReportes.generaReporte(reportPath, parametros, connection);
     }
 }

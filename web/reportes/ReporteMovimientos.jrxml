@@ -3,7 +3,7 @@
 	<property name="ireport.zoom" value="1.1000000000000003"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<parameter name="cuenta" class="java.lang.Long">
+	<parameter name="cuenta" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<parameter name="detalle" class="java.lang.String">
@@ -15,10 +15,10 @@
 	<parameter name="fechaFin" class="java.util.Date">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
-	<parameter name="tipoMovimiento" class="java.lang.Long">
+	<parameter name="tipoMovimiento" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
-	<parameter name="categoriaMovimiento" class="java.lang.Long">
+	<parameter name="categoriaMovimiento" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>

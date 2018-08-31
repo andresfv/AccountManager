@@ -22,9 +22,10 @@
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[select mv.FECHA_MOVIMIENTO, mv.FECHA_CONTABLE, mv.DETALLE, tm.NOMBRE as TIPO, 
-cm.NOMBRE as CATEGORIA, c.NOMBRE as NOMBRE_CUENTA, mv.MONTO
-from movimiento mv 
+		<![CDATA[select mv.FECHA_MOVIMIENTO, mv.DETALLE, tm.NOMBRE as TIPO, 
+cm.NOMBRE as CATEGORIA, c.NOMBRE as NOMBRE_CUENTA, mv.debito as DEBITO, mv.credito as CREDITO,
+(mv.credito - mv.debito) as DIFERENCIA
+from movimiento_view mv 
 inner join tipo_movimiento tm on tm.ID_TIPO_MOVIMIENTO = mv.TIPO_MOVIMIENTO
 inner join categoria_movimiento cm on cm.ID_CATEGORIA_MOVIMIENTO = mv.CATEGORIA_MOVIMIENTO
 inner join cuenta c on c.ID_CUENTA = mv.CUENTA
@@ -33,12 +34,9 @@ and mv.DETALLE like IF($P{detalle}='',mv.DETALLE,'%'||$P{detalle}||'%')
 and mv.TIPO_MOVIMIENTO = IF($P{tipoMovimiento} = 0,mv.TIPO_MOVIMIENTO, $P{tipoMovimiento})
 and mv.CATEGORIA_MOVIMIENTO = IF($P{categoriaMovimiento} = 0, mv.CATEGORIA_MOVIMIENTO, $P{categoriaMovimiento})
 and mv.FECHA_MOVIMIENTO between $P{fechaInicio} and  $P{fechaFin}
-order  by mv.FECHA_CONTABLE]]>
+order  by mv.FECHA_MOVIMIENTO]]>
 	</queryString>
 	<field name="FECHA_MOVIMIENTO" class="java.sql.Date">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="FECHA_CONTABLE" class="java.sql.Date">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="DETALLE" class="java.lang.String">
@@ -47,44 +45,88 @@ order  by mv.FECHA_CONTABLE]]>
 	<field name="TIPO" class="java.lang.String"/>
 	<field name="CATEGORIA" class="java.lang.String"/>
 	<field name="NOMBRE_CUENTA" class="java.lang.String"/>
-	<field name="MONTO" class="java.lang.Double">
+	<field name="DEBITO" class="java.lang.Double">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<variable name="MONTO_1" class="java.lang.Double" calculation="Sum">
-		<variableExpression><![CDATA[$F{MONTO}]]></variableExpression>
+	<field name="CREDITO" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="DIFERENCIA" class="java.lang.Double"/>
+	<variable name="DEBITO_1" class="java.lang.Double" resetType="Group" resetGroup="MONTH_GROUP" calculation="Sum">
+		<variableExpression><![CDATA[$F{DEBITO}]]></variableExpression>
 	</variable>
-	<variable name="MONTO_2" class="java.lang.Double" calculation="Sum">
-		<variableExpression><![CDATA[$F{MONTO}]]></variableExpression>
+	<variable name="CREDITO_1" class="java.lang.Double" resetType="Group" resetGroup="MONTH_GROUP" calculation="Sum">
+		<variableExpression><![CDATA[$F{CREDITO}]]></variableExpression>
+	</variable>
+	<variable name="DIFERENCIA_1" class="java.lang.Double" resetType="Group" resetGroup="MONTH_GROUP" calculation="Sum">
+		<variableExpression><![CDATA[$F{DIFERENCIA}]]></variableExpression>
+	</variable>
+	<variable name="DEBITO_2" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{DEBITO}]]></variableExpression>
+	</variable>
+	<variable name="CREDITO_2" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{CREDITO}]]></variableExpression>
+	</variable>
+	<variable name="DIFERENCIA_2" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{DIFERENCIA}]]></variableExpression>
 	</variable>
 	<group name="MONTH_GROUP">
 		<groupExpression><![CDATA[$F{FECHA_MOVIMIENTO}.getMonth()]]></groupExpression>
 		<groupHeader>
-			<band height="20">
+			<band height="23">
 				<textField pattern="MMMMM yyyy">
-					<reportElement x="0" y="0" width="100" height="20" uuid="9db2b2a5-d63a-4827-af74-bb24ae368990"/>
+					<reportElement x="0" y="0" width="253" height="20" uuid="9db2b2a5-d63a-4827-af74-bb24ae368990"/>
 					<textElement verticalAlignment="Middle">
 						<font size="12" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{FECHA_MOVIMIENTO}]]></textFieldExpression>
 				</textField>
+				<line>
+					<reportElement x="1" y="21" width="751" height="1" uuid="57169518-af71-412b-90e8-50db707058e3"/>
+				</line>
 			</band>
 		</groupHeader>
 		<groupFooter>
-			<band height="21">
-				<textField pattern="¤ #,##0.00">
-					<reportElement x="102" y="0" width="650" height="20" uuid="9b3641a7-a393-4dd8-bc7c-82afa4c63990"/>
-					<textElement verticalAlignment="Middle">
-						<font size="12" isBold="true"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$V{MONTO_1}]]></textFieldExpression>
-				</textField>
+			<band height="25">
 				<staticText>
 					<reportElement x="1" y="1" width="99" height="20" uuid="4c44ecaf-7db9-4d20-8518-afd7ee528ebe"/>
 					<textElement verticalAlignment="Middle">
 						<font size="12" isBold="true"/>
 					</textElement>
-					<text><![CDATA[Total Periodo:]]></text>
+					<text><![CDATA[Total Debito:]]></text>
 				</staticText>
+				<line>
+					<reportElement x="1" y="22" width="751" height="1" uuid="18cea3a8-499b-4dc6-b3a8-0b383cc82fa6"/>
+				</line>
+				<textField pattern="¤ #,##0.00">
+					<reportElement x="100" y="1" width="141" height="20" uuid="06382be8-401e-4fac-a234-c181c5e8de73"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{DEBITO_1}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="241" y="1" width="99" height="20" uuid="305b0112-5df3-43a3-b205-74a5c179216a"/>
+					<textElement verticalAlignment="Middle">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Total Credito:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="482" y="1" width="99" height="20" uuid="1ae0897f-6e76-4194-ab49-08c3c71ae703"/>
+					<textElement verticalAlignment="Middle">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Diferiencia:]]></text>
+				</staticText>
+				<textField pattern="¤ #,##0.00">
+					<reportElement x="340" y="0" width="142" height="20" uuid="983ada77-246d-4631-9efb-f48d8691615a"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{CREDITO_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="¤ #,##0.00">
+					<reportElement x="581" y="1" width="171" height="20" uuid="2bc0caef-bd4c-4f5b-b244-1ec11dc1604c"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{DIFERENCIA_1}]]></textFieldExpression>
+				</textField>
 			</band>
 		</groupFooter>
 	</group>
@@ -105,7 +147,7 @@ order  by mv.FECHA_CONTABLE]]>
 	<columnHeader>
 		<band height="79" splitType="Stretch">
 			<textField>
-				<reportElement x="622" y="1" width="80" height="20" uuid="22d6d1e5-6417-4d9e-a4f5-0d0a4e62deae"/>
+				<reportElement x="621" y="1" width="80" height="20" uuid="22d6d1e5-6417-4d9e-a4f5-0d0a4e62deae"/>
 				<textElement textAlignment="Right">
 					<font isBold="false"/>
 				</textElement>
@@ -157,46 +199,46 @@ order  by mv.FECHA_CONTABLE]]>
 				<text><![CDATA[Fecha Movimiento]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="82" y="48" width="72" height="30" uuid="c96ac6a0-d34c-4e30-917c-3d6cf6683e67"/>
-				<textElement verticalAlignment="Middle">
-					<font isBold="true"/>
-				</textElement>
-				<text><![CDATA[Fecha Contable]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="154" y="58" width="99" height="20" uuid="ccb1ea8a-4aec-4120-97ca-6550a72b59a1"/>
+				<reportElement x="81" y="58" width="99" height="20" uuid="ccb1ea8a-4aec-4120-97ca-6550a72b59a1"/>
 				<textElement textAlignment="Justified" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[Detalle]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="473" y="58" width="52" height="20" uuid="cbf15644-19e2-4965-b2a1-0e3bc6f6e8d2"/>
+				<reportElement x="383" y="58" width="52" height="20" uuid="cbf15644-19e2-4965-b2a1-0e3bc6f6e8d2"/>
 				<textElement textAlignment="Justified" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[Tipo]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="525" y="58" width="69" height="20" uuid="215b53ac-ed57-4834-a049-a81aa6779327"/>
+				<reportElement x="435" y="58" width="69" height="20" uuid="215b53ac-ed57-4834-a049-a81aa6779327"/>
 				<textElement textAlignment="Justified" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[Categoria]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="676" y="58" width="62" height="20" uuid="9a4ce2d2-a17e-4e8b-899c-14fcf1c433a4"/>
+				<reportElement x="586" y="59" width="62" height="20" uuid="9a4ce2d2-a17e-4e8b-899c-14fcf1c433a4"/>
 				<textElement textAlignment="Justified" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[Monto]]></text>
+				<text><![CDATA[Debito]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="608" y="58" width="57" height="20" uuid="1cf8a394-fc63-4b97-87f2-8a5a9c5a9466"/>
+				<reportElement x="518" y="58" width="57" height="20" uuid="1cf8a394-fc63-4b97-87f2-8a5a9c5a9466"/>
 				<textElement textAlignment="Justified" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[Cuenta]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="664" y="59" width="62" height="20" uuid="ea71bb7a-9c5d-43b2-9f7e-61d1d1cb587b"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Credito]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
@@ -206,48 +248,70 @@ order  by mv.FECHA_CONTABLE]]>
 				<reportElement x="0" y="0" width="80" height="22" uuid="06212829-9625-4e15-ba0e-0b54f66c1d7a"/>
 				<textFieldExpression><![CDATA[$F{FECHA_MOVIMIENTO}]]></textFieldExpression>
 			</textField>
-			<textField pattern="dd/MM/yyyy">
-				<reportElement x="81" y="0" width="72" height="21" uuid="d4ab547d-1959-4650-a7d1-dc27e2688c5c"/>
-				<textFieldExpression><![CDATA[$F{FECHA_CONTABLE}]]></textFieldExpression>
-			</textField>
 			<textField>
-				<reportElement x="153" y="1" width="319" height="20" uuid="22897d51-e469-4104-9d91-a2edaad84ea5"/>
+				<reportElement x="81" y="0" width="301" height="20" uuid="22897d51-e469-4104-9d91-a2edaad84ea5"/>
 				<textFieldExpression><![CDATA[$F{DETALLE}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="675" y="0" width="77" height="22" uuid="6d3ed9d7-e987-4841-ad05-401ffabc0031"/>
-				<textFieldExpression><![CDATA[$F{MONTO}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="607" y="1" width="69" height="20" uuid="167c0dda-0f80-4800-a773-f8ad5f05ebe8"/>
+				<reportElement x="517" y="1" width="69" height="20" uuid="167c0dda-0f80-4800-a773-f8ad5f05ebe8"/>
 				<textFieldExpression><![CDATA[$F{NOMBRE_CUENTA}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="472" y="1" width="52" height="20" uuid="28e1b630-f387-456b-ad4d-c288a9cb23a2"/>
+				<reportElement x="382" y="1" width="52" height="20" uuid="28e1b630-f387-456b-ad4d-c288a9cb23a2"/>
 				<textFieldExpression><![CDATA[$F{TIPO}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="524" y="1" width="83" height="20" uuid="766ab421-1ebc-4024-8995-8a932097f247"/>
+				<reportElement x="434" y="1" width="83" height="20" uuid="766ab421-1ebc-4024-8995-8a932097f247"/>
 				<textFieldExpression><![CDATA[$F{CATEGORIA}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00">
+				<reportElement x="586" y="1" width="78" height="20" uuid="2351fdff-f264-4c8d-a8c2-c4c85405a376"/>
+				<textFieldExpression><![CDATA[$F{DEBITO}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00">
+				<reportElement x="666" y="1" width="86" height="20" uuid="36dcacc3-fb7b-44df-a8a7-9e61d9aeb29e"/>
+				<textFieldExpression><![CDATA[$F{CREDITO}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
 	<summary>
 		<band height="21">
-			<textField pattern="¤ #,##0.00">
-				<reportElement x="102" y="0" width="650" height="21" uuid="15189346-077b-4919-85bc-b99baf6b5780"/>
-				<textElement verticalAlignment="Middle">
-					<font size="12" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{MONTO_2}]]></textFieldExpression>
-			</textField>
 			<staticText>
 				<reportElement x="1" y="1" width="99" height="20" uuid="dbb84f75-19c6-49dd-9a2f-37d31257055c"/>
 				<textElement verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Total Final:]]></text>
+				<text><![CDATA[Final Debito:]]></text>
 			</staticText>
+			<textField pattern="¤ #,##0.00">
+				<reportElement x="100" y="1" width="141" height="20" uuid="446ff512-98b8-431f-9547-3b7bccfc198a"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{DEBITO_2}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="242" y="0" width="98" height="20" uuid="9596f3ad-989f-491b-b7fe-5f0867dcf5e1"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Final Debito:]]></text>
+			</staticText>
+			<textField pattern="¤ #,##0.00">
+				<reportElement x="343" y="0" width="139" height="20" uuid="ad38604b-519f-4c83-b8c4-6b10174e1ff4"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{CREDITO_2}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="482" y="0" width="115" height="20" uuid="927c4695-a475-4192-b0a1-fa07ef2e84cb"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Final Diferencia:]]></text>
+			</staticText>
+			<textField pattern="¤ #,##0.00">
+				<reportElement x="597" y="0" width="155" height="20" uuid="d871b9f8-6957-4955-a82e-146441d7bea7"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{DIFERENCIA_2}]]></textFieldExpression>
+			</textField>
 		</band>
 	</summary>
 	<noData>

@@ -507,7 +507,7 @@ public class CuentaBean {
             //Comprueba que la celda no este vacia.
             if (row.getCell(columnaFechaContable) != null) {
                 try {
-                    valorCelda = dataFormatter.formatCellValue(row.getCell(columnaFechaContable)).trim();
+                    valorCelda = dataFormatter.formatCellValue(row.getCell(columnaFechaContable)).trim().replace("-", "/");
                     Date fechaContable = format.parse(valorCelda);
                     movimientoExcel.setFechaContable(fechaContable);
                 } catch (Exception e) {
@@ -520,7 +520,7 @@ public class CuentaBean {
             //------------------------------SET FECHA_MOVIMIENTO-------------------------------
             if (row.getCell(columnaFechaMovimiento) != null) {
                 try {
-                    valorCelda = dataFormatter.formatCellValue(row.getCell(columnaFechaMovimiento)).trim();
+                    valorCelda = dataFormatter.formatCellValue(row.getCell(columnaFechaMovimiento)).trim().replace("-", "/");
                     Date fechaMovimiento = format.parse(valorCelda);
                     movimientoExcel.setFechaMovimiento(fechaMovimiento);
 

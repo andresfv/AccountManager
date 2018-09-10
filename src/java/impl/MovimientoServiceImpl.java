@@ -82,7 +82,7 @@ public class MovimientoServiceImpl implements MovimientoService {
                     query.setParameter(nombreParametro, params.get(nombreParametro));
                 }
             }
-           // System.out.println("QUERY: " + query.getQueryString());
+            // System.out.println("QUERY: " + query.getQueryString());
             movimientos = query.list();
 
             tx.commit(); //Se comitea en la base de datos
@@ -96,5 +96,33 @@ public class MovimientoServiceImpl implements MovimientoService {
             }
         }
         return movimientos;
+    }
+
+    @Override
+    public void deleteMovimientosByFechaCreacionAndCuenta(Date fechaCreacion, Cuenta cuenta) {
+        //Se crea Objeto Session
+        Session session; //Se abre una sesion
+
+        try {
+            session = HibernateUtil.getSessionFactory().getCurrentSession();
+        } catch (HibernateException ex) {
+            session = HibernateUtil.getSessionFactory().openSession();
+        }
+
+        Transaction tx = session.beginTransaction(); //Se inicia una transacción
+        try {
+            String stringQuery = "DELETE FROM Movimiento m WHERE m.fechaCreacion = :fechaCreacion AND m.cuenta = :cuenta";
+            Query query = session.createQuery(stringQuery);
+            query.setDate("fechaCreacion", fechaCreacion);
+            query.setInteger("cuenta", cuenta.getIdCuenta());
+            tx.commit();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            tx.rollback();
+        } finally {
+            if (session.isOpen()) {
+                session.close();
+            }
+        }
     }
 }

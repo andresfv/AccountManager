@@ -7,17 +7,12 @@ package impl;
 
 import dao.HibernateService;
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.engine.jdbc.connections.spi.ConnectionProvider;
-import org.hibernate.engine.spi.SessionFactoryImplementor;
-import org.hibernate.internal.SessionImpl;
-import org.hibernate.jdbc.ReturningWork;
 import util.HibernateUtil;
 
 /**

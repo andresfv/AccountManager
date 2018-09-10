@@ -37,11 +37,11 @@
                         icon="ui-icon-arrowthick-1-s"
                         onclick="PF('dlg').show();"/>
 
-            <p:menuitem id="eliminaMovimientosCommandButton"
+            <p:menuitem id="eliminaMovimientosMenuItem"
                         value="Borrar Movimientos"
                         icon="ui-icon ui-icon-trash"
-                        onclick="PF('eliminaMovimientosConfirmDialog').show();"/>
-            
+                        onclick="PF('dlg3').show();"/>
+
             <p:menuitem id="imprimirReporteMovimientosCommandButton"
                         value="Imprimir Lista Movimientos"
                         icon="ui-icon ui-icon-print"
@@ -54,14 +54,13 @@
                          showEffect="bounce" 
                          hideEffect="fade" 
                          severity="alert" 
-                         message="¿Desea eliminar todos los movimientos de la cuenta seleccionada?"
+                         message="¿Esta seguro que desea eliminar todos los movimientos de la cuenta y la fecha de creación seleccionada?"
                          appendTo="@(body)"
                          closable="false">
-            <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" 
-                             action="#{cuentaBean.limpiaListaMovimientos()}"
+            <p:commandButton value="Si" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" 
                              update="#{p:component('movimientoDataTable')}, #{p:component('messages')},
                              :#{p:component('totalesOutputPanel')}"
-                             actionListener="#{cuentaBean.cargaMovimientosCuenta()}"
+                             actionListener="#{cuentaBean.eliminaMovimientosPorFechaCreacion()}"
                              process="@this"
                              onclick="PF('eliminaMovimientosConfirmDialog').hide();"/>
             <p:commandButton value="No" 
@@ -177,6 +176,42 @@
                                  value="Cancelar"
                                  onclick="PF('dlg2').hide();"/>
             </h:panelGrid>
+        </p:dialog>
+
+        <p:dialog id="dlg3"
+                  header="Importar Excel" 
+                  widgetVar="dlg3" 
+                  resizable="false">
+            <h:panelGrid columns="2">
+                <p:outputLabel id='cuentaEliminaMovimientosOutputLabel'
+                               value="Cuenta"
+                               for="cuentaEliminaMovimientosSelectOneMenu"/>
+
+                <p:selectOneMenu id="cuentaEliminaMovimientosSelectOneMenu"
+                                 value="#{cuentaBean.cuenta.idCuenta}">
+                    <f:selectItems value="#{cuentaBean.llenarCuentas()}"/>
+                    <p:ajax process="@this"
+                            event="change"/>
+                </p:selectOneMenu>
+
+                <p:outputLabel id='fechaCreacionOutputLabel'
+                               value="Fecha de Creación de los Movimientos"
+                               for="fechaCreacionCalendar"/>
+                <p:calendar id="fechaCreacionCalendar" 
+                            value="#{cuentaBean.fechaCreacion}"
+                            showOn="button"
+                            locale="es"
+                            navigator="true"
+                            pattern="dd/MM/yyyy"
+                            required="true">
+                    <p:ajax process="@this"/>
+                </p:calendar>
+            </h:panelGrid>
+            <p:commandButton id="eliminaMovimientosCommandButton"
+                             value="Borrar Movimientos"
+                             icon="ui-icon ui-icon-trash"
+                             onclick="PF('eliminaMovimientosConfirmDialog').show();"
+                             oncomplete="PF('dlg3').hide();"/>
         </p:dialog>
 
         <p:panel id='cuentaPanel'
@@ -398,7 +433,7 @@
                 <f:facet name="header">
                     Lista de Movimientos
                 </f:facet>
-                
+
                 <p:column headerText="Fecha Movimiento"
                           sortBy="#{object.fechaMovimiento}">
                     <p:cellEditor>

@@ -20,4 +20,6 @@ public interface MovimientoService {
 
     public List<Movimiento> findMovimientosByParametros(Cuenta cuenta, String detalle, Date fechaMovimientoDesde, Date fechaMovimientoHasta,
             List<TipoMovimiento> tiposMovimiento, List<CategoriaMovimiento> categoriasMovimiento);
+
+    public void deleteMovimientosByFechaCreacionAndCuenta(Date fechaCreacion, Cuenta cuenta);
 }

@@ -56,7 +56,7 @@ import util.GeneradorReportes;
 /**
  *
  * @author Luis Andrés Fallas Valenciano
- * 
+ *
  */
 @ManagedBean
 @SessionScoped
@@ -80,6 +80,7 @@ public class CuentaBean {
     Double saldoMontoMovimientos;
     Date fechaDesde;
     Date fechaHasta;
+    Date fechaCreacion;
 
     int mes = -1;
     int anio = -1;
@@ -146,10 +147,8 @@ public class CuentaBean {
         listaMovimientosFiltrados = this.listaMovimientos;
     }
 
-    public void limpiaListaMovimientos() {
-        for (Movimiento movimiento : listaMovimientos) {
-            movimientoBean.onDelete(movimiento);
-        }
+    public void eliminaMovimientosPorFechaCreacion() {
+        movimientoService.deleteMovimientosByFechaCreacionAndCuenta(fechaCreacion, cuenta);
     }
 
     public List<Cuenta> getListaCuentas() {
@@ -216,6 +215,14 @@ public class CuentaBean {
         this.detalle = detalle;
     }
 
+    public Date getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(Date fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+    
     public Double getTotalIngresosMontoMovimientos() {
         totalIngresosMontoMovimientos = 0.0;
         for (Movimiento movimiento : listaMovimientosFiltrados) {

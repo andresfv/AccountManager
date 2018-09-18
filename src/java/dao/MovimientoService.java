@@ -22,4 +22,16 @@ public interface MovimientoService {
             List<TipoMovimiento> tiposMovimiento, List<CategoriaMovimiento> categoriasMovimiento);
 
     public void deleteMovimientosByFechaCreacionAndCuenta(Date fechaCreacion, Cuenta cuenta);
+
+    public double promedio(int[] v);
+
+    public double desviacion(int[] v);
+    
+    public int[] burbuja(int[] v, int ord);
+    
+    public double mediana(int[] v);
+            
+    public int rango(int[] v);
+    
+    public  int moda(int[] v);
 }

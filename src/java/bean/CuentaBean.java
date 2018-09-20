@@ -148,7 +148,7 @@ public class CuentaBean {
     }
 
     public void eliminaMovimientosPorFechaCreacion() {
-        movimientoService.deleteMovimientosByFechaCreacionAndCuenta(fechaCreacion, cuenta);
+        movimientoService.deleteMovimientosByFechaCreacionAndCuenta(fechaCreacion, cuenta.getIdCuenta());
     }
 
     public List<Cuenta> getListaCuentas() {

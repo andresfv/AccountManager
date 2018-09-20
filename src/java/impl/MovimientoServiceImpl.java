@@ -99,7 +99,7 @@ public class MovimientoServiceImpl implements MovimientoService {
     }
 
     @Override
-    public void deleteMovimientosByFechaCreacionAndCuenta(Date fechaCreacion, Cuenta cuenta) {
+    public void deleteMovimientosByFechaCreacionAndCuenta(Date fechaCreacion, int idCuenta) {
         //Se crea Objeto Session
         Session session; //Se abre una sesion
 
@@ -114,7 +114,7 @@ public class MovimientoServiceImpl implements MovimientoService {
             String stringQuery = "DELETE FROM Movimiento m WHERE m.fechaCreacion = :fechaCreacion AND m.cuenta = :cuenta";
             Query query = session.createQuery(stringQuery);
             query.setDate("fechaCreacion", fechaCreacion);
-            query.setInteger("cuenta", cuenta.getIdCuenta());
+            query.setInteger("cuenta", idCuenta);
             tx.commit();
         } catch (Exception e) {
             System.out.println(e.getMessage());

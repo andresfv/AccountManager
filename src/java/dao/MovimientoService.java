@@ -21,7 +21,7 @@ public interface MovimientoService {
     public List<Movimiento> findMovimientosByParametros(Cuenta cuenta, String detalle, Date fechaMovimientoDesde, Date fechaMovimientoHasta,
             List<TipoMovimiento> tiposMovimiento, List<CategoriaMovimiento> categoriasMovimiento);
 
-    public void deleteMovimientosByFechaCreacionAndCuenta(Date fechaCreacion, Cuenta cuenta);
+    public void deleteMovimientosByFechaCreacionAndCuenta(Date fechaCreacion, int idCuenta);
 
     public double promedio(int[] v);
 

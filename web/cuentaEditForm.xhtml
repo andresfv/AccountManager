@@ -432,6 +432,9 @@
 
                 <f:facet name="header">
                     Lista de Movimientos
+
+                    <p:commandButton id="toggler" type="button" value="Columns" style="float:right" icon="ui-icon-calculator" />
+                    <p:columnToggler datasource="movimientoDataTable" trigger="toggler" />
                 </f:facet>
 
                 <p:column headerText="Fecha Movimiento"
@@ -447,19 +450,16 @@
                                         required="true"/>
                         </f:facet>
                         <f:facet name="output">
-                            <p:calendar id="fechaMovimientoCalendarOut" 
-                                        value="#{object.fechaMovimiento}"
-                                        showOn="button"
-                                        locale="es"
-                                        navigator="true"
-                                        pattern="dd/MM/yyyy"
-                                        disabled="true"/>
+                            <h:outputText value="#{object.fechaMovimiento}">
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                            </h:outputText>
                         </f:facet>
                     </p:cellEditor>
                 </p:column>
 
                 <p:column headerText="Fecha Contable"
-                          sortBy="#{object.fechaContable}">
+                          sortBy="#{object.fechaContable}"
+                          visible="false">
                     <p:cellEditor>
                         <f:facet name="input">
                             <p:calendar id="fechaContableMovimientoCalendarIn" 
@@ -471,13 +471,9 @@
                                         required="true"/>
                         </f:facet>
                         <f:facet name="output">
-                            <p:calendar id="fechaContableMovimientoCalendarOut" 
-                                        value="#{object.fechaContable}"
-                                        showOn="button"
-                                        locale="es"
-                                        navigator="true"
-                                        pattern="dd/MM/yyyy"
-                                        disabled="true"/>
+                            <h:outputText value="#{object.fechaContable}">
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
+                            </h:outputText>
                         </f:facet>
                     </p:cellEditor>
                 </p:column>
@@ -544,6 +540,22 @@
                             </h:outputText>
                         </f:facet>
                     </p:cellEditor>
+                </p:column>
+
+                <p:column headerText="Fecha Creación"
+                          sortBy="#{object.fechaCreacion}"
+                          visible="false">
+                    <h:outputText value="#{object.fechaCreacion}">
+                        <f:convertDateTime pattern="dd/MM/yyyy" />
+                    </h:outputText>
+                </p:column>
+
+                <p:column headerText="Fecha Modificacion"
+                          sortBy="#{object.fechaModificacion}"
+                          visible="false">
+                    <h:outputText value="#{object.fechaModificacion}">
+                        <f:convertDateTime pattern="dd/MM/yyyy" />
+                    </h:outputText>
                 </p:column>
 
                 <p:column headerText="Acciones" style="width:50px">

@@ -6,6 +6,7 @@
 package impl;
 
 import dao.MovimientoService;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -100,6 +101,7 @@ public class MovimientoServiceImpl implements MovimientoService {
 
     @Override
     public void deleteMovimientosByFechaCreacionAndCuenta(Date fechaCreacion, int idCuenta) {
+
         //Se crea Objeto Session
         Session session; //Se abre una sesion
 
@@ -111,9 +113,14 @@ public class MovimientoServiceImpl implements MovimientoService {
 
         Transaction tx = session.beginTransaction(); //Se inicia una transacción
         try {
+            SimpleDateFormat formatter = new SimpleDateFormat("DD/MM/YYYY");
+            Date oldDate = formatter.parse(fechaCreacion.toString());
+            formatter.applyPattern("YYYY/MM/DD");
+            //fechaCreacion = formatter.format(oldDate);
+
             String stringQuery = "DELETE FROM Movimiento m WHERE m.fechaCreacion = :fechaCreacion AND m.cuenta = :cuenta";
             Query query = session.createQuery(stringQuery);
-            query.setDate("fechaCreacion", fechaCreacion);
+            query.setString("fechaCreacion", formatter.format(oldDate));
             query.setInteger("cuenta", idCuenta);
             tx.commit();
         } catch (Exception e) {
